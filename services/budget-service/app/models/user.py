@@ -56,6 +56,14 @@ class User(Base):
     email_verified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     last_login_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
+    # Role-Based Access Control
+    role: Mapped[str] = mapped_column(
+        String(20),
+        default="user",
+        server_default="user",
+        nullable=False
+    )
+
     # Preferences
     preferred_currency: Mapped[str] = mapped_column(
         String(3),
@@ -124,9 +132,14 @@ class User(Base):
             "LENGTH(preferred_currency) = 3",
             name="chk_preferred_currency_length"
         ),
+        CheckConstraint(
+            "role IN ('user', 'admin', 'premium')",
+            name="chk_role_valid"
+        ),
         Index("idx_users_email", "email", postgresql_where="deleted_at IS NULL"),
         Index("idx_users_uuid", "uuid"),
         Index("idx_users_is_active", "is_active", postgresql_where="deleted_at IS NULL"),
+        Index("idx_users_role", "role"),
     )
 
     # Validators
@@ -159,6 +172,14 @@ class User(Base):
                 raise ValueError("Currency code must be exactly 3 characters")
             return currency.upper()
         return currency
+
+    @validates("role")
+    def validate_role(self, key, role):
+        """Validate user role."""
+        valid_roles = ["user", "admin", "premium"]
+        if role not in valid_roles:
+            raise ValueError(f"Role must be one of: {', '.join(valid_roles)}")
+        return role
 
     def __repr__(self) -> str:
         return f"<User(id={self.id}, email='{self.email}')>"
