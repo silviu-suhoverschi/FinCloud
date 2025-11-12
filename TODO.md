@@ -68,9 +68,9 @@
   - ✅ RecurringTransaction model
   - ✅ Tag model (additional)
   - ✅ BudgetSpendingCache model (additional)
-- 📋 Create Alembic migrations
-- 📋 Add database indexes for performance
-- 📋 Write model validators and constraints
+- ✅ Create Alembic migrations
+- ✅ Add database indexes for performance
+- ✅ Write model validators and constraints
 
 #### Portfolio Service Database
 - ✅ Design portfolio database schema
@@ -83,8 +83,8 @@
   - ✅ PortfolioPerformanceCache model (additional)
   - ✅ Benchmark model (additional)
   - ✅ PortfolioBenchmark model (additional)
-- 📋 Create Alembic migrations
-- 📋 Add composite indexes for queries
+- ✅ Create Alembic migrations
+- ✅ Add composite indexes for queries
 
 ### 1.2 Authentication & Authorization 📋
 

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """
 Budget Model
 
@@ -18,7 +20,7 @@ from sqlalchemy import (
     CheckConstraint,
     Index,
 )
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID as PostgreSQL_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 import uuid
@@ -36,7 +38,7 @@ class Budget(Base):
 
     # Unique Identifier
     uuid: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        PostgreSQL_UUID(as_uuid=True),
         unique=True,
         nullable=False,
         default=uuid.uuid4,
@@ -136,6 +138,9 @@ class Budget(Base):
         Index("idx_budgets_period", "period"),
         Index("idx_budgets_start_date", "start_date"),
         Index("idx_budgets_is_active", "is_active"),
+        # Composite indexes for common query patterns
+        Index("idx_budgets_user_active_period", "user_id", "is_active", "period", postgresql_where="deleted_at IS NULL"),
+        Index("idx_budgets_user_start_date", "user_id", "start_date", postgresql_ops={"start_date": "DESC"}, postgresql_where="deleted_at IS NULL"),
     )
 
     def __repr__(self) -> str:
