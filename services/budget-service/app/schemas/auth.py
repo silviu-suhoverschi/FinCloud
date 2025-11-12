@@ -4,8 +4,8 @@ Pydantic schemas for authentication and authorization.
 
 from datetime import datetime
 from typing import Optional
+from uuid import UUID
 from pydantic import BaseModel, EmailStr, Field, field_validator
-import uuid
 
 
 class UserRegister(BaseModel):
@@ -71,7 +71,7 @@ class UserResponse(BaseModel):
     """Schema for user response."""
 
     id: int = Field(..., description="User ID")
-    uuid: uuid.UUID = Field(..., description="User UUID")
+    uuid: UUID = Field(..., description="User UUID")
     email: str = Field(..., description="User email address")
     first_name: Optional[str] = Field(None, description="User's first name")
     last_name: Optional[str] = Field(None, description="User's last name")
