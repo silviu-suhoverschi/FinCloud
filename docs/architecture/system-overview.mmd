@@ -1,0 +1,80 @@
+erDiagram
+    USERS ||--o{ ACCOUNTS : "budget service"
+    USERS ||--o{ TRANSACTIONS : "budget service"
+    USERS ||--o{ BUDGETS : "budget service"
+    USERS ||--o{ PORTFOLIOS : "portfolio service"
+
+    ACCOUNTS ||--o{ TRANSACTIONS : has
+    TRANSACTIONS }o--|| CATEGORIES : categorized_by
+    BUDGETS }o--|| CATEGORIES : scoped_to
+
+    PORTFOLIOS ||--o{ HOLDINGS : contains
+    HOLDINGS }o--|| ASSETS : "asset type"
+    PORTFOLIOS ||--o{ PORTFOLIO_TRANSACTIONS : has
+    PORTFOLIO_TRANSACTIONS }o--|| ASSETS : trades
+
+    ASSETS ||--o{ PRICE_HISTORY : "price data"
+
+    USERS {
+        bigint id PK
+        varchar email
+        varchar name
+    }
+
+    ACCOUNTS {
+        bigint id PK
+        varchar name
+        varchar type
+        decimal balance
+    }
+
+    TRANSACTIONS {
+        bigint id PK
+        decimal amount
+        date date
+        varchar type
+    }
+
+    BUDGETS {
+        bigint id PK
+        decimal amount
+        varchar period
+    }
+
+    CATEGORIES {
+        bigint id PK
+        varchar name
+        varchar type
+    }
+
+    PORTFOLIOS {
+        bigint id PK
+        varchar name
+        varchar currency
+    }
+
+    ASSETS {
+        bigint id PK
+        varchar symbol
+        varchar name
+        varchar type
+    }
+
+    HOLDINGS {
+        bigint id PK
+        decimal quantity
+        decimal value
+    }
+
+    PORTFOLIO_TRANSACTIONS {
+        bigint id PK
+        varchar type
+        decimal quantity
+        decimal price
+    }
+
+    PRICE_HISTORY {
+        bigint id PK
+        date date
+        decimal close
+    }
