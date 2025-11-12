@@ -1,0 +1,18 @@
+apiVersion: v2
+name: fincloud
+description: A Helm chart for FinCloud - Self-hosted personal finance management
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - fincloud
+  - finance
+  - budgeting
+  - portfolio
+  - personal-finance
+home: https://github.com/your-username/FinCloud
+sources:
+  - https://github.com/your-username/FinCloud
+maintainers:
+  - name: FinCloud Team
+    email: maintainers@fincloud.dev

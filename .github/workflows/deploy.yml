@@ -1,0 +1,55 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+      version:
+        description: 'Version tag to deploy'
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    name: Deploy to ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+
+      - name: Configure kubectl
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install fincloud infrastructure/helm \
+            --namespace fincloud-${{ inputs.environment }} \
+            --create-namespace \
+            --set global.environment=${{ inputs.environment }} \
+            --set budgetService.image.tag=${{ inputs.version }} \
+            --set portfolioService.image.tag=${{ inputs.version }} \
+            --set apiGateway.image.tag=${{ inputs.version }} \
+            --set notificationService.image.tag=${{ inputs.version }} \
+            --set frontend.image.tag=${{ inputs.version }} \
+            --wait \
+            --timeout 10m
+
+      - name: Verify deployment
+        run: |
+          kubectl rollout status deployment/fincloud-api-gateway -n fincloud-${{ inputs.environment }}
+          kubectl rollout status deployment/fincloud-budget-service -n fincloud-${{ inputs.environment }}
+          kubectl rollout status deployment/fincloud-portfolio-service -n fincloud-${{ inputs.environment }}
+          kubectl rollout status deployment/fincloud-frontend -n fincloud-${{ inputs.environment }}
