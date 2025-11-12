@@ -10,6 +10,7 @@ from contextlib import asynccontextmanager
 from app.core.config import settings
 from app.core.database import engine, Base
 from app.api.v1 import accounts, transactions, budgets, categories
+from app.api.v1.endpoints import auth, users, password_reset
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -52,6 +53,12 @@ async def health_check():
     }
 
 # Include routers
+# Authentication & Authorization
+app.include_router(auth.router, prefix="/api/v1/auth", tags=["authentication"])
+app.include_router(users.router, prefix="/api/v1/users", tags=["users"])
+app.include_router(password_reset.router, prefix="/api/v1/password-reset", tags=["password-reset"])
+
+# Business Logic
 app.include_router(accounts.router, prefix="/api/v1/accounts", tags=["accounts"])
 app.include_router(transactions.router, prefix="/api/v1/transactions", tags=["transactions"])
 app.include_router(budgets.router, prefix="/api/v1/budgets", tags=["budgets"])
