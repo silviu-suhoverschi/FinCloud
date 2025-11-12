@@ -3,8 +3,15 @@ Database configuration and session management
 """
 
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from app.core.config import settings
+
+
+# Base class for models
+class Base(DeclarativeBase):
+    """Base class for all database models"""
+    pass
+
 
 # Create async engine
 engine = create_async_engine(
@@ -20,9 +27,6 @@ AsyncSessionLocal = sessionmaker(
     class_=AsyncSession,
     expire_on_commit=False,
 )
-
-# Base class for models
-Base = declarative_base()
 
 
 async def get_db():

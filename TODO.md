@@ -59,25 +59,30 @@
 
 #### Budget Service Database
 - ✅ Design database schema (ERD)
-- 📋 Create SQLAlchemy models:
-  - 📋 User model (id, email, password_hash, created_at)
-  - 📋 Account model (id, user_id, name, type, currency, balance)
-  - 📋 Category model (id, user_id, name, type, parent_id)
-  - 📋 Transaction model (id, account_id, category_id, amount, date, description)
-  - 📋 Budget model (id, user_id, category_id, amount, period, start_date)
-  - 📋 RecurringTransaction model
+- ✅ Create SQLAlchemy models:
+  - ✅ User model (id, email, password_hash, created_at)
+  - ✅ Account model (id, user_id, name, type, currency, balance)
+  - ✅ Category model (id, user_id, name, type, parent_id)
+  - ✅ Transaction model (id, account_id, category_id, amount, date, description)
+  - ✅ Budget model (id, user_id, category_id, amount, period, start_date)
+  - ✅ RecurringTransaction model
+  - ✅ Tag model (additional)
+  - ✅ BudgetSpendingCache model (additional)
 - 📋 Create Alembic migrations
 - 📋 Add database indexes for performance
 - 📋 Write model validators and constraints
 
 #### Portfolio Service Database
 - ✅ Design portfolio database schema
-- 📋 Create SQLAlchemy models:
-  - 📋 Portfolio model (id, user_id, name, description)
-  - 📋 Asset model (id, symbol, name, type, exchange)
-  - 📋 Holding model (id, portfolio_id, asset_id, quantity)
-  - 📋 PortfolioTransaction model (buy/sell/dividend)
-  - 📋 PriceHistory model (asset_id, date, price, source)
+- ✅ Create SQLAlchemy models:
+  - ✅ Portfolio model (id, user_id, name, description)
+  - ✅ Asset model (id, symbol, name, type, exchange)
+  - ✅ Holding model (id, portfolio_id, asset_id, quantity)
+  - ✅ PortfolioTransaction model (buy/sell/dividend)
+  - ✅ PriceHistory model (asset_id, date, price, source)
+  - ✅ PortfolioPerformanceCache model (additional)
+  - ✅ Benchmark model (additional)
+  - ✅ PortfolioBenchmark model (additional)
 - 📋 Create Alembic migrations
 - 📋 Add composite indexes for queries
 
