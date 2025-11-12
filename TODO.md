@@ -58,7 +58,7 @@
 ### 1.1 Database & Models 📋
 
 #### Budget Service Database
-- 📋 Design database schema (ERD)
+- ✅ Design database schema (ERD)
 - 📋 Create SQLAlchemy models:
   - 📋 User model (id, email, password_hash, created_at)
   - 📋 Account model (id, user_id, name, type, currency, balance)
@@ -71,7 +71,7 @@
 - 📋 Write model validators and constraints
 
 #### Portfolio Service Database
-- 📋 Design portfolio database schema
+- ✅ Design portfolio database schema
 - 📋 Create SQLAlchemy models:
   - 📋 Portfolio model (id, user_id, name, description)
   - 📋 Asset model (id, symbol, name, type, exchange)
