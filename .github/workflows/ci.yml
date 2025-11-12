@@ -89,7 +89,7 @@ jobs:
 
       - name: Run tests
         env:
-          DATABASE_URL: postgresql://fincloud:test_password@localhost:5432/fincloud_test
+          DATABASE_URL: postgresql+asyncpg://fincloud:test_password@localhost:5432/fincloud_test
           REDIS_URL: redis://localhost:6379/0
         run: |
           cd services/${{ matrix.service }}
