@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """
 User Model
 
@@ -14,10 +16,11 @@ from sqlalchemy import (
     CheckConstraint,
     Index,
 )
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PostgreSQL_UUID
+from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 from sqlalchemy.sql import func
 import uuid
+import re
 
 from app.core.database import Base
 
@@ -32,7 +35,7 @@ class User(Base):
 
     # Unique Identifier
     uuid: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        PostgreSQL_UUID(as_uuid=True),
         unique=True,
         nullable=False,
         default=uuid.uuid4,
@@ -125,6 +128,37 @@ class User(Base):
         Index("idx_users_uuid", "uuid"),
         Index("idx_users_is_active", "is_active", postgresql_where="deleted_at IS NULL"),
     )
+
+    # Validators
+    @validates("email")
+    def validate_email(self, key, email):
+        """Validate email format."""
+        if not email:
+            raise ValueError("Email cannot be empty")
+        email = email.lower().strip()
+        email_pattern = r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
+        if not re.match(email_pattern, email):
+            raise ValueError(f"Invalid email format: {email}")
+        return email
+
+    @validates("timezone")
+    def validate_timezone(self, key, value):
+        """Validate that timezone is not empty."""
+        if value and not value.strip():
+            raise ValueError(f"{key} cannot be empty or whitespace")
+        return value.strip() if value else value
+
+    @validates("preferred_currency")
+    def validate_currency(self, key, currency):
+        """Validate currency code format."""
+        if currency:
+            currency = currency.strip()
+            if not currency:
+                raise ValueError("Currency cannot be empty or whitespace")
+            if len(currency) != 3:
+                raise ValueError("Currency code must be exactly 3 characters")
+            return currency.upper()
+        return currency
 
     def __repr__(self) -> str:
         return f"<User(id={self.id}, email='{self.email}')>"

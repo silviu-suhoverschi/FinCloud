@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """
 Portfolio Transaction Model
 
@@ -17,7 +19,7 @@ from sqlalchemy import (
     CheckConstraint,
     Index,
 )
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID as PostgreSQL_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 import uuid
@@ -35,7 +37,7 @@ class PortfolioTransaction(Base):
 
     # Unique Identifier
     uuid: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        PostgreSQL_UUID(as_uuid=True),
         unique=True,
         nullable=False,
         default=uuid.uuid4,
@@ -134,6 +136,10 @@ class PortfolioTransaction(Base):
         Index("idx_portfolio_transactions_type", "type"),
         Index("idx_portfolio_transactions_date", "date", postgresql_ops={"date": "DESC"}),
         Index("idx_portfolio_transactions_created_at", "created_at", postgresql_ops={"created_at": "DESC"}),
+        # Composite indexes for common query patterns
+        Index("idx_portfolio_transactions_portfolio_date", "portfolio_id", "date", postgresql_ops={"date": "DESC"}, postgresql_where="deleted_at IS NULL"),
+        Index("idx_portfolio_transactions_asset_date", "asset_id", "date", postgresql_ops={"date": "DESC"}, postgresql_where="deleted_at IS NULL"),
+        Index("idx_portfolio_transactions_portfolio_type", "portfolio_id", "type", "date", postgresql_ops={"date": "DESC"}, postgresql_where="deleted_at IS NULL"),
     )
 
     def __repr__(self) -> str:

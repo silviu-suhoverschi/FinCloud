@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """
 Transaction Model
 
@@ -19,8 +21,8 @@ from sqlalchemy import (
     CheckConstraint,
     Index,
 )
-from sqlalchemy.dialects.postgresql import UUID, ARRAY
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PostgreSQL_UUID, ARRAY
+from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 from sqlalchemy.sql import func
 import uuid
 
@@ -37,7 +39,7 @@ class Transaction(Base):
 
     # Unique Identifier
     uuid: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        PostgreSQL_UUID(as_uuid=True),
         unique=True,
         nullable=False,
         default=uuid.uuid4,
@@ -157,7 +159,48 @@ class Transaction(Base):
         Index("idx_transactions_payee", "payee", postgresql_where="payee IS NOT NULL"),
         Index("idx_transactions_tags", "tags", postgresql_using="gin"),
         Index("idx_transactions_external_id", "external_id", postgresql_where="external_id IS NOT NULL"),
+        # Composite indexes for common query patterns
+        Index("idx_transactions_user_date", "user_id", "date", postgresql_ops={"date": "DESC"}, postgresql_where="deleted_at IS NULL"),
+        Index("idx_transactions_account_date", "account_id", "date", postgresql_ops={"date": "DESC"}, postgresql_where="deleted_at IS NULL"),
+        Index("idx_transactions_user_type_date", "user_id", "type", "date", postgresql_ops={"date": "DESC"}, postgresql_where="deleted_at IS NULL"),
     )
+
+    # Validators
+    @validates("amount")
+    def validate_amount(self, key, amount):
+        """Validate that amount is positive."""
+        if amount is not None and amount <= 0:
+            raise ValueError("Transaction amount must be positive")
+        return amount
+
+    @validates("exchange_rate")
+    def validate_exchange_rate(self, key, rate):
+        """Validate that exchange rate is positive."""
+        if rate is not None and rate <= 0:
+            raise ValueError("Exchange rate must be positive")
+        return rate
+
+    @validates("type")
+    def validate_type(self, key, transaction_type):
+        """Validate transaction type."""
+        valid_types = ['income', 'expense', 'transfer']
+        if transaction_type and transaction_type not in valid_types:
+            raise ValueError(f"Transaction type must be one of: {', '.join(valid_types)}")
+        return transaction_type
+
+    @validates("currency")
+    def validate_currency(self, key, currency):
+        """Validate currency code format."""
+        if currency and len(currency) != 3:
+            raise ValueError("Currency code must be exactly 3 characters")
+        return currency.upper() if currency else currency
+
+    @validates("description")
+    def validate_description(self, key, description):
+        """Validate that description is not empty."""
+        if description and not description.strip():
+            raise ValueError("Description cannot be empty or whitespace")
+        return description.strip() if description else description
 
     def __repr__(self) -> str:
         return f"<Transaction(id={self.id}, type='{self.type}', amount={self.amount})>"

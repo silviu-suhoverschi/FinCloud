@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """
 Asset Model
 
@@ -17,9 +19,10 @@ from sqlalchemy import (
     Index,
 )
 from sqlalchemy.dialects.postgresql import UUID, JSONB
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 from sqlalchemy.sql import func
 import uuid
+import re
 
 from app.core.database import Base
 
@@ -34,7 +37,7 @@ class Asset(Base):
 
     # Unique Identifier
     uuid: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        PostgreSQL_UUID(as_uuid=True),
         unique=True,
         nullable=False,
         default=uuid.uuid4,
@@ -122,6 +125,49 @@ class Asset(Base):
         Index("idx_assets_isin", "isin", postgresql_where="isin IS NOT NULL"),
         Index("idx_assets_metadata", "metadata", postgresql_using="gin"),
     )
+
+    # Validators
+    @validates("symbol")
+    def validate_symbol(self, key, symbol):
+        """Validate and normalize symbol."""
+        if symbol:
+            symbol = symbol.upper().strip()
+            if not symbol:
+                raise ValueError("Symbol cannot be empty")
+        return symbol
+
+    @validates("type")
+    def validate_type(self, key, asset_type):
+        """Validate asset type."""
+        valid_types = ['stock', 'etf', 'mutual_fund', 'crypto', 'bond', 'commodity', 'index', 'other']
+        if asset_type and asset_type not in valid_types:
+            raise ValueError(f"Asset type must be one of: {', '.join(valid_types)}")
+        return asset_type
+
+    @validates("asset_class")
+    def validate_asset_class(self, key, asset_class):
+        """Validate asset class."""
+        valid_classes = ['equity', 'fixed_income', 'real_estate', 'commodity', 'cash', 'alternative', 'cryptocurrency']
+        if asset_class and asset_class not in valid_classes:
+            raise ValueError(f"Asset class must be one of: {', '.join(valid_classes)}")
+        return asset_class
+
+    @validates("currency", "country")
+    def validate_iso_code(self, key, code):
+        """Validate ISO codes."""
+        if code and len(code) != 3:
+            raise ValueError(f"{key} code must be exactly 3 characters")
+        return code.upper() if code else code
+
+    @validates("isin")
+    def validate_isin(self, key, isin):
+        """Validate ISIN format."""
+        if isin:
+            isin = isin.upper().strip()
+            isin_pattern = r'^[A-Z]{2}[A-Z0-9]{9}[0-9]$'
+            if not re.match(isin_pattern, isin):
+                raise ValueError(f"Invalid ISIN format: {isin}")
+        return isin
 
     def __repr__(self) -> str:
         return f"<Asset(id={self.id}, symbol='{self.symbol}', name='{self.name}')>"

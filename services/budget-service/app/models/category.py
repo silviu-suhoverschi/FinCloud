@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """
 Category Model
 
@@ -17,7 +19,7 @@ from sqlalchemy import (
     UniqueConstraint,
     Index,
 )
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID as PostgreSQL_UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 import uuid
@@ -35,7 +37,7 @@ class Category(Base):
 
     # Unique Identifier
     uuid: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        PostgreSQL_UUID(as_uuid=True),
         unique=True,
         nullable=False,
         default=uuid.uuid4,
@@ -120,6 +122,9 @@ class Category(Base):
         Index("idx_categories_parent_id", "parent_id"),
         Index("idx_categories_type", "type"),
         Index("idx_categories_sort_order", "sort_order"),
+        # Composite indexes for common query patterns
+        Index("idx_categories_user_type_active", "user_id", "type", "is_active", postgresql_where="deleted_at IS NULL"),
+        Index("idx_categories_user_parent", "user_id", "parent_id", postgresql_where="deleted_at IS NULL"),
     )
 
     def __repr__(self) -> str:

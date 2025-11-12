@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """
 Account Model
 
@@ -18,10 +20,11 @@ from sqlalchemy import (
     CheckConstraint,
     Index,
 )
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PostgreSQL_UUID
+from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 from sqlalchemy.sql import func
 import uuid
+import re
 
 from app.core.database import Base
 
@@ -36,7 +39,7 @@ class Account(Base):
 
     # Unique Identifier
     uuid: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        PostgreSQL_UUID(as_uuid=True),
         unique=True,
         nullable=False,
         default=uuid.uuid4,
@@ -147,6 +150,38 @@ class Account(Base):
         Index("idx_accounts_is_active", "is_active"),
         Index("idx_accounts_created_at", "created_at"),
     )
+
+    # Validators
+    @validates("type")
+    def validate_type(self, key, account_type):
+        """Validate account type."""
+        valid_types = ['checking', 'savings', 'credit_card', 'cash', 'investment', 'loan', 'mortgage', 'other']
+        if account_type and account_type not in valid_types:
+            raise ValueError(f"Account type must be one of: {', '.join(valid_types)}")
+        return account_type
+
+    @validates("currency")
+    def validate_currency(self, key, currency):
+        """Validate currency code format."""
+        if currency and len(currency) != 3:
+            raise ValueError("Currency code must be exactly 3 characters")
+        return currency.upper() if currency else currency
+
+    @validates("color")
+    def validate_color(self, key, color):
+        """Validate color hex format."""
+        if color:
+            color_pattern = r'^#[0-9A-Fa-f]{6}$'
+            if not re.match(color_pattern, color):
+                raise ValueError(f"Color must be in hex format (#RRGGBB): {color}")
+        return color
+
+    @validates("name")
+    def validate_name(self, key, name):
+        """Validate that name is not empty."""
+        if name and not name.strip():
+            raise ValueError("Account name cannot be empty or whitespace")
+        return name.strip() if name else name
 
     def __repr__(self) -> str:
         return f"<Account(id={self.id}, name='{self.name}', type='{self.type}')>"

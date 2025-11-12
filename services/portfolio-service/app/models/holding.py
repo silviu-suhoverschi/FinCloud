@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """
 Holding Model
 
@@ -16,8 +18,8 @@ from sqlalchemy import (
     UniqueConstraint,
     Index,
 )
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID as PostgreSQL_UUID
+from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 from sqlalchemy.sql import func
 import uuid
 
@@ -34,7 +36,7 @@ class Holding(Base):
 
     # Unique Identifier
     uuid: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        PostgreSQL_UUID(as_uuid=True),
         unique=True,
         nullable=False,
         default=uuid.uuid4,
@@ -115,6 +117,21 @@ class Holding(Base):
         Index("idx_holdings_asset_id", "asset_id"),
         Index("idx_holdings_quantity", "quantity", postgresql_where="quantity > 0"),
     )
+
+    # Validators
+    @validates("average_cost", "cost_basis")
+    def validate_non_negative(self, key, value):
+        """Validate that costs are non-negative."""
+        if value is not None and value < 0:
+            raise ValueError(f"{key} cannot be negative")
+        return value
+
+    @validates("current_price")
+    def validate_current_price(self, key, price):
+        """Validate that current price is positive if set."""
+        if price is not None and price <= 0:
+            raise ValueError("Current price must be positive")
+        return price
 
     def __repr__(self) -> str:
         return f"<Holding(id={self.id}, portfolio_id={self.portfolio_id}, asset_id={self.asset_id}, quantity={self.quantity})>"
