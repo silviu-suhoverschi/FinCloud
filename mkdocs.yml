@@ -1,0 +1,99 @@
+site_name: FinCloud Documentation
+site_description: Self-hosted personal finance and investment management platform
+site_author: FinCloud Team
+site_url: https://docs.fincloud.dev
+
+repo_name: FinCloud
+repo_url: https://github.com/your-username/FinCloud
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: blue
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
+  language: en
+  icon:
+    repo: fontawesome/brands/github
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Quick Start: getting-started/quickstart.md
+    - Installation: getting-started/installation.md
+    - Configuration: getting-started/configuration.md
+  - Architecture:
+    - Overview: architecture/overview.md
+    - Services: architecture/services.md
+    - Database Schema: architecture/database.md
+  - User Guide:
+    - Budget Management: user-guide/budget.md
+    - Portfolio Tracking: user-guide/portfolio.md
+    - Reports & Analytics: user-guide/reports.md
+  - API Reference:
+    - REST API: api/rest.md
+    - GraphQL API: api/graphql.md
+    - Authentication: api/authentication.md
+  - Deployment:
+    - Docker Compose: deployment/docker-compose.md
+    - Kubernetes: deployment/kubernetes.md
+    - Security: deployment/security.md
+  - Development:
+    - Contributing: development/contributing.md
+    - Plugin Development: development/plugins.md
+    - Testing: development/testing.md
+  - Integration:
+    - n8n: integration/n8n.md
+    - Home Assistant: integration/home-assistant.md
+    - Webhooks: integration/webhooks.md
+
+plugins:
+  - search
+  - minify:
+      minify_html: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/your-username/FinCloud
+    - icon: fontawesome/brands/discord
+      link: https://discord.gg/fincloud
+  version:
+    provider: mike

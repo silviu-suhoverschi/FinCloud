@@ -1,0 +1,143 @@
+# Default values for FinCloud
+
+global:
+  imagePullPolicy: IfNotPresent
+  storageClass: standard
+
+# PostgreSQL configuration
+postgresql:
+  enabled: true
+  auth:
+    username: fincloud
+    password: changeme
+    database: fincloud
+  primary:
+    persistence:
+      enabled: true
+      size: 10Gi
+
+# Redis configuration
+redis:
+  enabled: true
+  auth:
+    enabled: false
+  master:
+    persistence:
+      enabled: true
+      size: 2Gi
+
+# MinIO configuration
+minio:
+  enabled: true
+  auth:
+    rootUser: fincloud
+    rootPassword: changeme
+  persistence:
+    enabled: true
+    size: 20Gi
+
+# Budget Service
+budgetService:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: fincloud/budget-service
+    tag: latest
+  service:
+    type: ClusterIP
+    port: 8001
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+# Portfolio Service
+portfolioService:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: fincloud/portfolio-service
+    tag: latest
+  service:
+    type: ClusterIP
+    port: 8002
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+# Notification Service
+notificationService:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: fincloud/notification-service
+    tag: latest
+  service:
+    type: ClusterIP
+    port: 8003
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+
+# API Gateway
+apiGateway:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: fincloud/api-gateway
+    tag: latest
+  service:
+    type: ClusterIP
+    port: 8000
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+# Frontend
+frontend:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: fincloud/frontend
+    tag: latest
+  service:
+    type: ClusterIP
+    port: 3000
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+
+# Ingress
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: fincloud.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: fincloud-tls
+      hosts:
+        - fincloud.example.com
