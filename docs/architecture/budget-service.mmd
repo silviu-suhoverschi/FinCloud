@@ -1,0 +1,172 @@
+erDiagram
+    USERS ||--o{ ACCOUNTS : owns
+    USERS ||--o{ CATEGORIES : creates
+    USERS ||--o{ TRANSACTIONS : creates
+    USERS ||--o{ BUDGETS : creates
+    USERS ||--o{ RECURRING_TRANSACTIONS : creates
+    USERS ||--o{ TAGS : creates
+
+    ACCOUNTS ||--o{ TRANSACTIONS : "source account"
+    ACCOUNTS ||--o{ TRANSACTIONS : "destination account"
+    ACCOUNTS ||--o{ RECURRING_TRANSACTIONS : "source account"
+    ACCOUNTS ||--o{ BUDGETS : "scoped to"
+
+    CATEGORIES ||--o{ CATEGORIES : "parent/child"
+    CATEGORIES ||--o{ TRANSACTIONS : categorizes
+    CATEGORIES ||--o{ BUDGETS : "scoped to"
+    CATEGORIES ||--o{ RECURRING_TRANSACTIONS : categorizes
+
+    BUDGETS ||--o{ BUDGET_SPENDING_CACHE : "cached spending"
+
+    RECURRING_TRANSACTIONS ||--o{ TRANSACTIONS : generates
+
+    USERS {
+        bigint id PK
+        uuid uuid UK
+        varchar email UK
+        varchar password_hash
+        varchar first_name
+        varchar last_name
+        boolean is_active
+        boolean is_verified
+        timestamp email_verified_at
+        timestamp last_login_at
+        varchar preferred_currency
+        varchar timezone
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    ACCOUNTS {
+        bigint id PK
+        uuid uuid UK
+        bigint user_id FK
+        varchar name
+        varchar type
+        varchar currency
+        decimal initial_balance
+        decimal current_balance
+        varchar account_number
+        varchar institution
+        varchar color
+        varchar icon
+        boolean is_active
+        boolean include_in_net_worth
+        text notes
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    CATEGORIES {
+        bigint id PK
+        uuid uuid UK
+        bigint user_id FK
+        bigint parent_id FK
+        varchar name
+        varchar type
+        varchar color
+        varchar icon
+        boolean is_active
+        integer sort_order
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    TRANSACTIONS {
+        bigint id PK
+        uuid uuid UK
+        bigint user_id FK
+        bigint account_id FK
+        bigint category_id FK
+        bigint destination_account_id FK
+        varchar type
+        decimal amount
+        varchar currency
+        decimal exchange_rate
+        date date
+        text description
+        varchar payee
+        varchar reference_number
+        text notes
+        text[] tags
+        boolean is_reconciled
+        timestamp reconciled_at
+        bigint recurring_transaction_id FK
+        varchar external_id
+        varchar import_source
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    BUDGETS {
+        bigint id PK
+        uuid uuid UK
+        bigint user_id FK
+        bigint category_id FK
+        bigint account_id FK
+        varchar name
+        decimal amount
+        varchar currency
+        varchar period
+        date start_date
+        date end_date
+        boolean rollover_unused
+        boolean alert_enabled
+        decimal alert_threshold
+        boolean is_active
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    RECURRING_TRANSACTIONS {
+        bigint id PK
+        uuid uuid UK
+        bigint user_id FK
+        bigint account_id FK
+        bigint category_id FK
+        bigint destination_account_id FK
+        varchar type
+        decimal amount
+        varchar currency
+        text description
+        varchar payee
+        varchar frequency
+        integer interval_count
+        date start_date
+        date end_date
+        date next_occurrence
+        timestamp last_generated_at
+        integer occurrences_count
+        integer max_occurrences
+        boolean is_active
+        boolean auto_create
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    TAGS {
+        bigint id PK
+        bigint user_id FK
+        varchar name
+        varchar color
+        integer usage_count
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    BUDGET_SPENDING_CACHE {
+        bigint id PK
+        bigint budget_id FK
+        date period_start
+        date period_end
+        decimal total_spent
+        decimal total_budget
+        integer transaction_count
+        timestamp last_calculated_at
+    }

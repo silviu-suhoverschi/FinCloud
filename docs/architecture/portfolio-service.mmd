@@ -1,0 +1,138 @@
+erDiagram
+    PORTFOLIOS ||--o{ HOLDINGS : contains
+    PORTFOLIOS ||--o{ PORTFOLIO_TRANSACTIONS : "has transactions"
+    PORTFOLIOS ||--o{ PORTFOLIO_PERFORMANCE_CACHE : "performance cache"
+    PORTFOLIOS ||--o{ PORTFOLIO_BENCHMARKS : "compared to"
+
+    ASSETS ||--o{ HOLDINGS : "held in"
+    ASSETS ||--o{ PORTFOLIO_TRANSACTIONS : "traded"
+    ASSETS ||--o{ PRICE_HISTORY : "price data"
+    ASSETS ||--o{ BENCHMARKS : "benchmark asset"
+
+    BENCHMARKS ||--o{ PORTFOLIO_BENCHMARKS : "benchmark for"
+
+    PORTFOLIOS {
+        bigint id PK
+        uuid uuid UK
+        bigint user_id
+        varchar name
+        text description
+        varchar currency
+        boolean is_active
+        integer sort_order
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    ASSETS {
+        bigint id PK
+        uuid uuid UK
+        varchar symbol
+        varchar name
+        varchar type
+        varchar asset_class
+        varchar sector
+        varchar exchange
+        varchar currency
+        varchar isin
+        varchar cusip
+        varchar figi
+        varchar country
+        text logo_url
+        boolean is_active
+        jsonb metadata
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    HOLDINGS {
+        bigint id PK
+        uuid uuid UK
+        bigint portfolio_id FK
+        bigint asset_id FK
+        decimal quantity
+        decimal average_cost
+        decimal cost_basis
+        decimal current_price
+        decimal current_value
+        decimal unrealized_gain_loss
+        decimal unrealized_gain_loss_percent
+        timestamp last_price_update
+        text notes
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    PORTFOLIO_TRANSACTIONS {
+        bigint id PK
+        uuid uuid UK
+        bigint portfolio_id FK
+        bigint asset_id FK
+        varchar type
+        decimal quantity
+        decimal price
+        decimal total_amount
+        decimal fee
+        decimal tax
+        varchar currency
+        decimal exchange_rate
+        date date
+        text notes
+        varchar reference_number
+        varchar external_id
+        varchar import_source
+        timestamp created_at
+        timestamp updated_at
+        timestamp deleted_at
+    }
+
+    PRICE_HISTORY {
+        bigint id PK
+        bigint asset_id FK
+        date date
+        decimal open
+        decimal high
+        decimal low
+        decimal close
+        decimal adjusted_close
+        bigint volume
+        varchar source
+        timestamp created_at
+    }
+
+    PORTFOLIO_PERFORMANCE_CACHE {
+        bigint id PK
+        bigint portfolio_id FK
+        date date
+        decimal total_value
+        decimal total_cost_basis
+        decimal total_gain_loss
+        decimal total_gain_loss_percent
+        decimal daily_return
+        decimal dividends_received
+        decimal fees_paid
+        timestamp created_at
+    }
+
+    BENCHMARKS {
+        bigint id PK
+        uuid uuid UK
+        varchar symbol UK
+        varchar name
+        text description
+        bigint asset_id FK
+        boolean is_active
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    PORTFOLIO_BENCHMARKS {
+        bigint id PK
+        bigint portfolio_id FK
+        bigint benchmark_id FK
+        decimal weight
+        timestamp created_at
+    }
