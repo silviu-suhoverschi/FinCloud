@@ -5,9 +5,8 @@ const nextConfig = {
   swcMinify: true,
 
   // PWA configuration
-  experimental: {
-    optimizeCss: true,
-  },
+  // Note: optimizeCss removed as it requires critters package
+  // and may cause build issues in Docker environments
 
   // Environment variables exposed to the browser
   env: {

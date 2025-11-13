@@ -135,7 +135,13 @@ jobs:
     needs: [test-python, lint-frontend]
     strategy:
       matrix:
-        service: [budget-service, portfolio-service, frontend]
+        include:
+          - service: budget-service
+            context: ./services/budget-service
+          - service: portfolio-service
+            context: ./services/portfolio-service
+          - service: frontend
+            context: ./frontend
     steps:
       - uses: actions/checkout@v4
 
@@ -145,7 +151,7 @@ jobs:
       - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./services/${{ matrix.service }}
+          context: ${{ matrix.context }}
           push: false
           tags: fincloud/${{ matrix.service }}:test
           cache-from: type=gha
