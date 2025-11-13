@@ -219,6 +219,89 @@ async def create_transaction(
     return transaction
 
 
+@router.get("/search", response_model=TransactionList)
+async def search_transactions(
+    query: str = Query(..., min_length=1, description="Search query"),
+    skip: int = Query(0, ge=0, description="Number of records to skip"),
+    limit: int = Query(
+        100, ge=1, le=1000, description="Max number of records to return"
+    ),
+    account_id: Optional[int] = Query(None, description="Filter by account ID"),
+    type: Optional[TransactionType] = Query(
+        None, description="Filter by transaction type"
+    ),
+    category_id: Optional[int] = Query(None, description="Filter by category ID"),
+    date_from: Optional[date] = Query(None, description="Filter by start date"),
+    date_to: Optional[date] = Query(None, description="Filter by end date"),
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Full-text search for transactions.
+
+    Searches in the following fields:
+    - description
+    - payee
+    - notes
+    - reference_number
+    - tags
+
+    Additional filters can be applied to narrow down the search results.
+    """
+    # Build base filters
+    filters = [Transaction.user_id == current_user.id, Transaction.deleted_at.is_(None)]
+
+    # Full-text search conditions
+    search_conditions = [
+        Transaction.description.ilike(f"%{query}%"),
+        Transaction.payee.ilike(f"%{query}%"),
+        Transaction.notes.ilike(f"%{query}%"),
+        Transaction.reference_number.ilike(f"%{query}%"),
+    ]
+
+    # Add the search conditions with OR
+    filters.append(or_(*search_conditions))
+
+    # Additional filters
+    if account_id is not None:
+        filters.append(
+            or_(
+                Transaction.account_id == account_id,
+                Transaction.destination_account_id == account_id,
+            )
+        )
+
+    if type is not None:
+        filters.append(Transaction.type == type.value)
+
+    if category_id is not None:
+        filters.append(Transaction.category_id == category_id)
+
+    if date_from is not None:
+        filters.append(Transaction.date >= date_from)
+
+    if date_to is not None:
+        filters.append(Transaction.date <= date_to)
+
+    # Get total count
+    count_query = select(func.count()).select_from(Transaction).filter(and_(*filters))
+    count_result = await db.execute(count_query)
+    total = count_result.scalar()
+
+    # Get transactions with pagination
+    query_stmt = (
+        select(Transaction)
+        .filter(and_(*filters))
+        .order_by(Transaction.date.desc(), Transaction.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+    )
+    result = await db.execute(query_stmt)
+    transactions = result.scalars().all()
+
+    return TransactionList(total=total, transactions=transactions)
+
+
 @router.get("/{transaction_id}", response_model=TransactionResponse)
 async def get_transaction(
     transaction_id: int,
@@ -598,86 +681,3 @@ async def bulk_create_transactions(
         errors=errors,
         transactions=created_transactions,
     )
-
-
-@router.get("/search", response_model=TransactionList)
-async def search_transactions(
-    query: str = Query(..., min_length=1, description="Search query"),
-    skip: int = Query(0, ge=0, description="Number of records to skip"),
-    limit: int = Query(
-        100, ge=1, le=1000, description="Max number of records to return"
-    ),
-    account_id: Optional[int] = Query(None, description="Filter by account ID"),
-    type: Optional[TransactionType] = Query(
-        None, description="Filter by transaction type"
-    ),
-    category_id: Optional[int] = Query(None, description="Filter by category ID"),
-    date_from: Optional[date] = Query(None, description="Filter by start date"),
-    date_to: Optional[date] = Query(None, description="Filter by end date"),
-    db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    """
-    Full-text search for transactions.
-
-    Searches in the following fields:
-    - description
-    - payee
-    - notes
-    - reference_number
-    - tags
-
-    Additional filters can be applied to narrow down the search results.
-    """
-    # Build base filters
-    filters = [Transaction.user_id == current_user.id, Transaction.deleted_at.is_(None)]
-
-    # Full-text search conditions
-    search_conditions = [
-        Transaction.description.ilike(f"%{query}%"),
-        Transaction.payee.ilike(f"%{query}%"),
-        Transaction.notes.ilike(f"%{query}%"),
-        Transaction.reference_number.ilike(f"%{query}%"),
-    ]
-
-    # Add the search conditions with OR
-    filters.append(or_(*search_conditions))
-
-    # Additional filters
-    if account_id is not None:
-        filters.append(
-            or_(
-                Transaction.account_id == account_id,
-                Transaction.destination_account_id == account_id,
-            )
-        )
-
-    if type is not None:
-        filters.append(Transaction.type == type.value)
-
-    if category_id is not None:
-        filters.append(Transaction.category_id == category_id)
-
-    if date_from is not None:
-        filters.append(Transaction.date >= date_from)
-
-    if date_to is not None:
-        filters.append(Transaction.date <= date_to)
-
-    # Get total count
-    count_query = select(func.count()).select_from(Transaction).filter(and_(*filters))
-    count_result = await db.execute(count_query)
-    total = count_result.scalar()
-
-    # Get transactions with pagination
-    query_stmt = (
-        select(Transaction)
-        .filter(and_(*filters))
-        .order_by(Transaction.date.desc(), Transaction.created_at.desc())
-        .offset(skip)
-        .limit(limit)
-    )
-    result = await db.execute(query_stmt)
-    transactions = result.scalars().all()
-
-    return TransactionList(total=total, transactions=transactions)

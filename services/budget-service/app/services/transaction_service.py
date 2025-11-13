@@ -79,7 +79,7 @@ class TransactionService:
             (
                 "expense"
                 if transaction.type == "income"
-                else "income" if transaction.type == "expense" else "transfer"
+                else ("income" if transaction.type == "expense" else "transfer")
             ),
             is_destination=False,
         )
