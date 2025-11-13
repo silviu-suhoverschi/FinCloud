@@ -15,13 +15,12 @@ class HoldingBase(BaseModel):
     portfolio_id: int = Field(..., gt=0, description="Portfolio ID")
     asset_id: int = Field(..., gt=0, description="Asset ID")
     quantity: Decimal = Field(
-        ..., ge=0, description="Quantity of the asset held", decimal_places=8
+        ..., ge=0, description="Quantity of the asset held"
     )
     average_cost: Decimal = Field(
         default=Decimal("0"),
         ge=0,
         description="Average cost per unit",
-        decimal_places=4,
     )
     notes: Optional[str] = Field(None, description="Additional notes about the holding")
 
@@ -44,10 +43,10 @@ class HoldingUpdate(BaseModel):
     """Schema for updating a holding."""
 
     quantity: Optional[Decimal] = Field(
-        None, ge=0, description="Quantity of the asset held", decimal_places=8
+        None, ge=0, description="Quantity of the asset held"
     )
     average_cost: Optional[Decimal] = Field(
-        None, ge=0, description="Average cost per unit", decimal_places=4
+        None, ge=0, description="Average cost per unit"
     )
     notes: Optional[str] = Field(None, description="Additional notes about the holding")
 
