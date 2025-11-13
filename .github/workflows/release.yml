@@ -27,7 +27,6 @@ jobs:
             context: ./services/portfolio-service
           - name: frontend
             context: ./frontend
-            file: Dockerfile
 
     steps:
       - uses: actions/checkout@v4
@@ -57,7 +56,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ${{ matrix.service.context }}
-          file: ${{ matrix.service.file || 'Dockerfile' }}
+          file: ${{ matrix.service.context }}/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
