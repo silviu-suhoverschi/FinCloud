@@ -6,7 +6,7 @@ import pytest
 import pytest_asyncio
 import asyncio
 import uuid
-from typing import AsyncGenerator, Generator
+from typing import AsyncGenerator
 from httpx import AsyncClient, ASGITransport
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
@@ -52,14 +52,6 @@ from app.core.config import settings
 pytest_plugins = ('pytest_asyncio',)
 
 
-@pytest.fixture(scope="session")
-def event_loop() -> Generator:
-    """Create an instance of the default event loop for each test case."""
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()
-
-
 def _adapt_metadata_for_sqlite(target, connection, **kw):
     """Adapt PostgreSQL-specific types and constraints to SQLite-compatible ones"""
     from sqlalchemy.dialects.postgresql import JSONB, UUID
@@ -97,7 +89,7 @@ def _adapt_metadata_for_sqlite(target, connection, **kw):
             table.constraints.discard(constraint)
 
 
-@pytest_asyncio.fixture(scope="session")
+@pytest_asyncio.fixture(scope="session", loop_scope="session")
 async def test_engine():
     """Create a test database engine using SQLite in-memory database"""
     # Use SQLite in-memory database for testing (no PostgreSQL required)
