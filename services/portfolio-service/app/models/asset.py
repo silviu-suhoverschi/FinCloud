@@ -1,13 +1,7 @@
 from __future__ import annotations
 
-"""
-Asset Model
-
-Investment assets (stocks, ETFs, crypto, bonds, etc.).
-"""
-
 from datetime import datetime
-from typing import List
+from typing import List, TYPE_CHECKING
 from sqlalchemy import (
     BigInteger,
     String,
@@ -26,6 +20,17 @@ import re
 
 from app.core.database import Base
 
+if TYPE_CHECKING:
+    from app.models.holding import Holding
+    from app.models.portfolio_transaction import PortfolioTransaction
+    from app.models.price_history import PriceHistory
+
+"""
+Asset Model
+
+Investment assets (stocks, ETFs, crypto, bonds, etc.).
+"""
+
 
 class Asset(Base):
     """Asset model for investment assets."""
@@ -41,7 +46,7 @@ class Asset(Base):
         unique=True,
         nullable=False,
         default=uuid.uuid4,
-        server_default=func.gen_random_uuid()
+        server_default=func.gen_random_uuid(),
     )
 
     # Asset Identifiers
@@ -65,38 +70,32 @@ class Asset(Base):
 
     # Visual and Metadata
     logo_url: Mapped[str | None] = mapped_column(Text)
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true")
+    is_active: Mapped[bool] = mapped_column(
+        Boolean, default=True, server_default="true"
+    )
     asset_metadata: Mapped[dict | None] = mapped_column(JSONB)
 
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        nullable=False,
-        server_default=func.now()
+        DateTime(timezone=True), nullable=False, server_default=func.now()
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
         server_default=func.now(),
-        onupdate=func.now()
+        onupdate=func.now(),
     )
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
     # Relationships
     holdings: Mapped[List["Holding"]] = relationship(
-        "Holding",
-        back_populates="asset",
-        cascade="all, delete-orphan"
+        "Holding", back_populates="asset", cascade="all, delete-orphan"
     )
     transactions: Mapped[List["PortfolioTransaction"]] = relationship(
-        "PortfolioTransaction",
-        back_populates="asset",
-        cascade="all, delete-orphan"
+        "PortfolioTransaction", back_populates="asset", cascade="all, delete-orphan"
     )
     price_history: Mapped[List["PriceHistory"]] = relationship(
-        "PriceHistory",
-        back_populates="asset",
-        cascade="all, delete-orphan"
+        "PriceHistory", back_populates="asset", cascade="all, delete-orphan"
     )
 
     # Table Constraints
@@ -104,19 +103,18 @@ class Asset(Base):
         UniqueConstraint("symbol", "exchange", name="uq_asset_symbol_exchange"),
         CheckConstraint(
             "type IN ('stock', 'etf', 'mutual_fund', 'crypto', 'bond', 'commodity', 'index', 'other')",
-            name="chk_asset_type"
+            name="chk_asset_type",
         ),
         CheckConstraint(
             "asset_class IS NULL OR asset_class IN ('equity', 'fixed_income', 'real_estate', 'commodity', 'cash', 'alternative', 'cryptocurrency')",
-            name="chk_asset_class"
+            name="chk_asset_class",
         ),
         CheckConstraint(
             "isin IS NULL OR isin ~* '^[A-Z]{2}[A-Z0-9]{9}[0-9]$'",
-            name="chk_isin_format"
+            name="chk_isin_format",
         ),
         CheckConstraint(
-            "country IS NULL OR LENGTH(country) = 3",
-            name="chk_country_code"
+            "country IS NULL OR LENGTH(country) = 3", name="chk_country_code"
         ),
         Index("idx_assets_symbol", "symbol", postgresql_where="deleted_at IS NULL"),
         Index("idx_assets_type", "type"),
@@ -139,7 +137,16 @@ class Asset(Base):
     @validates("type")
     def validate_type(self, key, asset_type):
         """Validate asset type."""
-        valid_types = ['stock', 'etf', 'mutual_fund', 'crypto', 'bond', 'commodity', 'index', 'other']
+        valid_types = [
+            "stock",
+            "etf",
+            "mutual_fund",
+            "crypto",
+            "bond",
+            "commodity",
+            "index",
+            "other",
+        ]
         if asset_type and asset_type not in valid_types:
             raise ValueError(f"Asset type must be one of: {', '.join(valid_types)}")
         return asset_type
@@ -147,7 +154,15 @@ class Asset(Base):
     @validates("asset_class")
     def validate_asset_class(self, key, asset_class):
         """Validate asset class."""
-        valid_classes = ['equity', 'fixed_income', 'real_estate', 'commodity', 'cash', 'alternative', 'cryptocurrency']
+        valid_classes = [
+            "equity",
+            "fixed_income",
+            "real_estate",
+            "commodity",
+            "cash",
+            "alternative",
+            "cryptocurrency",
+        ]
         if asset_class and asset_class not in valid_classes:
             raise ValueError(f"Asset class must be one of: {', '.join(valid_classes)}")
         return asset_class
@@ -164,7 +179,7 @@ class Asset(Base):
         """Validate ISIN format."""
         if isin:
             isin = isin.upper().strip()
-            isin_pattern = r'^[A-Z]{2}[A-Z0-9]{9}[0-9]$'
+            isin_pattern = r"^[A-Z]{2}[A-Z0-9]{9}[0-9]$"
             if not re.match(isin_pattern, isin):
                 raise ValueError(f"Invalid ISIN format: {isin}")
         return isin

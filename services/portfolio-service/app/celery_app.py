@@ -9,7 +9,7 @@ celery_app = Celery(
     "portfolio_service",
     broker=settings.CELERY_BROKER_URL,
     backend=settings.REDIS_URL,
-    include=["app.celery_tasks.price_updates"]
+    include=["app.celery_tasks.price_updates"],
 )
 
 # Celery configuration

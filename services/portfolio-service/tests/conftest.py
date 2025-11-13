@@ -2,9 +2,7 @@
 Test configuration and fixtures
 """
 
-import pytest
 import pytest_asyncio
-import asyncio
 import uuid
 from typing import AsyncGenerator
 from httpx import AsyncClient, ASGITransport
@@ -13,14 +11,16 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import JSON, String, event, TypeDecorator
 from sqlalchemy.dialects import postgresql
 
+
 # UUID type adapter for SQLite
 class SQLiteUUID(TypeDecorator):
     """Platform-independent UUID type that stores UUID as string on SQLite"""
+
     impl = String
     cache_ok = True
 
     def load_dialect_impl(self, dialect):
-        if dialect.name == 'sqlite':
+        if dialect.name == "sqlite":
             return dialect.type_descriptor(String(36))
         else:
             return dialect.type_descriptor(postgresql.UUID())
@@ -28,7 +28,7 @@ class SQLiteUUID(TypeDecorator):
     def process_bind_param(self, value, dialect):
         if value is None:
             return value
-        elif dialect.name == 'sqlite':
+        elif dialect.name == "sqlite":
             return str(value)
         else:
             return value
@@ -42,14 +42,14 @@ class SQLiteUUID(TypeDecorator):
             else:
                 return value
 
+
 # Import app components
-from app.main import app
-from app.core.database import Base, get_db
-from app.core.config import settings
+from app.main import app  # noqa: E402
+from app.core.database import Base, get_db  # noqa: E402
 
 
 # Configure pytest-asyncio
-pytest_plugins = ('pytest_asyncio',)
+pytest_plugins = ("pytest_asyncio",)
 
 
 def _adapt_metadata_for_sqlite(target, connection, **kw):
@@ -74,7 +74,7 @@ def _adapt_metadata_for_sqlite(target, connection, **kw):
             # Remove PostgreSQL-specific server defaults
             if column.server_default:
                 server_default_text = str(column.server_default.arg)
-                if 'gen_random_uuid' in server_default_text:
+                if "gen_random_uuid" in server_default_text:
                     column.server_default = None
 
         # Remove PostgreSQL-specific check constraints (those with regex)
@@ -82,7 +82,7 @@ def _adapt_metadata_for_sqlite(target, connection, **kw):
         for constraint in table.constraints:
             if isinstance(constraint, CheckConstraint):
                 constraint_text = str(constraint.sqltext)
-                if '~*' in constraint_text or 'regexp' in constraint_text.lower():
+                if "~*" in constraint_text or "regexp" in constraint_text.lower():
                     constraints_to_remove.append(constraint)
 
         for constraint in constraints_to_remove:
@@ -123,9 +123,7 @@ async def db_session(test_engine) -> AsyncGenerator[AsyncSession, None]:
 
         # Create a session bound to the connection
         async_session = sessionmaker(
-            bind=connection,
-            class_=AsyncSession,
-            expire_on_commit=False
+            bind=connection, class_=AsyncSession, expire_on_commit=False
         )
 
         async with async_session() as session:
@@ -138,14 +136,14 @@ async def db_session(test_engine) -> AsyncGenerator[AsyncSession, None]:
 @pytest_asyncio.fixture
 async def client(db_session) -> AsyncGenerator[AsyncClient, None]:
     """Create a test client"""
+
     async def override_get_db():
         yield db_session
 
     app.dependency_overrides[get_db] = override_get_db
 
     async with AsyncClient(
-        transport=ASGITransport(app=app),
-        base_url="http://test"
+        transport=ASGITransport(app=app), base_url="http://test"
     ) as ac:
         yield ac
 

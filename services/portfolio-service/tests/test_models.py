@@ -13,10 +13,7 @@ from app.models.portfolio import Portfolio
 async def test_create_portfolio(db_session: AsyncSession):
     """Test creating a portfolio"""
     portfolio = Portfolio(
-        user_id=1,
-        name="Test Portfolio",
-        description="A test portfolio",
-        currency="USD"
+        user_id=1, name="Test Portfolio", description="A test portfolio", currency="USD"
     )
 
     db_session.add(portfolio)
@@ -39,20 +36,12 @@ async def test_create_portfolio(db_session: AsyncSession):
 @pytest.mark.asyncio
 async def test_portfolio_unique_constraint(db_session: AsyncSession):
     """Test that user_id + name combination must be unique"""
-    portfolio1 = Portfolio(
-        user_id=1,
-        name="Unique Portfolio",
-        currency="USD"
-    )
+    portfolio1 = Portfolio(user_id=1, name="Unique Portfolio", currency="USD")
     db_session.add(portfolio1)
     await db_session.commit()
 
     # Try to create another portfolio with the same user_id and name
-    portfolio2 = Portfolio(
-        user_id=1,
-        name="Unique Portfolio",
-        currency="EUR"
-    )
+    portfolio2 = Portfolio(user_id=1, name="Unique Portfolio", currency="EUR")
     db_session.add(portfolio2)
 
     with pytest.raises(Exception):  # Should raise an IntegrityError
@@ -62,11 +51,7 @@ async def test_portfolio_unique_constraint(db_session: AsyncSession):
 @pytest.mark.asyncio
 async def test_portfolio_repr(db_session: AsyncSession):
     """Test portfolio string representation"""
-    portfolio = Portfolio(
-        user_id=1,
-        name="Test Portfolio",
-        currency="USD"
-    )
+    portfolio = Portfolio(user_id=1, name="Test Portfolio", currency="USD")
 
     db_session.add(portfolio)
     await db_session.commit()
@@ -90,9 +75,7 @@ async def test_query_portfolio(db_session: AsyncSession):
     await db_session.commit()
 
     # Query portfolios for user 1
-    result = await db_session.execute(
-        select(Portfolio).where(Portfolio.user_id == 1)
-    )
+    result = await db_session.execute(select(Portfolio).where(Portfolio.user_id == 1))
     user1_portfolios = result.scalars().all()
 
     assert len(user1_portfolios) == 2

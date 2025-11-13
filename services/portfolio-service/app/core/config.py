@@ -16,7 +16,9 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "info"
 
     # Database
-    DATABASE_URL: str = "postgresql+asyncpg://fincloud:fincloud_dev_password@localhost:5432/fincloud"
+    DATABASE_URL: str = (
+        "postgresql+asyncpg://fincloud:fincloud_dev_password@localhost:5432/fincloud"
+    )
     DATABASE_POOL_SIZE: int = 10
     DATABASE_MAX_OVERFLOW: int = 20
 

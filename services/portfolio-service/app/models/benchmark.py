@@ -1,13 +1,7 @@
 from __future__ import annotations
 
-"""
-Benchmark Model
-
-Market benchmarks for comparison (S&P 500, etc.).
-"""
-
 from datetime import datetime
-from typing import List
+from typing import List, TYPE_CHECKING
 from sqlalchemy import (
     BigInteger,
     String,
@@ -24,6 +18,15 @@ import uuid
 
 from app.core.database import Base
 
+if TYPE_CHECKING:
+    from app.models.portfolio_benchmark import PortfolioBenchmark
+
+"""
+Benchmark Model
+
+Market benchmarks for comparison (S&P 500, etc.).
+"""
+
 
 class Benchmark(Base):
     """Benchmark model for market benchmarks."""
@@ -39,7 +42,7 @@ class Benchmark(Base):
         unique=True,
         nullable=False,
         default=uuid.uuid4,
-        server_default=func.gen_random_uuid()
+        server_default=func.gen_random_uuid(),
     )
 
     # Benchmark Details
@@ -48,32 +51,27 @@ class Benchmark(Base):
     description: Mapped[str | None] = mapped_column(Text)
 
     # Asset Reference (optional)
-    asset_id: Mapped[int | None] = mapped_column(
-        BigInteger,
-        ForeignKey("assets.id")
-    )
+    asset_id: Mapped[int | None] = mapped_column(BigInteger, ForeignKey("assets.id"))
 
     # Settings
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true")
+    is_active: Mapped[bool] = mapped_column(
+        Boolean, default=True, server_default="true"
+    )
 
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        nullable=False,
-        server_default=func.now()
+        DateTime(timezone=True), nullable=False, server_default=func.now()
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
         server_default=func.now(),
-        onupdate=func.now()
+        onupdate=func.now(),
     )
 
     # Relationships
     portfolio_benchmarks: Mapped[List["PortfolioBenchmark"]] = relationship(
-        "PortfolioBenchmark",
-        back_populates="benchmark",
-        cascade="all, delete-orphan"
+        "PortfolioBenchmark", back_populates="benchmark", cascade="all, delete-orphan"
     )
 
     # Table Constraints
