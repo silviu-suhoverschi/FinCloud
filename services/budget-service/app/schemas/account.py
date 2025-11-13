@@ -43,9 +43,14 @@ class AccountBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=255, description="Account name")
     type: str = Field(..., description="Account type")
     currency: str = Field(
-        default="USD", min_length=3, max_length=3, description="Currency code (ISO 4217)"
+        default="USD",
+        min_length=3,
+        max_length=3,
+        description="Currency code (ISO 4217)",
     )
-    initial_balance: Decimal = Field(default=Decimal("0.00"), description="Initial balance")
+    initial_balance: Decimal = Field(
+        default=Decimal("0.00"), description="Initial balance"
+    )
     account_number: Optional[str] = Field(
         None, max_length=100, description="Account number (optional)"
     )
@@ -117,7 +122,9 @@ class AccountUpdate(BaseModel):
     account_number: Optional[str] = Field(
         None, max_length=100, description="Account number"
     )
-    institution: Optional[str] = Field(None, max_length=255, description="Institution name")
+    institution: Optional[str] = Field(
+        None, max_length=255, description="Institution name"
+    )
     color: Optional[str] = Field(None, max_length=7, description="Color in hex format")
     icon: Optional[str] = Field(None, max_length=50, description="Icon name")
     is_active: Optional[bool] = Field(None, description="Whether account is active")
@@ -133,7 +140,9 @@ class AccountUpdate(BaseModel):
         if v:
             valid_types = AccountType.values()
             if v not in valid_types:
-                raise ValueError(f"Account type must be one of: {', '.join(valid_types)}")
+                raise ValueError(
+                    f"Account type must be one of: {', '.join(valid_types)}"
+                )
         return v
 
     @field_validator("currency")
@@ -142,7 +151,9 @@ class AccountUpdate(BaseModel):
         """Validate currency code."""
         if v:
             if len(v) != 3:
-                raise ValueError("Currency code must be exactly 3 characters (ISO 4217)")
+                raise ValueError(
+                    "Currency code must be exactly 3 characters (ISO 4217)"
+                )
             return v.upper()
         return v
 
@@ -174,7 +185,9 @@ class AccountResponse(AccountBase):
     current_balance: Decimal = Field(..., description="Current account balance")
     created_at: datetime = Field(..., description="Account creation timestamp")
     updated_at: datetime = Field(..., description="Last update timestamp")
-    deleted_at: Optional[datetime] = Field(None, description="Deletion timestamp (soft delete)")
+    deleted_at: Optional[datetime] = Field(
+        None, description="Deletion timestamp (soft delete)"
+    )
 
     class Config:
         from_attributes = True

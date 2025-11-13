@@ -26,7 +26,9 @@ router = APIRouter()
 @router.get("/", response_model=AccountList)
 async def list_accounts(
     skip: int = Query(0, ge=0, description="Number of records to skip"),
-    limit: int = Query(100, ge=1, le=1000, description="Max number of records to return"),
+    limit: int = Query(
+        100, ge=1, le=1000, description="Max number of records to return"
+    ),
     is_active: Optional[bool] = Query(None, description="Filter by active status"),
     account_type: Optional[str] = Query(None, description="Filter by account type"),
     db: AsyncSession = Depends(get_db),
