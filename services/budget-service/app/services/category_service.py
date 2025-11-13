@@ -137,7 +137,7 @@ class CategoryService:
         db: AsyncSession,
         category_id: int,
         user_id: int,
-    ) -> Optional[Category]:
+    ) -> Optional[dict]:
         """
         Get category with all its children loaded.
 
@@ -147,8 +147,9 @@ class CategoryService:
             user_id: User ID
 
         Returns:
-            Category with children or None
+            Dictionary representing category with children or None
         """
+        # Get the parent category
         query = select(Category).filter(
             and_(
                 Category.id == category_id,
@@ -159,11 +160,58 @@ class CategoryService:
         result = await db.execute(query)
         category = result.scalar_one_or_none()
 
-        if category:
-            # Load children
-            await db.refresh(category, ["children"])
+        if not category:
+            return None
 
-        return category
+        # Get all direct children
+        children_query = select(Category).filter(
+            and_(
+                Category.parent_id == category_id,
+                Category.user_id == user_id,
+                Category.deleted_at.is_(None),
+            )
+        ).order_by(Category.sort_order, Category.name)
+
+        children_result = await db.execute(children_query)
+        children = children_result.scalars().all()
+
+        # Convert to dictionary
+        category_dict = {
+            "id": category.id,
+            "uuid": category.uuid,
+            "user_id": category.user_id,
+            "parent_id": category.parent_id,
+            "name": category.name,
+            "type": category.type,
+            "color": category.color,
+            "icon": category.icon,
+            "is_active": category.is_active,
+            "sort_order": category.sort_order,
+            "created_at": category.created_at,
+            "updated_at": category.updated_at,
+            "deleted_at": category.deleted_at,
+            "children": [
+                {
+                    "id": child.id,
+                    "uuid": child.uuid,
+                    "user_id": child.user_id,
+                    "parent_id": child.parent_id,
+                    "name": child.name,
+                    "type": child.type,
+                    "color": child.color,
+                    "icon": child.icon,
+                    "is_active": child.is_active,
+                    "sort_order": child.sort_order,
+                    "created_at": child.created_at,
+                    "updated_at": child.updated_at,
+                    "deleted_at": child.deleted_at,
+                    "children": []  # Only show direct children
+                }
+                for child in children
+            ]
+        }
+
+        return category_dict
 
     @staticmethod
     async def build_category_tree(
