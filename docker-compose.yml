@@ -64,7 +64,7 @@ services:
       dockerfile: Dockerfile
     container_name: fincloud-budget-service
     environment:
-      DATABASE_URL: postgresql://fincloud:fincloud_dev_password@postgres:5432/fincloud
+      DATABASE_URL: postgresql+asyncpg://fincloud:fincloud_dev_password@postgres:5432/fincloud
       REDIS_URL: redis://redis:6379/0
       SERVICE_PORT: 8001
       LOG_LEVEL: info
@@ -88,7 +88,7 @@ services:
       dockerfile: Dockerfile
     container_name: fincloud-portfolio-service
     environment:
-      DATABASE_URL: postgresql://fincloud:fincloud_dev_password@postgres:5432/fincloud
+      DATABASE_URL: postgresql+asyncpg://fincloud:fincloud_dev_password@postgres:5432/fincloud
       REDIS_URL: redis://redis:6379/1
       CELERY_BROKER_URL: redis://redis:6379/2
       SERVICE_PORT: 8002
@@ -116,7 +116,7 @@ services:
     container_name: fincloud-portfolio-worker
     command: celery -A app.celery_app worker --loglevel=info
     environment:
-      DATABASE_URL: postgresql://fincloud:fincloud_dev_password@postgres:5432/fincloud
+      DATABASE_URL: postgresql+asyncpg://fincloud:fincloud_dev_password@postgres:5432/fincloud
       REDIS_URL: redis://redis:6379/1
       CELERY_BROKER_URL: redis://redis:6379/2
       ALPHA_VANTAGE_API_KEY: ${ALPHA_VANTAGE_API_KEY:-demo}
