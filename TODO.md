@@ -136,10 +136,10 @@
 - ✅ GET /api/v1/budgets/{id}/progress - Budget progress
 
 #### Reports & Analytics
-- 📋 GET /api/v1/reports/cashflow - Monthly cashflow
-- 📋 GET /api/v1/reports/spending - Spending by category
-- 📋 GET /api/v1/reports/income - Income analysis
-- 📋 GET /api/v1/reports/net-worth - Net worth timeline
+- ✅ GET /api/v1/reports/cashflow - Monthly cashflow
+- ✅ GET /api/v1/reports/spending - Spending by category
+- ✅ GET /api/v1/reports/income - Income analysis
+- ✅ GET /api/v1/reports/net-worth - Net worth timeline
 
 ### 1.4 Portfolio Service Implementation 📋
 

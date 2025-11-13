@@ -62,6 +62,18 @@ from app.schemas.budget import (
     BudgetList,
 )
 
+from app.schemas.reports import (
+    DateRangeParams,
+    CashflowDataPoint,
+    CashflowReport,
+    CategorySpending,
+    SpendingReport,
+    IncomeSource,
+    IncomeReport,
+    NetWorthDataPoint,
+    NetWorthReport,
+)
+
 __all__ = [
     # Auth schemas
     "UserRegister",
@@ -113,4 +125,14 @@ __all__ = [
     "BudgetWithSpending",
     "BudgetProgress",
     "BudgetList",
+    # Reports schemas
+    "DateRangeParams",
+    "CashflowDataPoint",
+    "CashflowReport",
+    "CategorySpending",
+    "SpendingReport",
+    "IncomeSource",
+    "IncomeReport",
+    "NetWorthDataPoint",
+    "NetWorthReport",
 ]
