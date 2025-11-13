@@ -4,11 +4,11 @@ Reports service layer for analytics and reporting.
 Handles generation of various financial reports and analytics.
 """
 
-from typing import List, Dict, Optional
-from datetime import date, timedelta
+from typing import Dict, Optional
+from datetime import date
 from decimal import Decimal
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_, func, case
+from sqlalchemy import select, and_, func
 from dateutil.relativedelta import relativedelta
 
 from app.models.transaction import Transaction
@@ -368,7 +368,7 @@ class ReportsService:
                     and_(
                         Account.user_id == user_id,
                         Account.deleted_at.is_(None),
-                        Account.include_in_net_worth == True,
+                        Account.include_in_net_worth.is_(True),
                     )
                 )
                 .group_by(Account.currency)
@@ -387,7 +387,7 @@ class ReportsService:
             and_(
                 Account.user_id == user_id,
                 Account.deleted_at.is_(None),
-                Account.include_in_net_worth == True,
+                Account.include_in_net_worth.is_(True),
             )
         )
 
