@@ -2,7 +2,7 @@
 Authentication service for user registration, login, and token management.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select

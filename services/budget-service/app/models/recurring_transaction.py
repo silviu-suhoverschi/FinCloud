@@ -1,12 +1,7 @@
 from __future__ import annotations
 
-"""
-Recurring Transaction Model
-
-Templates for recurring transactions (subscriptions, salaries, etc.).
-"""
-
 from datetime import datetime, date
+from typing import TYPE_CHECKING
 from decimal import Decimal
 from sqlalchemy import (
     BigInteger,
@@ -27,6 +22,17 @@ from sqlalchemy.sql import func
 import uuid
 
 from app.core.database import Base
+
+if TYPE_CHECKING:
+    from app.models.user import User
+    from app.models.account import Account
+    from app.models.category import Category
+
+"""
+Recurring Transaction Model
+
+Templates for recurring transactions (subscriptions, salaries, etc.).
+"""
 
 
 class RecurringTransaction(Base):

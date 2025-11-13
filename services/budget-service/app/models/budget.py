@@ -1,13 +1,7 @@
 from __future__ import annotations
 
-"""
-Budget Model
-
-Budget allocations for categories or accounts.
-"""
-
 from datetime import datetime, date
-from typing import List
+from typing import List, TYPE_CHECKING
 from decimal import Decimal
 from sqlalchemy import (
     BigInteger,
@@ -26,6 +20,18 @@ from sqlalchemy.sql import func
 import uuid
 
 from app.core.database import Base
+
+if TYPE_CHECKING:
+    from app.models.user import User
+    from app.models.category import Category
+    from app.models.account import Account
+    from app.models.budget_spending_cache import BudgetSpendingCache
+
+"""
+Budget Model
+
+Budget allocations for categories or accounts.
+"""
 
 
 class Budget(Base):

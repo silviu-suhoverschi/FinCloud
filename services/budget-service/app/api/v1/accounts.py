@@ -2,9 +2,8 @@
 Accounts API endpoints
 """
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List
 
 from app.core.database import get_db
 

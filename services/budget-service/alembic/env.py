@@ -11,19 +11,19 @@ from alembic import context
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 # Import settings and database
-from app.core.config import settings
-from app.core.database import Base
+from app.core.config import settings  # noqa: E402
+from app.core.database import Base  # noqa: E402
 
 # Import all models to ensure they're registered with Base
-from app.models import (
-    User,
-    Account,
-    Category,
-    Transaction,
-    Budget,
-    RecurringTransaction,
-    Tag,
-    BudgetSpendingCache,
+from app.models import (  # noqa: E402
+    User,  # noqa: F401
+    Account,  # noqa: F401
+    Category,  # noqa: F401
+    Transaction,  # noqa: F401
+    Budget,  # noqa: F401
+    RecurringTransaction,  # noqa: F401
+    Tag,  # noqa: F401
+    BudgetSpendingCache,  # noqa: F401
 )
 
 # this is the Alembic Config object, which provides

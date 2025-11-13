@@ -1,13 +1,7 @@
 from __future__ import annotations
 
-"""
-User Model
-
-Stores user account information and authentication data.
-"""
-
 from datetime import datetime
-from typing import List
+from typing import List, TYPE_CHECKING
 from sqlalchemy import (
     BigInteger,
     String,
@@ -23,6 +17,20 @@ import uuid
 import re
 
 from app.core.database import Base
+
+if TYPE_CHECKING:
+    from app.models.account import Account
+    from app.models.category import Category
+    from app.models.transaction import Transaction
+    from app.models.budget import Budget
+    from app.models.recurring_transaction import RecurringTransaction
+    from app.models.tag import Tag
+
+"""
+User Model
+
+Stores user account information and authentication data.
+"""
 
 
 class User(Base):

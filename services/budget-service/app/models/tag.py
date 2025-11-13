@@ -1,10 +1,7 @@
-"""
-Tag Model
-
-Reusable tags for transactions and budgets.
-"""
+from __future__ import annotations
 
 from datetime import datetime
+from typing import TYPE_CHECKING
 from sqlalchemy import (
     BigInteger,
     String,
@@ -18,6 +15,15 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
 from app.core.database import Base
+
+if TYPE_CHECKING:
+    from app.models.user import User
+
+"""
+Tag Model
+
+Reusable tags for transactions and budgets.
+"""
 
 
 class Tag(Base):

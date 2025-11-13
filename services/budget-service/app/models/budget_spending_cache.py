@@ -1,10 +1,7 @@
-"""
-Budget Spending Cache Model
-
-Denormalized table for fast budget progress queries.
-"""
+from __future__ import annotations
 
 from datetime import datetime, date
+from typing import TYPE_CHECKING
 from decimal import Decimal
 from sqlalchemy import (
     BigInteger,
@@ -20,6 +17,15 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
 from app.core.database import Base
+
+if TYPE_CHECKING:
+    from app.models.budget import Budget
+
+"""
+Budget Spending Cache Model
+
+Denormalized table for fast budget progress queries.
+"""
 
 
 class BudgetSpendingCache(Base):

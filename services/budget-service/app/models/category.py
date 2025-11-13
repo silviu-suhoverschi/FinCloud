@@ -1,13 +1,7 @@
 from __future__ import annotations
 
-"""
-Category Model
-
-Transaction categories with hierarchical support (parent-child relationships).
-"""
-
 from datetime import datetime
-from typing import List
+from typing import List, TYPE_CHECKING
 from sqlalchemy import (
     BigInteger,
     String,
@@ -25,6 +19,18 @@ from sqlalchemy.sql import func
 import uuid
 
 from app.core.database import Base
+
+if TYPE_CHECKING:
+    from app.models.user import User
+    from app.models.transaction import Transaction
+    from app.models.budget import Budget
+    from app.models.recurring_transaction import RecurringTransaction
+
+"""
+Category Model
+
+Transaction categories with hierarchical support (parent-child relationships).
+"""
 
 
 class Category(Base):

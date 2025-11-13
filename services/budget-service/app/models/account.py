@@ -1,13 +1,7 @@
 from __future__ import annotations
 
-"""
-Account Model
-
-Financial accounts (bank, credit card, cash, investment, etc.).
-"""
-
 from datetime import datetime
-from typing import List
+from typing import List, TYPE_CHECKING
 from decimal import Decimal
 from sqlalchemy import (
     BigInteger,
@@ -27,6 +21,18 @@ import uuid
 import re
 
 from app.core.database import Base
+
+if TYPE_CHECKING:
+    from app.models.user import User
+    from app.models.transaction import Transaction
+    from app.models.budget import Budget
+    from app.models.recurring_transaction import RecurringTransaction
+
+"""
+Account Model
+
+Financial accounts (bank, credit card, cash, investment, etc.).
+"""
 
 
 class Account(Base):
