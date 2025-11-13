@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 
 from app.core.config import settings
 from app.core.database import engine, Base
-from app.api.v1 import accounts, transactions, budgets, categories
+from app.api.v1 import accounts, transactions, budgets, categories, reports
 from app.api.v1.endpoints import auth, users, password_reset, email_verification
 
 
@@ -72,6 +72,7 @@ app.include_router(
 )
 app.include_router(budgets.router, prefix="/api/v1/budgets", tags=["budgets"])
 app.include_router(categories.router, prefix="/api/v1/categories", tags=["categories"])
+app.include_router(reports.router, prefix="/api/v1/reports", tags=["reports"])
 
 
 @app.get("/")
