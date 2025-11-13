@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import Optional
 from uuid import UUID
 from decimal import Decimal
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 import re
 
 
@@ -189,8 +189,7 @@ class AccountResponse(AccountBase):
         None, description="Deletion timestamp (soft delete)"
     )
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class AccountBalance(BaseModel):
@@ -205,8 +204,7 @@ class AccountBalance(BaseModel):
     balance_change: Decimal = Field(..., description="Change from initial balance")
     last_updated: datetime = Field(..., description="Last balance update timestamp")
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class AccountList(BaseModel):

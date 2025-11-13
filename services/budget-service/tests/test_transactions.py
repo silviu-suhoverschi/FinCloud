@@ -3,6 +3,7 @@ Tests for transaction endpoints
 """
 
 import pytest
+import pytest_asyncio
 from httpx import AsyncClient
 from datetime import date
 from decimal import Decimal
@@ -17,7 +18,7 @@ from app.core.security import get_password_hash
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def test_user(db_session: AsyncSession) -> User:
     """Create a test user"""
     user = User(
@@ -33,7 +34,7 @@ async def test_user(db_session: AsyncSession) -> User:
     return user
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def auth_headers(client: AsyncClient, test_user: User) -> dict:
     """Get authentication headers"""
     response = await client.post(
@@ -48,7 +49,7 @@ async def auth_headers(client: AsyncClient, test_user: User) -> dict:
     return {"Authorization": f"Bearer {token}"}
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def test_account(db_session: AsyncSession, test_user: User) -> Account:
     """Create a test account"""
     account = Account(
@@ -65,7 +66,7 @@ async def test_account(db_session: AsyncSession, test_user: User) -> Account:
     return account
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def test_account_2(db_session: AsyncSession, test_user: User) -> Account:
     """Create a second test account"""
     account = Account(
@@ -82,7 +83,7 @@ async def test_account_2(db_session: AsyncSession, test_user: User) -> Account:
     return account
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def test_category(db_session: AsyncSession, test_user: User) -> Category:
     """Create a test category"""
     category = Category(
