@@ -25,13 +25,9 @@ jobs:
             context: ./services/budget-service
           - name: portfolio-service
             context: ./services/portfolio-service
-          - name: api-gateway
-            context: ./services/api-gateway
-          - name: notification-service
-            context: ./services/notification-service
           - name: frontend
             context: ./frontend
-            dockerfile: Dockerfile
+            file: Dockerfile
 
     steps:
       - uses: actions/checkout@v4
@@ -61,7 +57,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ${{ matrix.service.context }}
-          dockerfile: ${{ matrix.service.dockerfile || 'Dockerfile' }}
+          file: ${{ matrix.service.file || 'Dockerfile' }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
