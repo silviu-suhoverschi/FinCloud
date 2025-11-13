@@ -14,13 +14,9 @@ class HoldingBase(BaseModel):
 
     portfolio_id: int = Field(..., gt=0, description="Portfolio ID")
     asset_id: int = Field(..., gt=0, description="Asset ID")
-    quantity: Decimal = Field(
-        ..., ge=0, description="Quantity of the asset held"
-    )
+    quantity: Decimal = Field(..., ge=0, description="Quantity of the asset held")
     average_cost: Decimal = Field(
-        default=Decimal("0"),
-        ge=0,
-        description="Average cost per unit",
+        default=Decimal("0"), ge=0, description="Average cost per unit"
     )
     notes: Optional[str] = Field(None, description="Additional notes about the holding")
 

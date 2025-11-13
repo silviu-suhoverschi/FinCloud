@@ -158,9 +158,9 @@ async def test_list_holdings_pagination(
         holding = Holding(
             portfolio_id=test_portfolio.id,
             asset_id=asset.id,
-            quantity=Decimal(f"{(i+1)*10}"),
+            quantity=Decimal(f"{(i + 1) * 10}"),
             average_cost=Decimal("100.0"),
-            cost_basis=Decimal(f"{(i+1)*1000}"),
+            cost_basis=Decimal(f"{(i + 1) * 1000}"),
         )
         db_session.add(holding)
     await db_session.commit()
