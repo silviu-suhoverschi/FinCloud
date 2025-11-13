@@ -24,7 +24,8 @@ async def test_user(db_session: AsyncSession) -> User:
     user = User(
         email="test@example.com",
         password_hash=get_password_hash("TestPassword123"),
-        full_name="Test User",
+        first_name="Test",
+        last_name="User",
         is_active=True,
         is_verified=True,
     )
