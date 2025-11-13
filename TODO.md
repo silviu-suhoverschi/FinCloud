@@ -143,12 +143,12 @@
 
 ### 1.4 Portfolio Service Implementation 📋
 
-#### Portfolio Management
-- 📋 GET /api/v1/portfolios - List portfolios
-- 📋 POST /api/v1/portfolios - Create portfolio
-- 📋 GET /api/v1/portfolios/{id} - Get portfolio details
-- 📋 PUT /api/v1/portfolios/{id} - Update portfolio
-- 📋 DELETE /api/v1/portfolios/{id} - Delete portfolio
+#### Portfolio Management ✅
+- ✅ GET /api/v1/portfolios - List portfolios
+- ✅ POST /api/v1/portfolios - Create portfolio
+- ✅ GET /api/v1/portfolios/{id} - Get portfolio details
+- ✅ PUT /api/v1/portfolios/{id} - Update portfolio
+- ✅ DELETE /api/v1/portfolios/{id} - Delete portfolio
 
 #### Holdings Management
 - 📋 GET /api/v1/holdings - List all holdings
