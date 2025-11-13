@@ -49,7 +49,9 @@ class CashflowReport(BaseModel):
 class CategorySpending(BaseModel):
     """Spending breakdown by category."""
 
-    category_id: Optional[int] = Field(None, description="Category ID (null for uncategorized)")
+    category_id: Optional[int] = Field(
+        None, description="Category ID (null for uncategorized)"
+    )
     category_name: str = Field(..., description="Category name")
     total_amount: Decimal = Field(..., description="Total spent in this category")
     transaction_count: int = Field(..., description="Number of transactions")
@@ -74,7 +76,9 @@ class SpendingReport(BaseModel):
 class IncomeSource(BaseModel):
     """Income breakdown by category."""
 
-    category_id: Optional[int] = Field(None, description="Category ID (null for uncategorized)")
+    category_id: Optional[int] = Field(
+        None, description="Category ID (null for uncategorized)"
+    )
     category_name: str = Field(..., description="Category name")
     total_amount: Decimal = Field(..., description="Total income from this source")
     transaction_count: int = Field(..., description="Number of transactions")
@@ -91,7 +95,9 @@ class IncomeReport(BaseModel):
     currency: str = Field(..., description="Currency for the report")
     sources: List[IncomeSource] = Field(..., description="Income by source")
     total_income: Decimal = Field(..., description="Total income for the period")
-    total_transactions: int = Field(..., description="Total number of income transactions")
+    total_transactions: int = Field(
+        ..., description="Total number of income transactions"
+    )
     average_monthly_income: Decimal = Field(..., description="Average monthly income")
 
     model_config = ConfigDict(from_attributes=True)
@@ -102,7 +108,9 @@ class NetWorthDataPoint(BaseModel):
 
     date: DateType = Field(..., description="Date of the snapshot")
     total_assets: Decimal = Field(..., description="Total assets (positive balances)")
-    total_liabilities: Decimal = Field(..., description="Total liabilities (negative balances)")
+    total_liabilities: Decimal = Field(
+        ..., description="Total liabilities (negative balances)"
+    )
     net_worth: Decimal = Field(..., description="Net worth (assets - liabilities)")
     currency: str = Field(..., description="Currency code")
 
@@ -130,7 +138,9 @@ class NetWorthReport(BaseModel):
     timeline: List[NetWorthDataPoint] = Field(..., description="Net worth over time")
     current_net_worth: Decimal = Field(..., description="Current net worth")
     change: Decimal = Field(..., description="Change in net worth over the period")
-    change_percentage: Decimal = Field(..., description="Percentage change in net worth")
+    change_percentage: Decimal = Field(
+        ..., description="Percentage change in net worth"
+    )
     accounts: List[AccountBalance] = Field(..., description="Current account balances")
 
     model_config = ConfigDict(from_attributes=True)
