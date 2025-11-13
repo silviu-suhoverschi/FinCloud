@@ -89,7 +89,7 @@ def _adapt_metadata_for_sqlite(target, connection, **kw):
             table.constraints.discard(constraint)
 
 
-@pytest_asyncio.fixture(scope="session", loop_scope="session")
+@pytest_asyncio.fixture(scope="session")
 async def test_engine():
     """Create a test database engine using SQLite in-memory database"""
     # Use SQLite in-memory database for testing (no PostgreSQL required)
