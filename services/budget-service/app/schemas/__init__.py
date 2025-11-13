@@ -51,6 +51,17 @@ from app.schemas.category import (
     CategoryTree,
 )
 
+from app.schemas.budget import (
+    BudgetPeriod,
+    BudgetBase,
+    BudgetCreate,
+    BudgetUpdate,
+    BudgetResponse,
+    BudgetWithSpending,
+    BudgetProgress,
+    BudgetList,
+)
+
 __all__ = [
     # Auth schemas
     "UserRegister",
@@ -93,4 +104,13 @@ __all__ = [
     "CategoryWithChildren",
     "CategoryList",
     "CategoryTree",
+    # Budget schemas
+    "BudgetPeriod",
+    "BudgetBase",
+    "BudgetCreate",
+    "BudgetUpdate",
+    "BudgetResponse",
+    "BudgetWithSpending",
+    "BudgetProgress",
+    "BudgetList",
 ]
