@@ -1,6 +1,6 @@
 # FinCloud - Development TODO
 
-> Last Updated: 2025-11-12
+> Last Updated: 2025-11-13
 > Current Phase: **Phase 0 - Project Setup** ✅ COMPLETED
 > Next Phase: **Phase 1 - MVP Development**
 
@@ -101,13 +101,13 @@
 
 ### 1.3 Budget Service Implementation 📋
 
-#### Account Management
-- 📋 GET /api/v1/accounts - List accounts
-- 📋 POST /api/v1/accounts - Create account
-- 📋 GET /api/v1/accounts/{id} - Get account details
-- 📋 PUT /api/v1/accounts/{id} - Update account
-- 📋 DELETE /api/v1/accounts/{id} - Delete account
-- 📋 GET /api/v1/accounts/{id}/balance - Get account balance
+#### Account Management ✅
+- ✅ GET /api/v1/accounts - List accounts
+- ✅ POST /api/v1/accounts - Create account
+- ✅ GET /api/v1/accounts/{id} - Get account details
+- ✅ PUT /api/v1/accounts/{id} - Update account
+- ✅ DELETE /api/v1/accounts/{id} - Delete account
+- ✅ GET /api/v1/accounts/{id}/balance - Get account balance
 
 #### Transaction Management
 - 📋 GET /api/v1/transactions - List transactions (with filters)
