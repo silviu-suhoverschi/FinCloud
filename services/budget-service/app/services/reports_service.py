@@ -216,13 +216,15 @@ class ReportsService:
             percentage = (
                 (amount / total_spending * 100) if total_spending > 0 else Decimal("0")
             )
-            categories.append({
-                "category_id": row.category_id,
-                "category_name": row.category_name or "Uncategorized",
-                "total_amount": amount,
-                "transaction_count": row.transaction_count,
-                "percentage": round(percentage, 2),
-            })
+            categories.append(
+                {
+                    "category_id": row.category_id,
+                    "category_name": row.category_name or "Uncategorized",
+                    "total_amount": amount,
+                    "transaction_count": row.transaction_count,
+                    "percentage": round(percentage, 2),
+                }
+            )
 
         return {
             "start_date": start_date,
@@ -310,13 +312,15 @@ class ReportsService:
             percentage = (
                 (amount / total_income * 100) if total_income > 0 else Decimal("0")
             )
-            sources.append({
-                "category_id": row.category_id,
-                "category_name": row.category_name or "Uncategorized",
-                "total_amount": amount,
-                "transaction_count": row.transaction_count,
-                "percentage": round(percentage, 2),
-            })
+            sources.append(
+                {
+                    "category_id": row.category_id,
+                    "category_name": row.category_name or "Uncategorized",
+                    "total_amount": amount,
+                    "transaction_count": row.transaction_count,
+                    "percentage": round(percentage, 2),
+                }
+            )
 
         # Calculate average monthly income
         months_count = (
@@ -403,13 +407,15 @@ class ReportsService:
         current_liabilities = Decimal("0")
 
         for account in accounts:
-            current_accounts.append({
-                "account_id": account.id,
-                "account_name": account.name,
-                "account_type": account.type,
-                "balance": account.current_balance,
-                "currency": account.currency,
-            })
+            current_accounts.append(
+                {
+                    "account_id": account.id,
+                    "account_name": account.name,
+                    "account_type": account.type,
+                    "balance": account.current_balance,
+                    "currency": account.currency,
+                }
+            )
 
             if account.current_balance >= 0:
                 current_assets += account.current_balance
@@ -432,7 +438,10 @@ class ReportsService:
             snapshot_date = current
 
             # For the current month, use actual current balances
-            if current.year == date.today().year and current.month == date.today().month:
+            if (
+                current.year == date.today().year
+                and current.month == date.today().month
+            ):
                 net_worth = current_net_worth
                 assets = current_assets
                 liabilities = current_liabilities
@@ -467,13 +476,15 @@ class ReportsService:
 
                 net_worth = assets - liabilities
 
-            timeline.append({
-                "date": snapshot_date,
-                "total_assets": assets,
-                "total_liabilities": liabilities,
-                "net_worth": net_worth,
-                "currency": primary_currency,
-            })
+            timeline.append(
+                {
+                    "date": snapshot_date,
+                    "total_assets": assets,
+                    "total_liabilities": liabilities,
+                    "net_worth": net_worth,
+                    "currency": primary_currency,
+                }
+            )
 
             current = current + relativedelta(months=1)
 

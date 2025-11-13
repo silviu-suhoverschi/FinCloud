@@ -97,7 +97,10 @@ async def test_categories(db_session: AsyncSession, test_user: User) -> dict:
 
 @pytest_asyncio.fixture(scope="function")
 async def test_transactions(
-    db_session: AsyncSession, test_user: User, test_account: Account, test_categories: dict
+    db_session: AsyncSession,
+    test_user: User,
+    test_account: Account,
+    test_categories: dict,
 ) -> list:
     """Create test transactions"""
     today = date.today()
@@ -444,4 +447,6 @@ async def test_report_unauthorized(client: AsyncClient):
         },
     )
 
-    assert response.status_code == 403  # Auth middleware returns 403 when no token provided
+    assert (
+        response.status_code == 403
+    )  # Auth middleware returns 403 when no token provided
