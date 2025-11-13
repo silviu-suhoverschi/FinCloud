@@ -9,6 +9,14 @@ from app.schemas.portfolio import (
     PortfolioResponse,
     PortfolioList,
 )
+from app.schemas.holding import (
+    HoldingBase,
+    HoldingCreate,
+    HoldingUpdate,
+    HoldingResponse,
+    HoldingWithAssetResponse,
+    HoldingList,
+)
 
 __all__ = [
     # Portfolio schemas
@@ -17,4 +25,11 @@ __all__ = [
     "PortfolioUpdate",
     "PortfolioResponse",
     "PortfolioList",
+    # Holding schemas
+    "HoldingBase",
+    "HoldingCreate",
+    "HoldingUpdate",
+    "HoldingResponse",
+    "HoldingWithAssetResponse",
+    "HoldingList",
 ]

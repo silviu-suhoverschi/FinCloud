@@ -150,12 +150,12 @@
 - ✅ PUT /api/v1/portfolios/{id} - Update portfolio
 - ✅ DELETE /api/v1/portfolios/{id} - Delete portfolio
 
-#### Holdings Management
-- 📋 GET /api/v1/holdings - List all holdings
-- 📋 POST /api/v1/holdings - Add holding
-- 📋 GET /api/v1/holdings/{id} - Get holding details
-- 📋 PUT /api/v1/holdings/{id} - Update holding
-- 📋 DELETE /api/v1/holdings/{id} - Remove holding
+#### Holdings Management ✅
+- ✅ GET /api/v1/holdings - List all holdings
+- ✅ POST /api/v1/holdings - Add holding
+- ✅ GET /api/v1/holdings/{id} - Get holding details
+- ✅ PUT /api/v1/holdings/{id} - Update holding
+- ✅ DELETE /api/v1/holdings/{id} - Remove holding
 
 #### Transaction Management
 - 📋 GET /api/v1/transactions - List portfolio transactions

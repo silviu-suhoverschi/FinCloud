@@ -83,7 +83,7 @@ async def test_list_portfolios_pagination(client: AsyncClient, mock_auth, db_ses
     for i in range(5):
         portfolio = Portfolio(
             user_id=TEST_USER_ID,
-            name=f"Portfolio {i+1}",
+            name=f"Portfolio {i + 1}",
             currency="USD",
             sort_order=i,
         )
