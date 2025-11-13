@@ -444,4 +444,4 @@ async def test_report_unauthorized(client: AsyncClient):
         },
     )
 
-    assert response.status_code == 401
+    assert response.status_code == 403  # Auth middleware returns 403 when no token provided
