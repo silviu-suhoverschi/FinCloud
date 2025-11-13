@@ -109,14 +109,14 @@
 - ✅ DELETE /api/v1/accounts/{id} - Delete account
 - ✅ GET /api/v1/accounts/{id}/balance - Get account balance
 
-#### Transaction Management
-- 📋 GET /api/v1/transactions - List transactions (with filters)
-- 📋 POST /api/v1/transactions - Create transaction
-- 📋 GET /api/v1/transactions/{id} - Get transaction
-- 📋 PUT /api/v1/transactions/{id} - Update transaction
-- 📋 DELETE /api/v1/transactions/{id} - Delete transaction
-- 📋 POST /api/v1/transactions/bulk - Bulk import (CSV)
-- 📋 GET /api/v1/transactions/search - Full-text search
+#### Transaction Management ✅
+- ✅ GET /api/v1/transactions - List transactions (with filters)
+- ✅ POST /api/v1/transactions - Create transaction
+- ✅ GET /api/v1/transactions/{id} - Get transaction
+- ✅ PUT /api/v1/transactions/{id} - Update transaction
+- ✅ DELETE /api/v1/transactions/{id} - Delete transaction
+- ✅ POST /api/v1/transactions/bulk - Bulk import (CSV)
+- ✅ GET /api/v1/transactions/search - Full-text search
 
 #### Category Management
 - 📋 GET /api/v1/categories - List categories
