@@ -37,7 +37,7 @@ class Asset(Base):
 
     # Unique Identifier
     uuid: Mapped[uuid.UUID] = mapped_column(
-        PostgreSQL_UUID(as_uuid=True),
+        UUID(as_uuid=True),
         unique=True,
         nullable=False,
         default=uuid.uuid4,
