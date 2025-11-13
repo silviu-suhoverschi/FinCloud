@@ -49,8 +49,7 @@ async def request_password_reset(
             "type": "password_reset",
         }
         reset_token = create_access_token(
-            reset_token_data,
-            expires_delta=timedelta(hours=1)
+            reset_token_data, expires_delta=timedelta(hours=1)
         )
 
         # TODO: Send email with reset token

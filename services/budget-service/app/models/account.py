@@ -49,14 +49,12 @@ class Account(Base):
         unique=True,
         nullable=False,
         default=uuid.uuid4,
-        server_default=func.gen_random_uuid()
+        server_default=func.gen_random_uuid(),
     )
 
     # Foreign Keys
     user_id: Mapped[int] = mapped_column(
-        BigInteger,
-        ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False
+        BigInteger, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
 
     # Account Details
@@ -66,14 +64,10 @@ class Account(Base):
 
     # Balance Information
     initial_balance: Mapped[Decimal] = mapped_column(
-        Numeric(15, 2),
-        nullable=False,
-        default=0
+        Numeric(15, 2), nullable=False, default=0
     )
     current_balance: Mapped[Decimal] = mapped_column(
-        Numeric(15, 2),
-        nullable=False,
-        default=0
+        Numeric(15, 2), nullable=False, default=0
     )
 
     # Account Metadata
@@ -83,11 +77,11 @@ class Account(Base):
     icon: Mapped[str | None] = mapped_column(String(50))
 
     # Settings
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true")
+    is_active: Mapped[bool] = mapped_column(
+        Boolean, default=True, server_default="true"
+    )
     include_in_net_worth: Mapped[bool] = mapped_column(
-        Boolean,
-        default=True,
-        server_default="true"
+        Boolean, default=True, server_default="true"
     )
 
     # Notes
@@ -95,15 +89,13 @@ class Account(Base):
 
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        nullable=False,
-        server_default=func.now()
+        DateTime(timezone=True), nullable=False, server_default=func.now()
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
         server_default=func.now(),
-        onupdate=func.now()
+        onupdate=func.now(),
     )
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
@@ -113,43 +105,37 @@ class Account(Base):
         "Transaction",
         back_populates="account",
         foreign_keys="Transaction.account_id",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
     )
     destination_transactions: Mapped[List["Transaction"]] = relationship(
         "Transaction",
         back_populates="destination_account",
         foreign_keys="Transaction.destination_account_id",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
     )
     budgets: Mapped[List["Budget"]] = relationship(
-        "Budget",
-        back_populates="account",
-        cascade="all, delete-orphan"
+        "Budget", back_populates="account", cascade="all, delete-orphan"
     )
     recurring_transactions: Mapped[List["RecurringTransaction"]] = relationship(
         "RecurringTransaction",
         back_populates="account",
         foreign_keys="RecurringTransaction.account_id",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
     )
 
     # Table Constraints
     __table_args__ = (
         CheckConstraint(
             "type IN ('checking', 'savings', 'credit_card', 'cash', 'investment', 'loan', 'mortgage', 'other')",
-            name="chk_account_type"
+            name="chk_account_type",
         ),
+        CheckConstraint("LENGTH(currency) = 3", name="chk_currency_length"),
         CheckConstraint(
-            "LENGTH(currency) = 3",
-            name="chk_currency_length"
-        ),
-        CheckConstraint(
-            "color IS NULL OR color ~* '^#[0-9A-Fa-f]{6}$'",
-            name="chk_color_format"
+            "color IS NULL OR color ~* '^#[0-9A-Fa-f]{6}$'", name="chk_color_format"
         ),
         CheckConstraint(
             "current_balance > -999999999999.99 AND current_balance < 999999999999.99",
-            name="chk_balance_precision"
+            name="chk_balance_precision",
         ),
         Index("idx_accounts_user_id", "user_id", postgresql_where="deleted_at IS NULL"),
         Index("idx_accounts_type", "type"),
@@ -161,7 +147,16 @@ class Account(Base):
     @validates("type")
     def validate_type(self, key, account_type):
         """Validate account type."""
-        valid_types = ['checking', 'savings', 'credit_card', 'cash', 'investment', 'loan', 'mortgage', 'other']
+        valid_types = [
+            "checking",
+            "savings",
+            "credit_card",
+            "cash",
+            "investment",
+            "loan",
+            "mortgage",
+            "other",
+        ]
         if account_type and account_type not in valid_types:
             raise ValueError(f"Account type must be one of: {', '.join(valid_types)}")
         return account_type
@@ -177,7 +172,7 @@ class Account(Base):
     def validate_color(self, key, color):
         """Validate color hex format."""
         if color:
-            color_pattern = r'^#[0-9A-Fa-f]{6}$'
+            color_pattern = r"^#[0-9A-Fa-f]{6}$"
             if not re.match(color_pattern, color):
                 raise ValueError(f"Color must be in hex format (#RRGGBB): {color}")
         return color

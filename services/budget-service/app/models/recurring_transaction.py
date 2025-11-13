@@ -49,27 +49,21 @@ class RecurringTransaction(Base):
         unique=True,
         nullable=False,
         default=uuid.uuid4,
-        server_default=func.gen_random_uuid()
+        server_default=func.gen_random_uuid(),
     )
 
     # Foreign Keys
     user_id: Mapped[int] = mapped_column(
-        BigInteger,
-        ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False
+        BigInteger, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
     account_id: Mapped[int] = mapped_column(
-        BigInteger,
-        ForeignKey("accounts.id", ondelete="CASCADE"),
-        nullable=False
+        BigInteger, ForeignKey("accounts.id", ondelete="CASCADE"), nullable=False
     )
     category_id: Mapped[int | None] = mapped_column(
-        BigInteger,
-        ForeignKey("categories.id", ondelete="SET NULL")
+        BigInteger, ForeignKey("categories.id", ondelete="SET NULL")
     )
     destination_account_id: Mapped[int | None] = mapped_column(
-        BigInteger,
-        ForeignKey("accounts.id", ondelete="CASCADE")
+        BigInteger, ForeignKey("accounts.id", ondelete="CASCADE")
     )
 
     # Transaction Details
@@ -88,63 +82,61 @@ class RecurringTransaction(Base):
 
     # Tracking
     last_generated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
-    occurrences_count: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    occurrences_count: Mapped[int] = mapped_column(
+        Integer, default=0, server_default="0"
+    )
     max_occurrences: Mapped[int | None] = mapped_column(Integer)
 
     # Settings
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true")
-    auto_create: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true")
+    is_active: Mapped[bool] = mapped_column(
+        Boolean, default=True, server_default="true"
+    )
+    auto_create: Mapped[bool] = mapped_column(
+        Boolean, default=True, server_default="true"
+    )
 
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        nullable=False,
-        server_default=func.now()
+        DateTime(timezone=True), nullable=False, server_default=func.now()
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
         server_default=func.now(),
-        onupdate=func.now()
+        onupdate=func.now(),
     )
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
     # Relationships
     user: Mapped["User"] = relationship("User", back_populates="recurring_transactions")
     account: Mapped["Account"] = relationship(
-        "Account",
-        back_populates="recurring_transactions",
-        foreign_keys=[account_id]
+        "Account", back_populates="recurring_transactions", foreign_keys=[account_id]
     )
     category: Mapped["Category | None"] = relationship(
-        "Category",
-        back_populates="recurring_transactions"
+        "Category", back_populates="recurring_transactions"
     )
 
     # Table Constraints
     __table_args__ = (
         CheckConstraint(
-            "type IN ('income', 'expense', 'transfer')",
-            name="chk_recurring_type"
+            "type IN ('income', 'expense', 'transfer')", name="chk_recurring_type"
         ),
         CheckConstraint(
             "frequency IN ('daily', 'weekly', 'biweekly', 'monthly', 'quarterly', 'yearly')",
-            name="chk_recurring_frequency"
+            name="chk_recurring_frequency",
         ),
-        CheckConstraint(
-            "interval_count > 0",
-            name="chk_interval_positive"
+        CheckConstraint("interval_count > 0", name="chk_interval_positive"),
+        CheckConstraint("amount > 0", name="chk_recurring_amount_positive"),
+        Index(
+            "idx_recurring_transactions_user_id",
+            "user_id",
+            postgresql_where="deleted_at IS NULL",
         ),
-        CheckConstraint(
-            "amount > 0",
-            name="chk_recurring_amount_positive"
-        ),
-        Index("idx_recurring_transactions_user_id", "user_id", postgresql_where="deleted_at IS NULL"),
         Index("idx_recurring_transactions_account_id", "account_id"),
         Index(
             "idx_recurring_transactions_next_occurrence",
             "next_occurrence",
-            postgresql_where="is_active = TRUE AND deleted_at IS NULL"
+            postgresql_where="is_active = TRUE AND deleted_at IS NULL",
         ),
         Index("idx_recurring_transactions_is_active", "is_active"),
     )

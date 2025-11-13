@@ -10,6 +10,7 @@ from app.core.config import settings
 # Base class for models
 class Base(DeclarativeBase):
     """Base class for all database models"""
+
     pass
 
 
