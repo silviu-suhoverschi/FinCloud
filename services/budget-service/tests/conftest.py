@@ -3,6 +3,7 @@ Test configuration and fixtures
 """
 
 import pytest
+import pytest_asyncio
 import asyncio
 from typing import AsyncGenerator, Generator
 from httpx import AsyncClient, ASGITransport
@@ -26,7 +27,7 @@ def event_loop() -> Generator:
     loop.close()
 
 
-@pytest.fixture(scope="session")
+@pytest_asyncio.fixture(scope="session")
 async def test_engine():
     """Create a test database engine"""
     # Use the test database URL from environment or create one
@@ -50,7 +51,7 @@ async def test_engine():
     await engine.dispose()
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def db_session(test_engine) -> AsyncGenerator[AsyncSession, None]:
     """Create a test database session"""
     async_session = sessionmaker(
@@ -62,7 +63,7 @@ async def db_session(test_engine) -> AsyncGenerator[AsyncSession, None]:
         await session.rollback()
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def client(db_session) -> AsyncGenerator[AsyncClient, None]:
     """Create a test client"""
     async def override_get_db():
