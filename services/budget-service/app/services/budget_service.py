@@ -8,7 +8,7 @@ from typing import Optional, Tuple
 from datetime import datetime, date, timedelta
 from decimal import Decimal
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_, func, or_
+from sqlalchemy import select, and_, func
 
 from app.models.budget import Budget
 from app.models.category import Category
