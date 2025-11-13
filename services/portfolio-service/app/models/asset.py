@@ -66,7 +66,7 @@ class Asset(Base):
     # Visual and Metadata
     logo_url: Mapped[str | None] = mapped_column(Text)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true")
-    metadata: Mapped[dict | None] = mapped_column(JSONB)
+    asset_metadata: Mapped[dict | None] = mapped_column(JSONB)
 
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(
@@ -123,7 +123,7 @@ class Asset(Base):
         Index("idx_assets_asset_class", "asset_class"),
         Index("idx_assets_sector", "sector"),
         Index("idx_assets_isin", "isin", postgresql_where="isin IS NOT NULL"),
-        Index("idx_assets_metadata", "metadata", postgresql_using="gin"),
+        Index("idx_assets_asset_metadata", "asset_metadata", postgresql_using="gin"),
     )
 
     # Validators
