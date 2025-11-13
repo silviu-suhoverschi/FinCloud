@@ -61,9 +61,7 @@ class CategoryService:
 
         if existing:
             parent_msg = f" under parent category {parent_id}" if parent_id else ""
-            raise ValueError(
-                f"Category with name '{name}'{parent_msg} already exists"
-            )
+            raise ValueError(f"Category with name '{name}'{parent_msg} already exists")
 
         # Validate parent category exists and belongs to user
         if parent_id is not None:
@@ -164,13 +162,17 @@ class CategoryService:
             return None
 
         # Get all direct children
-        children_query = select(Category).filter(
-            and_(
-                Category.parent_id == category_id,
-                Category.user_id == user_id,
-                Category.deleted_at.is_(None),
+        children_query = (
+            select(Category)
+            .filter(
+                and_(
+                    Category.parent_id == category_id,
+                    Category.user_id == user_id,
+                    Category.deleted_at.is_(None),
+                )
             )
-        ).order_by(Category.sort_order, Category.name)
+            .order_by(Category.sort_order, Category.name)
+        )
 
         children_result = await db.execute(children_query)
         children = children_result.scalars().all()
@@ -205,10 +207,10 @@ class CategoryService:
                     "created_at": child.created_at,
                     "updated_at": child.updated_at,
                     "deleted_at": child.deleted_at,
-                    "children": []  # Only show direct children
+                    "children": [],  # Only show direct children
                 }
                 for child in children
-            ]
+            ],
         }
 
         return category_dict
@@ -264,7 +266,7 @@ class CategoryService:
                 "created_at": cat.created_at,
                 "updated_at": cat.updated_at,
                 "deleted_at": cat.deleted_at,
-                "children": []
+                "children": [],
             }
 
         # Build parent-child relationships
@@ -294,20 +296,28 @@ class CategoryService:
             Dictionary with usage counts
         """
         # Count transactions
-        transaction_query = select(func.count()).select_from(Transaction).filter(
-            and_(
-                Transaction.category_id == category_id,
-                Transaction.deleted_at.is_(None),
+        transaction_query = (
+            select(func.count())
+            .select_from(Transaction)
+            .filter(
+                and_(
+                    Transaction.category_id == category_id,
+                    Transaction.deleted_at.is_(None),
+                )
             )
         )
         transaction_result = await db.execute(transaction_query)
         transaction_count = transaction_result.scalar()
 
         # Count budgets
-        budget_query = select(func.count()).select_from(Budget).filter(
-            and_(
-                Budget.category_id == category_id,
-                Budget.deleted_at.is_(None),
+        budget_query = (
+            select(func.count())
+            .select_from(Budget)
+            .filter(
+                and_(
+                    Budget.category_id == category_id,
+                    Budget.deleted_at.is_(None),
+                )
             )
         )
         budget_result = await db.execute(budget_query)

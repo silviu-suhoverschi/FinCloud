@@ -106,9 +106,7 @@ class TestListCategories:
     """Tests for listing categories"""
 
     @pytest.mark.asyncio
-    async def test_list_categories_empty(
-        self, client: AsyncClient, auth_headers: dict
-    ):
+    async def test_list_categories_empty(self, client: AsyncClient, auth_headers: dict):
         """Test listing categories when none exist"""
         response = await client.get("/api/v1/categories/", headers=auth_headers)
         assert response.status_code == 200
@@ -157,7 +155,9 @@ class TestListCategories:
     async def test_list_categories_unauthorized(self, client: AsyncClient):
         """Test listing categories without authentication"""
         response = await client.get("/api/v1/categories/")
-        assert response.status_code == 403  # FastAPI returns 403 for missing credentials
+        assert (
+            response.status_code == 403
+        )  # FastAPI returns 403 for missing credentials
 
 
 class TestGetCategory:

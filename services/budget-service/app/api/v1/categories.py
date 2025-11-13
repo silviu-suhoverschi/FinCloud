@@ -32,18 +32,13 @@ async def list_categories(
     limit: int = Query(
         100, ge=1, le=1000, description="Max number of records to return"
     ),
-    type: Optional[CategoryType] = Query(
-        None, description="Filter by category type"
-    ),
+    type: Optional[CategoryType] = Query(None, description="Filter by category type"),
     parent_id: Optional[int] = Query(
-        None, description="Filter by parent category ID (use 'null' for root categories)"
+        None,
+        description="Filter by parent category ID (use 'null' for root categories)",
     ),
-    is_active: Optional[bool] = Query(
-        None, description="Filter by active status"
-    ),
-    search: Optional[str] = Query(
-        None, description="Search by category name"
-    ),
+    is_active: Optional[bool] = Query(None, description="Filter by active status"),
+    search: Optional[str] = Query(None, description="Search by category name"),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -58,10 +53,7 @@ async def list_categories(
     - **search**: Search by category name (partial match)
     """
     # Build query filters
-    filters = [
-        Category.user_id == current_user.id,
-        Category.deleted_at.is_(None)
-    ]
+    filters = [Category.user_id == current_user.id, Category.deleted_at.is_(None)]
 
     if type is not None:
         filters.append(Category.type == type.value)
@@ -96,9 +88,7 @@ async def list_categories(
 
 @router.get("/tree", response_model=CategoryTree)
 async def get_category_tree(
-    type: Optional[CategoryType] = Query(
-        None, description="Filter by category type"
-    ),
+    type: Optional[CategoryType] = Query(None, description="Filter by category type"),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -134,15 +124,13 @@ async def get_category(
     if not category:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Category with ID {category_id} not found"
+            detail=f"Category with ID {category_id} not found",
         )
 
     return category
 
 
-@router.post(
-    "/", response_model=CategoryResponse, status_code=status.HTTP_201_CREATED
-)
+@router.post("/", response_model=CategoryResponse, status_code=status.HTTP_201_CREATED)
 async def create_category(
     category_data: CategoryCreate,
     db: AsyncSession = Depends(get_db),
@@ -168,10 +156,7 @@ async def create_category(
             category_data.parent_id,
         )
     except ValueError as e:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=str(e)
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
     # Create new category
     new_category = Category(
@@ -225,7 +210,7 @@ async def update_category(
     if not category:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Category with ID {category_id} not found"
+            detail=f"Category with ID {category_id} not found",
         )
 
     # Validate if name or parent_id is being changed
@@ -235,14 +220,15 @@ async def update_category(
                 db,
                 current_user.id,
                 category_data.name if category_data.name is not None else category.name,
-                category_data.parent_id if category_data.parent_id is not None else category.parent_id,
+                (
+                    category_data.parent_id
+                    if category_data.parent_id is not None
+                    else category.parent_id
+                ),
                 category_id=category_id,
             )
         except ValueError as e:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=str(e)
-            )
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
     # Update fields
     if category_data.name is not None:
@@ -271,9 +257,7 @@ async def update_category(
 @router.delete("/{category_id}", status_code=status.HTTP_200_OK)
 async def delete_category(
     category_id: int,
-    force: bool = Query(
-        False, description="Force delete even if category is in use"
-    ),
+    force: bool = Query(False, description="Force delete even if category is in use"),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -299,7 +283,7 @@ async def delete_category(
     if not category:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Category with ID {category_id} not found"
+            detail=f"Category with ID {category_id} not found",
         )
 
     # Check if category is in use
@@ -312,7 +296,7 @@ async def delete_category(
                     f"Category is in use by {usage['transaction_count']} transaction(s) "
                     f"and {usage['budget_count']} budget(s). "
                     f"Use force=true to delete anyway or deactivate the category instead."
-                )
+                ),
             )
 
     # Soft delete the category and its children
@@ -322,7 +306,7 @@ async def delete_category(
 
     return {
         "message": f"Successfully deleted category and {deleted_count - 1} child categories",
-        "deleted_count": deleted_count
+        "deleted_count": deleted_count,
     }
 
 
@@ -353,13 +337,9 @@ async def get_category_usage(
     if not category:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Category with ID {category_id} not found"
+            detail=f"Category with ID {category_id} not found",
         )
 
     usage = await CategoryService.check_category_usage(db, category_id)
 
-    return {
-        "category_id": category_id,
-        "category_name": category.name,
-        **usage
-    }
+    return {"category_id": category_id, "category_name": category.name, **usage}

@@ -22,23 +22,20 @@ class CategoryType(str, Enum):
 class CategoryBase(BaseModel):
     """Base schema for category."""
 
-    name: str = Field(
-        ..., min_length=1, max_length=255, description="Category name"
-    )
+    name: str = Field(..., min_length=1, max_length=255, description="Category name")
     type: CategoryType = Field(..., description="Category type")
     parent_id: Optional[int] = Field(
         None, description="Parent category ID for hierarchical categories"
     )
     color: Optional[str] = Field(
-        None, min_length=7, max_length=7, pattern="^#[0-9A-Fa-f]{6}$",
-        description="Category color in hex format (e.g., #FF5733)"
+        None,
+        min_length=7,
+        max_length=7,
+        pattern="^#[0-9A-Fa-f]{6}$",
+        description="Category color in hex format (e.g., #FF5733)",
     )
-    icon: Optional[str] = Field(
-        None, max_length=50, description="Icon identifier"
-    )
-    is_active: bool = Field(
-        default=True, description="Whether the category is active"
-    )
+    icon: Optional[str] = Field(None, max_length=50, description="Icon identifier")
+    is_active: bool = Field(default=True, description="Whether the category is active")
     sort_order: int = Field(
         default=0, description="Sort order for displaying categories"
     )
@@ -73,22 +70,19 @@ class CategoryUpdate(BaseModel):
         None, min_length=1, max_length=255, description="Category name"
     )
     type: Optional[CategoryType] = Field(None, description="Category type")
-    parent_id: Optional[int] = Field(
-        None, description="Parent category ID"
-    )
+    parent_id: Optional[int] = Field(None, description="Parent category ID")
     color: Optional[str] = Field(
-        None, min_length=7, max_length=7, pattern="^#[0-9A-Fa-f]{6}$",
-        description="Category color in hex format"
+        None,
+        min_length=7,
+        max_length=7,
+        pattern="^#[0-9A-Fa-f]{6}$",
+        description="Category color in hex format",
     )
-    icon: Optional[str] = Field(
-        None, max_length=50, description="Icon identifier"
-    )
+    icon: Optional[str] = Field(None, max_length=50, description="Icon identifier")
     is_active: Optional[bool] = Field(
         None, description="Whether the category is active"
     )
-    sort_order: Optional[int] = Field(
-        None, description="Sort order"
-    )
+    sort_order: Optional[int] = Field(None, description="Sort order")
 
     @field_validator("name")
     @classmethod
@@ -136,9 +130,7 @@ class CategoryList(BaseModel):
     """Schema for category list response."""
 
     total: int = Field(..., description="Total number of categories")
-    categories: list[CategoryResponse] = Field(
-        ..., description="List of categories"
-    )
+    categories: list[CategoryResponse] = Field(..., description="List of categories")
 
 
 class CategoryTree(BaseModel):
