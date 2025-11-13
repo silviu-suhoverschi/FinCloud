@@ -28,6 +28,18 @@ from app.schemas.account import (
     AccountList,
 )
 
+from app.schemas.transaction import (
+    TransactionType,
+    TransactionBase,
+    TransactionCreate,
+    TransactionUpdate,
+    TransactionResponse,
+    TransactionList,
+    TransactionBulkCreate,
+    TransactionBulkResponse,
+    TransactionSearchParams,
+)
+
 __all__ = [
     # Auth schemas
     "UserRegister",
@@ -51,4 +63,14 @@ __all__ = [
     "AccountResponse",
     "AccountBalance",
     "AccountList",
+    # Transaction schemas
+    "TransactionType",
+    "TransactionBase",
+    "TransactionCreate",
+    "TransactionUpdate",
+    "TransactionResponse",
+    "TransactionList",
+    "TransactionBulkCreate",
+    "TransactionBulkResponse",
+    "TransactionSearchParams",
 ]
