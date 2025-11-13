@@ -20,7 +20,7 @@ python-telegram-bot==20.7
 pywebpush==1.14.0
 
 # HTTP Client
-httpx==0.26.0
+httpx~=0.25.2
 requests==2.31.0
 
 # Utilities
