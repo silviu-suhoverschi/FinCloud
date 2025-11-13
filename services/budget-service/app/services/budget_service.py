@@ -132,10 +132,11 @@ class BudgetService:
             transaction_count = cache.transaction_count
         else:
             # Calculate from transactions
-            total_spent, transaction_count = (
-                await BudgetService._calculate_spending_from_transactions(
-                    db, budget, period_start, period_end
-                )
+            (
+                total_spent,
+                transaction_count,
+            ) = await BudgetService._calculate_spending_from_transactions(
+                db, budget, period_start, period_end
             )
 
             # Update or create cache
