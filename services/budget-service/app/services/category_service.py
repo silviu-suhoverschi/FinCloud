@@ -214,12 +214,13 @@ class CategoryService:
                     parent._children_list = []
                 parent._children_list.append(category)
 
-        # Set children attribute for all categories
+        # Set children attribute for all categories using object.__setattr__ to bypass SQLAlchemy lazy loading
         for category in all_categories:
             if hasattr(category, '_children_list'):
-                category.children = category._children_list
+                # Use object.__setattr__ to bypass SQLAlchemy's descriptor and avoid lazy loading
+                object.__setattr__(category, 'children', category._children_list)
             else:
-                category.children = []
+                object.__setattr__(category, 'children', [])
 
         return root_categories
 

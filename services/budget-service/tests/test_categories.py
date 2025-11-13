@@ -158,7 +158,7 @@ class TestListCategories:
     async def test_list_categories_unauthorized(self, client: AsyncClient):
         """Test listing categories without authentication"""
         response = await client.get("/api/v1/categories/")
-        assert response.status_code == 401
+        assert response.status_code == 403  # FastAPI returns 403 for missing credentials
 
 
 class TestGetCategory:
