@@ -127,13 +127,13 @@
 - ✅ GET /api/v1/categories/tree - Get hierarchical category tree
 - ✅ GET /api/v1/categories/{id}/usage - Get category usage statistics
 
-#### Budget Management
-- 📋 GET /api/v1/budgets - List budgets
-- 📋 POST /api/v1/budgets - Create budget
-- 📋 GET /api/v1/budgets/{id} - Get budget with spending
-- 📋 PUT /api/v1/budgets/{id} - Update budget
-- 📋 DELETE /api/v1/budgets/{id} - Delete budget
-- 📋 GET /api/v1/budgets/{id}/progress - Budget progress
+#### Budget Management ✅
+- ✅ GET /api/v1/budgets - List budgets
+- ✅ POST /api/v1/budgets - Create budget
+- ✅ GET /api/v1/budgets/{id} - Get budget with spending
+- ✅ PUT /api/v1/budgets/{id} - Update budget
+- ✅ DELETE /api/v1/budgets/{id} - Delete budget
+- ✅ GET /api/v1/budgets/{id}/progress - Budget progress
 
 #### Reports & Analytics
 - 📋 GET /api/v1/reports/cashflow - Monthly cashflow
