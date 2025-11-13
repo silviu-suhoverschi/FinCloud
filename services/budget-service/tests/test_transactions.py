@@ -646,7 +646,8 @@ async def test_account_balance_updates_on_transaction_create(
 async def test_unauthorized_access(client: AsyncClient):
     """Test that endpoints require authentication"""
     response = await client.get("/api/v1/transactions/")
-    assert response.status_code == 401
+    # FastAPI HTTPBearer returns 403 when no credentials provided
+    assert response.status_code == 403
 
     response = await client.post(
         "/api/v1/transactions/",
@@ -659,4 +660,5 @@ async def test_unauthorized_access(client: AsyncClient):
             "description": "Test",
         },
     )
-    assert response.status_code == 401
+    # FastAPI HTTPBearer returns 403 when no credentials provided
+    assert response.status_code == 403
