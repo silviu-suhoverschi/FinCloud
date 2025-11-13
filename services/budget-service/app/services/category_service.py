@@ -7,6 +7,7 @@ Handles category creation, updates, and hierarchy management.
 from typing import Optional, List
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_, func
+from sqlalchemy import inspect as sqlalchemy_inspect
 from datetime import datetime
 
 from app.models.category import Category
@@ -214,13 +215,15 @@ class CategoryService:
                     parent._children_list = []
                 parent._children_list.append(category)
 
-        # Set children attribute for all categories using object.__setattr__ to bypass SQLAlchemy lazy loading
+        # Set children attribute for all categories using SQLAlchemy's state API to bypass lazy loading
         for category in all_categories:
+            # Get the SQLAlchemy instance state
+            state = sqlalchemy_inspect(category)
+            # Directly set the attribute in the instance dict, bypassing the descriptor
             if hasattr(category, '_children_list'):
-                # Use object.__setattr__ to bypass SQLAlchemy's descriptor and avoid lazy loading
-                object.__setattr__(category, 'children', category._children_list)
+                state.dict['children'] = category._children_list
             else:
-                object.__setattr__(category, 'children', [])
+                state.dict['children'] = []
 
         return root_categories
 
