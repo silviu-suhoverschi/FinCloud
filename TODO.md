@@ -119,11 +119,13 @@
 - ✅ GET /api/v1/transactions/search - Full-text search
 
 #### Category Management
-- 📋 GET /api/v1/categories - List categories
-- 📋 POST /api/v1/categories - Create category
-- 📋 PUT /api/v1/categories/{id} - Update category
-- 📋 DELETE /api/v1/categories/{id} - Delete category
-- 📋 Implement category hierarchies (parent/child)
+- ✅ GET /api/v1/categories - List categories
+- ✅ POST /api/v1/categories - Create category
+- ✅ PUT /api/v1/categories/{id} - Update category
+- ✅ DELETE /api/v1/categories/{id} - Delete category
+- ✅ Implement category hierarchies (parent/child)
+- ✅ GET /api/v1/categories/tree - Get hierarchical category tree
+- ✅ GET /api/v1/categories/{id}/usage - Get category usage statistics
 
 #### Budget Management
 - 📋 GET /api/v1/budgets - List budgets

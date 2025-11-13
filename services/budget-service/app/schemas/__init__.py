@@ -40,6 +40,17 @@ from app.schemas.transaction import (
     TransactionSearchParams,
 )
 
+from app.schemas.category import (
+    CategoryType,
+    CategoryBase,
+    CategoryCreate,
+    CategoryUpdate,
+    CategoryResponse,
+    CategoryWithChildren,
+    CategoryList,
+    CategoryTree,
+)
+
 __all__ = [
     # Auth schemas
     "UserRegister",
@@ -73,4 +84,13 @@ __all__ = [
     "TransactionBulkCreate",
     "TransactionBulkResponse",
     "TransactionSearchParams",
+    # Category schemas
+    "CategoryType",
+    "CategoryBase",
+    "CategoryCreate",
+    "CategoryUpdate",
+    "CategoryResponse",
+    "CategoryWithChildren",
+    "CategoryList",
+    "CategoryTree",
 ]
