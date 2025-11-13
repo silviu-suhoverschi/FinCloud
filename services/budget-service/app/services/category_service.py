@@ -7,7 +7,6 @@ Handles category creation, updates, and hierarchy management.
 from typing import Optional, List
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_, func
-from sqlalchemy import inspect as sqlalchemy_inspect
 from datetime import datetime
 
 from app.models.category import Category
@@ -171,7 +170,7 @@ class CategoryService:
         db: AsyncSession,
         user_id: int,
         category_type: Optional[str] = None,
-    ) -> List[Category]:
+    ) -> List[dict]:
         """
         Build a hierarchical tree of categories.
 
@@ -181,7 +180,7 @@ class CategoryService:
             category_type: Filter by category type (optional)
 
         Returns:
-            List of root categories with children loaded
+            List of dictionaries representing root categories with their children
         """
         # Get all categories for the user
         filters = [
@@ -200,30 +199,34 @@ class CategoryService:
         result = await db.execute(query)
         all_categories = result.scalars().all()
 
-        # Build a map of categories by ID
-        category_map = {cat.id: cat for cat in all_categories}
+        # Convert to dictionaries to avoid SQLAlchemy state management issues
+        category_dicts = {}
+        for cat in all_categories:
+            category_dicts[cat.id] = {
+                "id": cat.id,
+                "uuid": cat.uuid,
+                "user_id": cat.user_id,
+                "parent_id": cat.parent_id,
+                "name": cat.name,
+                "type": cat.type,
+                "color": cat.color,
+                "icon": cat.icon,
+                "is_active": cat.is_active,
+                "sort_order": cat.sort_order,
+                "created_at": cat.created_at,
+                "updated_at": cat.updated_at,
+                "deleted_at": cat.deleted_at,
+                "children": []
+            }
 
         # Build parent-child relationships
         root_categories = []
-        for category in all_categories:
-            if category.parent_id is None:
-                root_categories.append(category)
-            elif category.parent_id in category_map:
-                parent = category_map[category.parent_id]
-                # Initialize children list if not exists
-                if not hasattr(parent, '_children_list'):
-                    parent._children_list = []
-                parent._children_list.append(category)
-
-        # Set children attribute for all categories using SQLAlchemy's state API to bypass lazy loading
-        for category in all_categories:
-            # Get the SQLAlchemy instance state
-            state = sqlalchemy_inspect(category)
-            # Directly set the attribute in the instance dict, bypassing the descriptor
-            if hasattr(category, '_children_list'):
-                state.dict['children'] = category._children_list
-            else:
-                state.dict['children'] = []
+        for cat_id, cat_dict in category_dicts.items():
+            if cat_dict["parent_id"] is None:
+                root_categories.append(cat_dict)
+            elif cat_dict["parent_id"] in category_dicts:
+                parent = category_dicts[cat_dict["parent_id"]]
+                parent["children"].append(cat_dict)
 
         return root_categories
 

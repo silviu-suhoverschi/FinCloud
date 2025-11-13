@@ -125,7 +125,7 @@ class CategoryResponse(CategoryBase):
 class CategoryWithChildren(CategoryResponse):
     """Schema for category with children."""
 
-    children: list[CategoryResponse] = Field(
+    children: list["CategoryWithChildren"] = Field(
         default_factory=list, description="Child categories"
     )
 
