@@ -10,7 +10,7 @@ from contextlib import asynccontextmanager
 from app.core.config import settings
 from app.core.database import engine, Base
 from app.api.v1 import accounts, transactions, budgets, categories
-from app.api.v1.endpoints import auth, users, password_reset
+from app.api.v1.endpoints import auth, users, password_reset, email_verification
 
 
 @asynccontextmanager
@@ -58,6 +58,11 @@ app.include_router(auth.router, prefix="/api/v1/auth", tags=["authentication"])
 app.include_router(users.router, prefix="/api/v1/users", tags=["users"])
 app.include_router(
     password_reset.router, prefix="/api/v1/password-reset", tags=["password-reset"]
+)
+app.include_router(
+    email_verification.router,
+    prefix="/api/v1/email-verification",
+    tags=["email-verification"],
 )
 
 # Business Logic

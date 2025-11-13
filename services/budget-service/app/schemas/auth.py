@@ -184,3 +184,9 @@ class UserWithRole(UserResponse):
     """Schema for user response with role information."""
 
     role: str = Field(default="user", description="User role")
+
+
+class EmailVerificationRequest(BaseModel):
+    """Schema for email verification request."""
+
+    token: str = Field(..., description="Email verification token")

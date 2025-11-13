@@ -86,18 +86,18 @@
 - ✅ Create Alembic migrations
 - ✅ Add composite indexes for queries
 
-### 1.2 Authentication & Authorization 📋
+### 1.2 Authentication & Authorization ✅
 
-- 📋 Implement JWT token generation
-- 📋 Create password hashing utilities (bcrypt)
-- 📋 Build user registration endpoint
-- 📋 Build login endpoint
-- 📋 Build token refresh endpoint
-- 📋 Add authentication middleware
-- 📋 Implement RBAC (Role-Based Access Control)
-- 📋 Add user profile endpoints
-- 📋 Password reset functionality
-- 📋 Email verification (optional for MVP)
+- ✅ Implement JWT token generation
+- ✅ Create password hashing utilities (bcrypt)
+- ✅ Build user registration endpoint
+- ✅ Build login endpoint
+- ✅ Build token refresh endpoint
+- ✅ Add authentication middleware
+- ✅ Implement RBAC (Role-Based Access Control)
+- ✅ Add user profile endpoints
+- ✅ Password reset functionality
+- ✅ Email verification (optional for MVP)
 
 ### 1.3 Budget Service Implementation 📋
 

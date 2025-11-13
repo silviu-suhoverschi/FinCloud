@@ -11,6 +11,7 @@ This document describes the authentication and authorization system implemented 
 ✅ Role-Based Access Control (RBAC)
 ✅ User profile management
 ✅ Password reset functionality
+✅ Email verification
 ✅ Protected route middleware
 
 ## Architecture
@@ -43,6 +44,7 @@ This document describes the authentication and authorization system implemented 
    - `app/api/v1/endpoints/auth.py`: Authentication endpoints
    - `app/api/v1/endpoints/users.py`: User profile management
    - `app/api/v1/endpoints/password_reset.py`: Password reset
+   - `app/api/v1/endpoints/email_verification.py`: Email verification
 
 ## API Endpoints
 
@@ -74,6 +76,14 @@ This document describes the authentication and authorization system implemented 
 |--------|----------|-------------|---------------|
 | POST | `/request` | Request password reset | No |
 | POST | `/reset` | Reset password with token | No |
+
+### Email Verification (`/api/v1/email-verification`)
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| POST | `/request` | Request email verification | Yes |
+| POST | `/verify` | Verify email with token | No |
+| POST | `/resend` | Resend verification email | Yes |
 
 ## User Roles
 
