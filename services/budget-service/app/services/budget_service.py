@@ -213,20 +213,18 @@ class BudgetService:
             filters.append(Transaction.account_id == budget.account_id)
 
         # Calculate total spending (only count expenses, not income)
-        query = (
-            select(
-                func.coalesce(func.sum(Transaction.amount), 0).label("total"),
-                func.count(Transaction.id).label("count"),
-            )
-            .filter(and_(*filters))
-            .filter(Transaction.amount < 0)  # Only expenses (negative amounts)
-        )
+        filters.append(Transaction.type == "expense")  # Only expenses
+
+        query = select(
+            func.coalesce(func.sum(Transaction.amount), 0).label("total"),
+            func.count(Transaction.id).label("count"),
+        ).filter(and_(*filters))
 
         result = await db.execute(query)
         row = result.one()
 
-        # Convert negative amounts to positive for spending
-        total_spent = abs(Decimal(str(row.total)))
+        # Total spent from expense transactions (amounts are already positive)
+        total_spent = Decimal(str(row.total))
         transaction_count = row.count
 
         return total_spent, transaction_count

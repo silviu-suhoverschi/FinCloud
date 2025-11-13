@@ -226,7 +226,8 @@ class TestGetBudget:
     async def test_get_budget_unauthorized(self, client: AsyncClient):
         """Test getting a budget without authentication"""
         response = await client.get("/api/v1/budgets/1")
-        assert response.status_code == 401
+        # FastAPI HTTPBearer returns 403 when no credentials provided
+        assert response.status_code == 403
 
 
 class TestCreateBudget:
@@ -475,7 +476,7 @@ class TestBudgetProgress:
             user_id=test_user.id,
             account_id=test_account.id,
             category_id=test_category.id,
-            amount=Decimal("-100.00"),
+            amount=Decimal("100.00"),
             date=date.today(),
             description="Grocery shopping",
             type="expense",
@@ -484,7 +485,7 @@ class TestBudgetProgress:
             user_id=test_user.id,
             account_id=test_account.id,
             category_id=test_category.id,
-            amount=Decimal("-50.00"),
+            amount=Decimal("50.00"),
             date=date.today(),
             description="More groceries",
             type="expense",
@@ -521,7 +522,7 @@ class TestBudgetProgress:
             user_id=test_user.id,
             account_id=test_account.id,
             category_id=test_category.id,
-            amount=Decimal("-600.00"),
+            amount=Decimal("600.00"),
             date=date.today(),
             description="Over budget",
             type="expense",
