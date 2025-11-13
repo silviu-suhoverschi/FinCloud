@@ -2,7 +2,10 @@
 Pydantic schemas for transaction management.
 """
 
-from datetime import datetime, date
+from __future__ import annotations
+
+from datetime import datetime
+from datetime import date as DateType
 from typing import Optional
 from uuid import UUID
 from decimal import Decimal
@@ -29,7 +32,7 @@ class TransactionBase(BaseModel):
     currency: str = Field(
         ..., min_length=3, max_length=3, description="Currency code (ISO 4217)"
     )
-    date: date = Field(..., description="Transaction date")
+    date: DateType = Field(..., description="Transaction date")
     description: str = Field(
         ..., min_length=1, max_length=1000, description="Transaction description"
     )
@@ -102,7 +105,7 @@ class TransactionUpdate(BaseModel):
     currency: Optional[str] = Field(
         None, min_length=3, max_length=3, description="Currency code"
     )
-    date: Optional[date] = Field(None, description="Transaction date")
+    date: Optional[DateType] = Field(None, description="Transaction date")
     description: Optional[str] = Field(
         None, min_length=1, max_length=1000, description="Transaction description"
     )
@@ -212,8 +215,8 @@ class TransactionSearchParams(BaseModel):
         None, description="Filter by transaction type"
     )
     category_id: Optional[int] = Field(None, description="Filter by category ID")
-    date_from: Optional[date] = Field(None, description="Filter by start date")
-    date_to: Optional[date] = Field(None, description="Filter by end date")
+    date_from: Optional[DateType] = Field(None, description="Filter by start date")
+    date_to: Optional[DateType] = Field(None, description="Filter by end date")
     min_amount: Optional[Decimal] = Field(None, ge=0, description="Minimum amount")
     max_amount: Optional[Decimal] = Field(None, ge=0, description="Maximum amount")
     tags: Optional[list[str]] = Field(None, description="Filter by tags")
