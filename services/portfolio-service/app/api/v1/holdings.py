@@ -3,12 +3,11 @@ Holdings API endpoints
 """
 
 from typing import Optional
-from decimal import Decimal
+from datetime import datetime
+
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_
-from sqlalchemy.orm import joinedload
-from datetime import datetime
 
 from app.core.database import get_db
 from app.core.auth import get_current_user_id
@@ -19,7 +18,6 @@ from app.schemas.holding import (
     HoldingCreate,
     HoldingUpdate,
     HoldingResponse,
-    HoldingWithAssetResponse,
     HoldingList,
 )
 
