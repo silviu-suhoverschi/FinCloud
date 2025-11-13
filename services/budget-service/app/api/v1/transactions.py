@@ -2,7 +2,7 @@
 Transactions API endpoints
 """
 
-from typing import Optional, List
+from typing import Optional
 import csv
 import io
 from fastapi import APIRouter, Depends, HTTPException, status, Query, UploadFile, File
@@ -15,7 +15,6 @@ from app.core.database import get_db
 from app.core.auth import get_current_user
 from app.models.user import User
 from app.models.transaction import Transaction
-from app.models.account import Account
 from app.schemas.transaction import (
     TransactionCreate,
     TransactionUpdate,

@@ -4,7 +4,7 @@ Tests for transaction endpoints
 
 import pytest
 from httpx import AsyncClient
-from datetime import date, datetime
+from datetime import date
 from decimal import Decimal
 import io
 import csv

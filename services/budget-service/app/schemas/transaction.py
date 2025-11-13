@@ -3,7 +3,7 @@ Pydantic schemas for transaction management.
 """
 
 from datetime import datetime, date
-from typing import Optional, List
+from typing import Optional
 from uuid import UUID
 from decimal import Decimal
 from pydantic import BaseModel, Field, field_validator
@@ -44,7 +44,7 @@ class TransactionBase(BaseModel):
         None, max_length=100, description="Reference number (e.g., check number)"
     )
     notes: Optional[str] = Field(None, description="Additional notes")
-    tags: Optional[List[str]] = Field(None, description="Tags for categorization")
+    tags: Optional[list[str]] = Field(None, description="Tags for categorization")
     exchange_rate: Decimal = Field(
         default=Decimal("1.0"),
         gt=0,
@@ -78,7 +78,7 @@ class TransactionBase(BaseModel):
 
     @field_validator("tags")
     @classmethod
-    def validate_tags(cls, v: Optional[List[str]]) -> Optional[List[str]]:
+    def validate_tags(cls, v: Optional[list[str]]) -> Optional[list[str]]:
         """Validate tags."""
         if v:
             # Remove empty tags and strip whitespace
@@ -115,7 +115,7 @@ class TransactionUpdate(BaseModel):
         None, max_length=100, description="Reference number"
     )
     notes: Optional[str] = Field(None, description="Additional notes")
-    tags: Optional[List[str]] = Field(None, description="Tags")
+    tags: Optional[list[str]] = Field(None, description="Tags")
     exchange_rate: Optional[Decimal] = Field(None, gt=0, description="Exchange rate")
     is_reconciled: Optional[bool] = Field(
         None, description="Whether transaction is reconciled"
@@ -143,7 +143,7 @@ class TransactionUpdate(BaseModel):
 
     @field_validator("tags")
     @classmethod
-    def validate_tags(cls, v: Optional[List[str]]) -> Optional[List[str]]:
+    def validate_tags(cls, v: Optional[list[str]]) -> Optional[list[str]]:
         """Validate tags."""
         if v:
             cleaned_tags = [tag.strip() for tag in v if tag.strip()]
@@ -177,7 +177,7 @@ class TransactionList(BaseModel):
     """Schema for paginated transaction list response."""
 
     total: int = Field(..., description="Total number of transactions")
-    transactions: List[TransactionResponse] = Field(
+    transactions: list[TransactionResponse] = Field(
         ..., description="List of transactions"
     )
 
@@ -185,7 +185,7 @@ class TransactionList(BaseModel):
 class TransactionBulkCreate(BaseModel):
     """Schema for bulk transaction creation from CSV."""
 
-    transactions: List[TransactionCreate] = Field(
+    transactions: list[TransactionCreate] = Field(
         ..., description="List of transactions to create"
     )
 
@@ -195,10 +195,10 @@ class TransactionBulkResponse(BaseModel):
 
     created: int = Field(..., description="Number of transactions created")
     failed: int = Field(..., description="Number of transactions that failed")
-    errors: List[dict] = Field(
+    errors: list[dict] = Field(
         default_factory=list, description="List of errors for failed transactions"
     )
-    transactions: List[TransactionResponse] = Field(
+    transactions: list[TransactionResponse] = Field(
         default_factory=list, description="List of created transactions"
     )
 
@@ -216,7 +216,7 @@ class TransactionSearchParams(BaseModel):
     date_to: Optional[date] = Field(None, description="Filter by end date")
     min_amount: Optional[Decimal] = Field(None, ge=0, description="Minimum amount")
     max_amount: Optional[Decimal] = Field(None, ge=0, description="Maximum amount")
-    tags: Optional[List[str]] = Field(None, description="Filter by tags")
+    tags: Optional[list[str]] = Field(None, description="Filter by tags")
     is_reconciled: Optional[bool] = Field(
         None, description="Filter by reconciled status"
     )
