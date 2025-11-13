@@ -1,13 +1,7 @@
 from __future__ import annotations
 
-"""
-Portfolio Model
-
-Investment portfolios owned by users.
-"""
-
 from datetime import datetime
-from typing import List
+from typing import List, TYPE_CHECKING
 from sqlalchemy import (
     BigInteger,
     String,
@@ -25,6 +19,18 @@ import uuid
 
 from app.core.database import Base
 
+if TYPE_CHECKING:
+    from app.models.holding import Holding
+    from app.models.portfolio_transaction import PortfolioTransaction
+    from app.models.portfolio_performance_cache import PortfolioPerformanceCache
+    from app.models.portfolio_benchmark import PortfolioBenchmark
+
+"""
+Portfolio Model
+
+Investment portfolios owned by users.
+"""
+
 
 class Portfolio(Base):
     """Portfolio model for investment portfolios."""
@@ -40,7 +46,7 @@ class Portfolio(Base):
         unique=True,
         nullable=False,
         default=uuid.uuid4,
-        server_default=func.gen_random_uuid()
+        server_default=func.gen_random_uuid(),
     )
 
     # User Reference (no FK constraint across services)
@@ -52,49 +58,45 @@ class Portfolio(Base):
     currency: Mapped[str] = mapped_column(String(3), nullable=False, default="USD")
 
     # Settings
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true")
+    is_active: Mapped[bool] = mapped_column(
+        Boolean, default=True, server_default="true"
+    )
     sort_order: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
 
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        nullable=False,
-        server_default=func.now()
+        DateTime(timezone=True), nullable=False, server_default=func.now()
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
         server_default=func.now(),
-        onupdate=func.now()
+        onupdate=func.now(),
     )
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
     # Relationships
     holdings: Mapped[List["Holding"]] = relationship(
-        "Holding",
-        back_populates="portfolio",
-        cascade="all, delete-orphan"
+        "Holding", back_populates="portfolio", cascade="all, delete-orphan"
     )
     transactions: Mapped[List["PortfolioTransaction"]] = relationship(
-        "PortfolioTransaction",
-        back_populates="portfolio",
-        cascade="all, delete-orphan"
+        "PortfolioTransaction", back_populates="portfolio", cascade="all, delete-orphan"
     )
     performance_cache: Mapped[List["PortfolioPerformanceCache"]] = relationship(
         "PortfolioPerformanceCache",
         back_populates="portfolio",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
     )
     benchmarks: Mapped[List["PortfolioBenchmark"]] = relationship(
-        "PortfolioBenchmark",
-        back_populates="portfolio",
-        cascade="all, delete-orphan"
+        "PortfolioBenchmark", back_populates="portfolio", cascade="all, delete-orphan"
     )
 
     # Table Constraints
     __table_args__ = (
         UniqueConstraint("user_id", "name", name="uq_user_portfolio_name"),
-        Index("idx_portfolios_user_id", "user_id", postgresql_where="deleted_at IS NULL"),
+        Index(
+            "idx_portfolios_user_id", "user_id", postgresql_where="deleted_at IS NULL"
+        ),
         Index("idx_portfolios_is_active", "is_active"),
         Index("idx_portfolios_sort_order", "sort_order"),
     )

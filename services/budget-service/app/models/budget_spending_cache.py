@@ -1,10 +1,7 @@
-"""
-Budget Spending Cache Model
-
-Denormalized table for fast budget progress queries.
-"""
+from __future__ import annotations
 
 from datetime import datetime, date
+from typing import TYPE_CHECKING
 from decimal import Decimal
 from sqlalchemy import (
     BigInteger,
@@ -21,6 +18,15 @@ from sqlalchemy.sql import func
 
 from app.core.database import Base
 
+if TYPE_CHECKING:
+    from app.models.budget import Budget
+
+"""
+Budget Spending Cache Model
+
+Denormalized table for fast budget progress queries.
+"""
+
 
 class BudgetSpendingCache(Base):
     """Budget spending cache for performance optimization."""
@@ -32,9 +38,7 @@ class BudgetSpendingCache(Base):
 
     # Foreign Keys
     budget_id: Mapped[int] = mapped_column(
-        BigInteger,
-        ForeignKey("budgets.id", ondelete="CASCADE"),
-        nullable=False
+        BigInteger, ForeignKey("budgets.id", ondelete="CASCADE"), nullable=False
     )
 
     # Period Information
@@ -43,18 +47,16 @@ class BudgetSpendingCache(Base):
 
     # Spending Information
     total_spent: Mapped[Decimal] = mapped_column(
-        Numeric(15, 2),
-        default=Decimal("0"),
-        server_default="0"
+        Numeric(15, 2), default=Decimal("0"), server_default="0"
     )
     total_budget: Mapped[Decimal] = mapped_column(Numeric(15, 2), nullable=False)
-    transaction_count: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+    transaction_count: Mapped[int] = mapped_column(
+        Integer, default=0, server_default="0"
+    )
 
     # Cache Metadata
     last_calculated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        nullable=False,
-        server_default=func.now()
+        DateTime(timezone=True), nullable=False, server_default=func.now()
     )
 
     # Relationships

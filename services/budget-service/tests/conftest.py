@@ -16,7 +16,7 @@ from app.core.config import settings
 
 
 # Configure pytest-asyncio
-pytest_plugins = ('pytest_asyncio',)
+pytest_plugins = ("pytest_asyncio",)
 
 
 @pytest.fixture(scope="session")
@@ -66,14 +66,14 @@ async def db_session(test_engine) -> AsyncGenerator[AsyncSession, None]:
 @pytest_asyncio.fixture
 async def client(db_session) -> AsyncGenerator[AsyncClient, None]:
     """Create a test client"""
+
     async def override_get_db():
         yield db_session
 
     app.dependency_overrides[get_db] = override_get_db
 
     async with AsyncClient(
-        transport=ASGITransport(app=app),
-        base_url="http://test"
+        transport=ASGITransport(app=app), base_url="http://test"
     ) as ac:
         yield ac
 

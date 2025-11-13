@@ -12,10 +12,18 @@ class UserRegister(BaseModel):
     """Schema for user registration."""
 
     email: EmailStr = Field(..., description="User email address")
-    password: str = Field(..., min_length=8, max_length=100, description="User password (min 8 chars)")
-    first_name: Optional[str] = Field(None, max_length=100, description="User's first name")
-    last_name: Optional[str] = Field(None, max_length=100, description="User's last name")
-    preferred_currency: str = Field("USD", min_length=3, max_length=3, description="Preferred currency code")
+    password: str = Field(
+        ..., min_length=8, max_length=100, description="User password (min 8 chars)"
+    )
+    first_name: Optional[str] = Field(
+        None, max_length=100, description="User's first name"
+    )
+    last_name: Optional[str] = Field(
+        None, max_length=100, description="User's last name"
+    )
+    preferred_currency: str = Field(
+        "USD", min_length=3, max_length=3, description="Preferred currency code"
+    )
     timezone: str = Field("UTC", max_length=50, description="User's timezone")
 
     @field_validator("password")
@@ -77,7 +85,9 @@ class UserResponse(BaseModel):
     last_name: Optional[str] = Field(None, description="User's last name")
     is_active: bool = Field(..., description="Whether user account is active")
     is_verified: bool = Field(..., description="Whether user email is verified")
-    email_verified_at: Optional[datetime] = Field(None, description="Email verification timestamp")
+    email_verified_at: Optional[datetime] = Field(
+        None, description="Email verification timestamp"
+    )
     last_login_at: Optional[datetime] = Field(None, description="Last login timestamp")
     preferred_currency: str = Field(..., description="Preferred currency code")
     timezone: str = Field(..., description="User's timezone")
@@ -92,9 +102,15 @@ class UserResponse(BaseModel):
 class UserUpdate(BaseModel):
     """Schema for user profile update."""
 
-    first_name: Optional[str] = Field(None, max_length=100, description="User's first name")
-    last_name: Optional[str] = Field(None, max_length=100, description="User's last name")
-    preferred_currency: Optional[str] = Field(None, min_length=3, max_length=3, description="Preferred currency code")
+    first_name: Optional[str] = Field(
+        None, max_length=100, description="User's first name"
+    )
+    last_name: Optional[str] = Field(
+        None, max_length=100, description="User's last name"
+    )
+    preferred_currency: Optional[str] = Field(
+        None, min_length=3, max_length=3, description="Preferred currency code"
+    )
     timezone: Optional[str] = Field(None, max_length=50, description="User's timezone")
 
     @field_validator("preferred_currency")
@@ -108,7 +124,9 @@ class PasswordChange(BaseModel):
     """Schema for password change."""
 
     current_password: str = Field(..., description="Current password")
-    new_password: str = Field(..., min_length=8, max_length=100, description="New password (min 8 chars)")
+    new_password: str = Field(
+        ..., min_length=8, max_length=100, description="New password (min 8 chars)"
+    )
 
     @field_validator("new_password")
     @classmethod
@@ -135,7 +153,9 @@ class PasswordReset(BaseModel):
     """Schema for password reset confirmation."""
 
     token: str = Field(..., description="Password reset token")
-    new_password: str = Field(..., min_length=8, max_length=100, description="New password (min 8 chars)")
+    new_password: str = Field(
+        ..., min_length=8, max_length=100, description="New password (min 8 chars)"
+    )
 
     @field_validator("new_password")
     @classmethod

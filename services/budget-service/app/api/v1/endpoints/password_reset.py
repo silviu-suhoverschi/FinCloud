@@ -2,12 +2,12 @@
 Password reset endpoints.
 """
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
-from app.core.security import create_access_token, decode_token, get_password_hash
+from app.core.security import create_access_token, decode_token
 from app.schemas.auth import PasswordResetRequest, PasswordReset
 from app.services.auth_service import AuthService
 
@@ -49,8 +49,7 @@ async def request_password_reset(
             "type": "password_reset",
         }
         reset_token = create_access_token(
-            reset_token_data,
-            expires_delta=timedelta(hours=1)
+            reset_token_data, expires_delta=timedelta(hours=1)
         )
 
         # TODO: Send email with reset token

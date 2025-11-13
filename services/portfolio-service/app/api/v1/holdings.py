@@ -11,11 +11,6 @@ router = APIRouter()
 
 
 @router.get("/")
-async def list_holdings(
-    db: AsyncSession = Depends(get_db)
-):
+async def list_holdings(db: AsyncSession = Depends(get_db)):
     """List all holdings"""
-    return {
-        "holdings": [],
-        "message": "Holdings endpoint - implementation pending"
-    }
+    return {"holdings": [], "message": "Holdings endpoint - implementation pending"}

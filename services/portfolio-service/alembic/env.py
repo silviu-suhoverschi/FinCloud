@@ -11,19 +11,19 @@ from alembic import context
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 # Import settings and database
-from app.core.config import settings
-from app.core.database import Base
+from app.core.config import settings  # noqa: E402
+from app.core.database import Base  # noqa: E402
 
 # Import all models to ensure they're registered with Base
-from app.models import (
-    Portfolio,
-    Asset,
-    Holding,
-    PortfolioTransaction,
-    PriceHistory,
-    PortfolioPerformanceCache,
-    Benchmark,
-    PortfolioBenchmark,
+from app.models import (  # noqa: E402
+    Portfolio,  # noqa: F401
+    Asset,  # noqa: F401
+    Holding,  # noqa: F401
+    PortfolioTransaction,  # noqa: F401
+    PriceHistory,  # noqa: F401
+    PortfolioPerformanceCache,  # noqa: F401
+    Benchmark,  # noqa: F401
+    PortfolioBenchmark,  # noqa: F401
 )
 
 # this is the Alembic Config object, which provides
@@ -87,9 +87,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

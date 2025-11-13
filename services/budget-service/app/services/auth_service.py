@@ -2,7 +2,7 @@
 Authentication service for user registration, login, and token management.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -39,7 +39,9 @@ class AuthService:
             HTTPException: If email already exists
         """
         # Check if email already exists
-        result = await db.execute(select(User).filter(User.email == user_data.email.lower()))
+        result = await db.execute(
+            select(User).filter(User.email == user_data.email.lower())
+        )
         existing_user = result.scalar_one_or_none()
 
         if existing_user:
@@ -84,7 +86,9 @@ class AuthService:
             HTTPException: If credentials are invalid
         """
         # Find user by email
-        result = await db.execute(select(User).filter(User.email == login_data.email.lower()))
+        result = await db.execute(
+            select(User).filter(User.email == login_data.email.lower())
+        )
         user = result.scalar_one_or_none()
 
         if not user:
@@ -139,9 +143,7 @@ class AuthService:
         refresh_token = create_refresh_token(token_data)
 
         return Token(
-            access_token=access_token,
-            refresh_token=refresh_token,
-            token_type="bearer"
+            access_token=access_token, refresh_token=refresh_token, token_type="bearer"
         )
 
     @staticmethod
@@ -223,7 +225,9 @@ class AuthService:
         return result.scalar_one_or_none()
 
     @staticmethod
-    async def update_user_password(user: User, new_password: str, db: AsyncSession) -> User:
+    async def update_user_password(
+        user: User, new_password: str, db: AsyncSession
+    ) -> User:
         """
         Update a user's password.
 
