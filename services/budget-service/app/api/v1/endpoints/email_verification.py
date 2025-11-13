@@ -62,7 +62,10 @@ async def request_email_verification(
     return {
         "message": "Verification email has been sent to your email address.",
         "verification_token": verification_token,  # REMOVE THIS IN PRODUCTION
-        "note": "In production, this token should be sent via email, not returned in the API response.",
+        "note": (
+            "In production, this token should be sent via email, "
+            "not returned in the API response."
+        ),
     }
 
 
@@ -135,7 +138,10 @@ async def verify_email(
     await AuthService.verify_user_email(user, db)
 
     return {
-        "message": "Email has been verified successfully. You now have full access to your account."
+        "message": (
+            "Email has been verified successfully. "
+            "You now have full access to your account."
+        )
     }
 
 
@@ -182,5 +188,8 @@ async def resend_verification_email(
     return {
         "message": "Verification email has been resent to your email address.",
         "verification_token": verification_token,  # REMOVE THIS IN PRODUCTION
-        "note": "In production, this token should be sent via email, not returned in the API response.",
+        "note": (
+            "In production, this token should be sent via email, "
+            "not returned in the API response."
+        ),
     }

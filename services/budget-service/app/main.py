@@ -60,7 +60,9 @@ app.include_router(
     password_reset.router, prefix="/api/v1/password-reset", tags=["password-reset"]
 )
 app.include_router(
-    email_verification.router, prefix="/api/v1/email-verification", tags=["email-verification"]
+    email_verification.router,
+    prefix="/api/v1/email-verification",
+    tags=["email-verification"],
 )
 
 # Business Logic
