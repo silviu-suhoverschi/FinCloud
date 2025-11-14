@@ -157,10 +157,15 @@
 - ✅ PUT /api/v1/holdings/{id} - Update holding
 - ✅ DELETE /api/v1/holdings/{id} - Remove holding
 
-#### Transaction Management
-- 📋 GET /api/v1/transactions - List portfolio transactions
-- 📋 POST /api/v1/transactions - Record transaction
-- 📋 Support transaction types: BUY, SELL, DIVIDEND, SPLIT
+#### Transaction Management ✅
+- ✅ GET /api/v1/transactions - List portfolio transactions
+- ✅ POST /api/v1/transactions - Record transaction
+- ✅ GET /api/v1/transactions/{id} - Get transaction details
+- ✅ PUT /api/v1/transactions/{id} - Update transaction
+- ✅ DELETE /api/v1/transactions/{id} - Delete transaction
+- ✅ Support transaction types: BUY, SELL, DIVIDEND, SPLIT, INTEREST, FEE, TAX, TRANSFER_IN, TRANSFER_OUT
+- ✅ Automatic holding updates for BUY/SELL transactions
+- ✅ Advanced filtering (portfolio, asset, type, date range)
 
 #### Price Fetching
 - 📋 Implement Yahoo Finance integration
