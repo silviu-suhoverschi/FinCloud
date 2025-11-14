@@ -40,9 +40,9 @@ class AuthMiddleware:
         if path in AuthMiddleware.PUBLIC_PATHS:
             return True
 
-        # Path starts with public prefix
+        # Path starts with public prefix (but not bare "/" to avoid matching everything)
         for public_path in AuthMiddleware.PUBLIC_PATHS:
-            if path.startswith(public_path):
+            if public_path != "/" and path.startswith(public_path):
                 return True
 
         return False
