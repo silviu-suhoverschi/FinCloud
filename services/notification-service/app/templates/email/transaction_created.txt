@@ -1,0 +1,22 @@
+New Transaction: {{ transaction_description }}
+
+Hello {{ user_name }},
+
+A new transaction has been recorded in your account.
+
+Transaction Details:
+- Description: {{ transaction_description }}
+- Amount: {{ amount|currency(currency) }}
+- Type: {{ transaction_type }}
+- Account: {{ account_name }}
+- Category: {{ category_name }}
+- Date: {{ transaction_date }}
+{% if tags %}
+- Tags: {{ tags|join(', ') }}
+{% endif %}
+
+View transaction details: {{ app_url }}/transactions/{{ transaction_id }}
+
+---
+This is an automated notification from FinCloud.
+To manage your notification preferences, visit: {{ app_url }}/settings/notifications
