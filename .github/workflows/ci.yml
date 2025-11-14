@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [budget-service, portfolio-service]
+        service: [budget-service, portfolio-service, api-gateway]
     steps:
       - uses: actions/checkout@v4
 
@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [budget-service, portfolio-service]
+        service: [budget-service, portfolio-service, api-gateway]
     services:
       postgres:
         image: postgres:16-alpine
@@ -140,6 +140,8 @@ jobs:
             context: ./services/budget-service
           - service: portfolio-service
             context: ./services/portfolio-service
+          - service: api-gateway
+            context: ./services/api-gateway
           - service: frontend
             context: ./frontend
     steps:
