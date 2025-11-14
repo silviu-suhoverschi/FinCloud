@@ -111,14 +111,14 @@ class DividendByAsset(BaseModel):
 class DividendHistory(BaseModel):
     """Individual dividend payment"""
 
-    date: date = Field(..., description="Payment date")
+    payment_date: date = Field(..., description="Payment date", alias="date")
     asset_id: int = Field(..., description="Asset ID")
     symbol: str = Field(..., description="Asset symbol")
     amount: Decimal = Field(..., description="Dividend amount (after tax)")
     tax: Decimal = Field(..., description="Tax amount")
     type: str = Field(..., description="Transaction type (dividend/interest)")
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
 
 
 class DividendMetrics(BaseModel):
