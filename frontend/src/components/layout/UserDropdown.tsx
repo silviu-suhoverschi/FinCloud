@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import Image from 'next/image'
 import { UserIcon, ChevronDownIcon, Cog6ToothIcon, ArrowRightOnRectangleIcon } from '@/components/icons'
 
 interface UserDropdownProps {
@@ -50,9 +51,11 @@ export default function UserDropdown({ user }: UserDropdownProps) {
       >
         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
           {displayUser.avatar ? (
-            <img
+            <Image
               src={displayUser.avatar}
               alt={displayUser.name}
+              width={32}
+              height={32}
               className="w-8 h-8 rounded-full"
             />
           ) : (
