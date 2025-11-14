@@ -1,0 +1,29 @@
+Budget Alert: {{ budget_name }}
+
+Hello {{ user_name }},
+
+Your budget "{{ budget_name }}" has {% if percentage >= 100 %}exceeded{% else %}reached{{ percentage }}%{% endif %} of its limit.
+
+Budget Details:
+- Budget Name: {{ budget_name }}
+- Limit: {{ limit|currency(currency) }}
+- Spent: {{ spent|currency(currency) }}
+- Percentage: {{ percentage }}%
+{% if remaining > 0 %}
+- Remaining: {{ remaining|currency(currency) }}
+{% else %}
+- Over Budget: {{ (spent - limit)|currency(currency) }}
+{% endif %}
+- Period: {{ period }}
+
+{% if percentage >= 100 %}
+⚠️ You have exceeded your budget limit. Consider reviewing your spending.
+{% elif percentage >= 80 %}
+⚠️ You're approaching your budget limit. Please monitor your spending carefully.
+{% endif %}
+
+View your budget details: {{ app_url }}/budgets/{{ budget_id }}
+
+---
+This is an automated notification from FinCloud.
+To manage your notification preferences, visit: {{ app_url }}/settings/notifications
