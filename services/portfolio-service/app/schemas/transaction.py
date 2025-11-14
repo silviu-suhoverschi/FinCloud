@@ -51,26 +51,6 @@ class TransactionBase(BaseModel):
         None, max_length=100, description="Reference/confirmation number"
     )
 
-    @field_validator("quantity")
-    @classmethod
-    def validate_quantity(cls, v: Decimal, values) -> Decimal:
-        """Validate that quantity is positive for most transaction types."""
-        # For fee and tax transactions, quantity can be zero or negative
-        # But for buy/sell/dividend, it must be positive
-        if v <= 0:
-            # We'll allow the model-level constraint to handle this
-            # since we don't have access to 'type' here easily
-            pass
-        return v
-
-    @field_validator("price")
-    @classmethod
-    def validate_price(cls, v: Decimal) -> Decimal:
-        """Validate that price is non-negative."""
-        if v < 0:
-            raise ValueError("Price must be non-negative")
-        return v
-
     @field_validator("currency")
     @classmethod
     def validate_currency(cls, v: str) -> str:
@@ -104,14 +84,6 @@ class TransactionUpdate(BaseModel):
     reference_number: Optional[str] = Field(
         None, max_length=100, description="Reference/confirmation number"
     )
-
-    @field_validator("price")
-    @classmethod
-    def validate_price(cls, v: Optional[Decimal]) -> Optional[Decimal]:
-        """Validate that price is non-negative."""
-        if v is not None and v < 0:
-            raise ValueError("Price must be non-negative")
-        return v
 
     @field_validator("currency")
     @classmethod
