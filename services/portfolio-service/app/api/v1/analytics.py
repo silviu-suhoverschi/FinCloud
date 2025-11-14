@@ -68,7 +68,9 @@ async def get_portfolio_value(
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to calculate value: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to calculate value: {str(e)}"
+        )
 
 
 @router.get("/portfolio/{portfolio_id}/roi", response_model=ROIMetrics)
@@ -111,10 +113,14 @@ async def get_roi(
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to calculate ROI: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to calculate ROI: {str(e)}"
+        )
 
 
-@router.get("/portfolio/{portfolio_id}/performance", response_model=PerformanceMetrics)
+@router.get(
+    "/portfolio/{portfolio_id}/performance", response_model=PerformanceMetrics
+)
 async def get_performance(
     portfolio_id: int,
     end_date: Optional[date] = Query(None, description="End date for calculations"),
@@ -169,7 +175,9 @@ async def get_performance(
         )
 
 
-@router.get("/portfolio/{portfolio_id}/allocation", response_model=AssetAllocation)
+@router.get(
+    "/portfolio/{portfolio_id}/allocation", response_model=AssetAllocation
+)
 async def get_allocation(
     portfolio_id: int,
     db: AsyncSession = Depends(get_db),
@@ -216,7 +224,9 @@ async def get_allocation(
         )
 
 
-@router.get("/portfolio/{portfolio_id}/holdings", response_model=list[HoldingPerformance])
+@router.get(
+    "/portfolio/{portfolio_id}/holdings", response_model=list[HoldingPerformance]
+)
 async def get_holdings_performance(
     portfolio_id: int,
     db: AsyncSession = Depends(get_db),
@@ -259,15 +269,22 @@ async def get_holdings_performance(
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(
-            status_code=500, detail=f"Failed to get holdings performance: {str(e)}"
+            status_code=500,
+            detail=f"Failed to get holdings performance: {str(e)}",
         )
 
 
-@router.get("/portfolio/{portfolio_id}/dividends", response_model=DividendMetrics)
+@router.get(
+    "/portfolio/{portfolio_id}/dividends", response_model=DividendMetrics
+)
 async def get_dividend_metrics(
     portfolio_id: int,
-    start_date: Optional[date] = Query(None, description="Start date for dividend tracking"),
-    end_date: Optional[date] = Query(None, description="End date for dividend tracking"),
+    start_date: Optional[date] = Query(
+        None, description="Start date for dividend tracking"
+    ),
+    end_date: Optional[date] = Query(
+        None, description="End date for dividend tracking"
+    ),
     db: AsyncSession = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
@@ -316,7 +333,10 @@ async def get_dividend_metrics(
         )
 
 
-@router.get("/portfolio/{portfolio_id}/comprehensive", response_model=ComprehensiveAnalytics)
+@router.get(
+    "/portfolio/{portfolio_id}/comprehensive",
+    response_model=ComprehensiveAnalytics,
+)
 async def get_comprehensive_analytics(
     portfolio_id: int,
     db: AsyncSession = Depends(get_db),

@@ -112,7 +112,7 @@ class PortfolioTransaction(Base):
         ),
         CheckConstraint(
             "quantity > 0 OR type IN ('dividend', 'interest', 'fee', 'tax')",
-            name="chk_quantity_positive"
+            name="chk_quantity_positive",
         ),
         CheckConstraint("price >= 0", name="chk_price_non_negative"),
         CheckConstraint("fee >= 0", name="chk_fee_non_negative"),

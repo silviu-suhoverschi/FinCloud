@@ -430,7 +430,10 @@ class AnalyticsService:
         )
 
     async def get_dividend_metrics(
-        self, portfolio_id: int, start_date: Optional[date] = None, end_date: Optional[date] = None
+        self,
+        portfolio_id: int,
+        start_date: Optional[date] = None,
+        end_date: Optional[date] = None,
     ) -> Dict[str, any]:
         """
         Get dividend tracking and yield metrics

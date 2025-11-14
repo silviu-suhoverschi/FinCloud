@@ -46,9 +46,7 @@ async def test_get_portfolio_total_value_empty(db_session: AsyncSession):
     """Test portfolio total value calculation for empty portfolio"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=TEST_USER_ID,
-        name="Test Portfolio",
-        currency="USD"
+        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
     )
     db_session.add(portfolio)
     await db_session.commit()
@@ -65,9 +63,7 @@ async def test_get_portfolio_total_value_with_holdings(db_session: AsyncSession)
     """Test portfolio total value calculation with holdings"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=TEST_USER_ID,
-        name="Test Portfolio",
-        currency="USD"
+        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
     )
     db_session.add(portfolio)
     await db_session.flush()
@@ -121,20 +117,13 @@ async def test_calculate_roi(db_session: AsyncSession):
     """Test ROI calculation"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=TEST_USER_ID,
-        name="Test Portfolio",
-        currency="USD"
+        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
     )
     db_session.add(portfolio)
     await db_session.flush()
 
     # Create asset
-    asset = Asset(
-        symbol="AAPL",
-        name="Apple Inc.",
-        type="stock",
-        currency="USD"
-    )
+    asset = Asset(symbol="AAPL", name="Apple Inc.", type="stock", currency="USD")
     db_session.add(asset)
     await db_session.flush()
 
@@ -184,20 +173,13 @@ async def test_calculate_roi_with_sales(db_session: AsyncSession):
     """Test ROI calculation with buy and sell transactions"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=TEST_USER_ID,
-        name="Test Portfolio",
-        currency="USD"
+        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
     )
     db_session.add(portfolio)
     await db_session.flush()
 
     # Create asset
-    asset = Asset(
-        symbol="AAPL",
-        name="Apple Inc.",
-        type="stock",
-        currency="USD"
-    )
+    asset = Asset(symbol="AAPL", name="Apple Inc.", type="stock", currency="USD")
     db_session.add(asset)
     await db_session.flush()
 
@@ -258,9 +240,7 @@ async def test_get_asset_allocation(db_session: AsyncSession):
     """Test asset allocation breakdown"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=TEST_USER_ID,
-        name="Test Portfolio",
-        currency="USD"
+        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
     )
     db_session.add(portfolio)
     await db_session.flush()
@@ -354,20 +334,13 @@ async def test_get_holdings_performance(db_session: AsyncSession):
     """Test holdings performance calculation"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=TEST_USER_ID,
-        name="Test Portfolio",
-        currency="USD"
+        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
     )
     db_session.add(portfolio)
     await db_session.flush()
 
     # Create asset
-    asset = Asset(
-        symbol="AAPL",
-        name="Apple Inc.",
-        type="stock",
-        currency="USD"
-    )
+    asset = Asset(symbol="AAPL", name="Apple Inc.", type="stock", currency="USD")
     db_session.add(asset)
     await db_session.flush()
 
@@ -402,20 +375,13 @@ async def test_get_dividend_metrics(db_session: AsyncSession):
     """Test dividend metrics calculation"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=TEST_USER_ID,
-        name="Test Portfolio",
-        currency="USD"
+        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
     )
     db_session.add(portfolio)
     await db_session.flush()
 
     # Create asset
-    asset = Asset(
-        symbol="AAPL",
-        name="Apple Inc.",
-        type="stock",
-        currency="USD"
-    )
+    asset = Asset(symbol="AAPL", name="Apple Inc.", type="stock", currency="USD")
     db_session.add(asset)
     await db_session.flush()
 
@@ -497,20 +463,13 @@ async def test_calculate_xirr_simple(db_session: AsyncSession):
     """Test XIRR calculation with simple investment"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=TEST_USER_ID,
-        name="Test Portfolio",
-        currency="USD"
+        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
     )
     db_session.add(portfolio)
     await db_session.flush()
 
     # Create asset
-    asset = Asset(
-        symbol="AAPL",
-        name="Apple Inc.",
-        type="stock",
-        currency="USD"
-    )
+    asset = Asset(symbol="AAPL", name="Apple Inc.", type="stock", currency="USD")
     db_session.add(asset)
     await db_session.flush()
 
@@ -556,20 +515,13 @@ async def test_calculate_twr_simple(db_session: AsyncSession):
     """Test TWR calculation with simple investment"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=TEST_USER_ID,
-        name="Test Portfolio",
-        currency="USD"
+        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
     )
     db_session.add(portfolio)
     await db_session.flush()
 
     # Create asset
-    asset = Asset(
-        symbol="AAPL",
-        name="Apple Inc.",
-        type="stock",
-        currency="USD"
-    )
+    asset = Asset(symbol="AAPL", name="Apple Inc.", type="stock", currency="USD")
     db_session.add(asset)
     await db_session.flush()
 
@@ -615,9 +567,7 @@ async def test_comprehensive_analytics(db_session: AsyncSession):
     """Test comprehensive analytics"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=TEST_USER_ID,
-        name="Test Portfolio",
-        currency="USD"
+        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
     )
     db_session.add(portfolio)
     await db_session.flush()
