@@ -255,10 +255,17 @@ async def root():
 
 
 # Include routers
+# Health router at root level (for Kubernetes/Docker health checks)
+app.include_router(
+    health.router,
+    tags=["Health"]
+)
+
+# Also include health router under /api/v1 for consistency
 app.include_router(
     health.router,
     prefix="/api/v1",
-    tags=["Health"]
+    tags=["Health API"]
 )
 
 app.include_router(

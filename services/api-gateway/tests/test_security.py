@@ -3,7 +3,7 @@ Tests for security utilities
 """
 
 import pytest
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 from jose import jwt
 from app.core.config import settings
 from app.core.security import (
@@ -22,7 +22,7 @@ def create_token(payload_override=None, secret=None):
         "email": "test@example.com",
         "role": "user",
         "type": "access",
-        "exp": datetime.utcnow() + timedelta(minutes=30)
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=30)
     }
 
     if payload_override:
@@ -56,7 +56,7 @@ def test_decode_invalid_token():
 def test_decode_expired_token():
     """Test decoding an expired token"""
     token = create_token({
-        "exp": datetime.utcnow() - timedelta(minutes=10)
+        "exp": datetime.now(timezone.utc) - timedelta(minutes=10)
     })
 
     payload = decode_token(token)

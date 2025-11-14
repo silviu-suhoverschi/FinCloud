@@ -129,13 +129,17 @@ async def test_status_endpoint(client: AsyncClient):
 async def test_check_service_health_success(mock_get):
     """Test checking service health when service responds"""
     from app.api.v1.health import check_service_health
+    from unittest.mock import Mock
 
-    # Mock successful response
-    mock_response = AsyncMock()
+    # Mock successful response - use Mock instead of AsyncMock for attributes
+    mock_response = Mock()
     mock_response.status_code = 200
     mock_response.json.return_value = {"status": "ok"}
     mock_response.content = b'{"status": "ok"}'
+    # elapsed is a Mock object with total_seconds method
     mock_response.elapsed.total_seconds.return_value = 0.05
+
+    # Wrap in AsyncMock to make it awaitable
     mock_get.return_value = mock_response
 
     result = await check_service_health("test-service", "http://test:8000")
@@ -150,9 +154,10 @@ async def test_check_service_health_success(mock_get):
 async def test_check_service_health_failure(mock_get):
     """Test checking service health when service fails"""
     from app.api.v1.health import check_service_health
+    from unittest.mock import Mock
 
     # Mock failed response
-    mock_response = AsyncMock()
+    mock_response = Mock()
     mock_response.status_code = 500
     mock_response.elapsed.total_seconds.return_value = 0.1
     mock_get.return_value = mock_response

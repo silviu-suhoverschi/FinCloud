@@ -5,9 +5,10 @@ Test configuration and fixtures for API Gateway
 import pytest
 import pytest_asyncio
 from typing import AsyncGenerator
-from httpx import AsyncClient, ASGITransport
+from datetime import datetime, timezone, timedelta
+from httpx import AsyncClient, ASGITransport, Response
 import redis.asyncio as redis
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, Mock
 
 from app.main import app
 from app.middleware.rate_limit import rate_limiter
@@ -52,33 +53,34 @@ async def mock_redis():
 @pytest_asyncio.fixture
 async def mock_service_proxy():
     """Mock service proxy for testing routing without actual backend services"""
-    # Store original client
-    original_client = service_proxy.client
+    # Store original method
+    original_proxy = service_proxy.proxy_request
 
-    # Create mock client
-    mock_client = AsyncMock()
-    service_proxy.client = mock_client
+    # Create a mock that raises service unavailable by default
+    async def mock_proxy(*args, **kwargs):
+        from fastapi import HTTPException
+        raise HTTPException(status_code=503, detail="Service unavailable (mocked)")
 
-    yield mock_client
+    service_proxy.proxy_request = mock_proxy
 
-    # Restore original client
-    service_proxy.client = original_client
+    yield service_proxy
+
+    # Restore original method
+    service_proxy.proxy_request = original_proxy
 
 
 @pytest.fixture
 def valid_jwt_token():
     """Generate a valid JWT token for testing"""
-    from app.core.security import decode_token
     from jose import jwt
     from app.core.config import settings
-    from datetime import datetime, timedelta
 
     payload = {
         "sub": "1",
         "email": "test@example.com",
         "role": "user",
         "type": "access",
-        "exp": datetime.utcnow() + timedelta(minutes=30)
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=30)
     }
 
     token = jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
@@ -90,14 +92,13 @@ def expired_jwt_token():
     """Generate an expired JWT token for testing"""
     from jose import jwt
     from app.core.config import settings
-    from datetime import datetime, timedelta
 
     payload = {
         "sub": "1",
         "email": "test@example.com",
         "role": "user",
         "type": "access",
-        "exp": datetime.utcnow() - timedelta(minutes=10)  # Expired
+        "exp": datetime.now(timezone.utc) - timedelta(minutes=10)  # Expired
     }
 
     token = jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
@@ -109,14 +110,13 @@ def invalid_token_type():
     """Generate a token with wrong type (refresh instead of access)"""
     from jose import jwt
     from app.core.config import settings
-    from datetime import datetime, timedelta
 
     payload = {
         "sub": "1",
         "email": "test@example.com",
         "role": "user",
         "type": "refresh",  # Wrong type
-        "exp": datetime.utcnow() + timedelta(days=7)
+        "exp": datetime.now(timezone.utc) + timedelta(days=7)
     }
 
     token = jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)

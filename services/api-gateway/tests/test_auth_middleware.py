@@ -23,15 +23,16 @@ async def test_public_endpoint_no_auth(client: AsyncClient):
 
 
 @pytest.mark.asyncio
-async def test_protected_endpoint_no_token(client: AsyncClient, mock_service_proxy):
+async def test_protected_endpoint_no_token(client: AsyncClient):
     """Test protected endpoints require authentication"""
+    # Don't use mock_service_proxy - test will fail at auth middleware level
     response = await client.get("/api/v1/budget/accounts")
     assert response.status_code == 401
     assert response.json()["detail"] == "Missing authentication token"
 
 
 @pytest.mark.asyncio
-async def test_protected_endpoint_invalid_token(client: AsyncClient, mock_service_proxy):
+async def test_protected_endpoint_invalid_token(client: AsyncClient):
     """Test protected endpoints reject invalid tokens"""
     response = await client.get(
         "/api/v1/budget/accounts",
@@ -42,7 +43,7 @@ async def test_protected_endpoint_invalid_token(client: AsyncClient, mock_servic
 
 
 @pytest.mark.asyncio
-async def test_protected_endpoint_expired_token(client: AsyncClient, expired_jwt_token, mock_service_proxy):
+async def test_protected_endpoint_expired_token(client: AsyncClient, expired_jwt_token):
     """Test protected endpoints reject expired tokens"""
     response = await client.get(
         "/api/v1/budget/accounts",
@@ -52,7 +53,7 @@ async def test_protected_endpoint_expired_token(client: AsyncClient, expired_jwt
 
 
 @pytest.mark.asyncio
-async def test_protected_endpoint_wrong_token_type(client: AsyncClient, invalid_token_type, mock_service_proxy):
+async def test_protected_endpoint_wrong_token_type(client: AsyncClient, invalid_token_type):
     """Test protected endpoints reject wrong token type (refresh instead of access)"""
     response = await client.get(
         "/api/v1/budget/accounts",
@@ -65,24 +66,14 @@ async def test_protected_endpoint_wrong_token_type(client: AsyncClient, invalid_
 @pytest.mark.asyncio
 async def test_protected_endpoint_valid_token(client: AsyncClient, valid_jwt_token, mock_service_proxy):
     """Test protected endpoints work with valid token"""
-    from httpx import Response
-
-    # Mock successful response from backend service
-    mock_response = Response(
-        status_code=200,
-        json={"accounts": []},
-        headers={"content-type": "application/json"}
-    )
-    mock_service_proxy.request = pytest.AsyncMock(return_value=mock_response)
-
+    # With valid token, auth should pass and request reaches proxy (which returns 503 in test)
     response = await client.get(
         "/api/v1/budget/accounts",
         headers={"Authorization": f"Bearer {valid_jwt_token}"}
     )
 
-    # Should pass authentication and attempt to proxy request
-    # (will fail if backend is not mocked, but authentication should succeed)
-    assert response.status_code in [200, 503]  # 503 if proxy fails, 200 if mocked
+    # Should pass authentication, so we get 503 from mocked proxy (not 401)
+    assert response.status_code == 503  # Proxy mock returns 503
 
 
 @pytest.mark.asyncio
@@ -95,7 +86,7 @@ async def test_auth_middleware_extracts_user_info(client: AsyncClient, valid_jwt
 
 
 @pytest.mark.asyncio
-async def test_malformed_auth_header(client: AsyncClient, mock_service_proxy):
+async def test_malformed_auth_header(client: AsyncClient):
     """Test malformed Authorization header"""
     # Missing 'Bearer' prefix
     response = await client.get(
