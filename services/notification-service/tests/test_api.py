@@ -2,8 +2,6 @@
 Test API endpoints
 """
 
-from unittest.mock import AsyncMock
-
 import fakeredis.aioredis
 import pytest
 from fastapi.testclient import TestClient
