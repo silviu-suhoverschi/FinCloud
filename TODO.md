@@ -177,13 +177,13 @@
 - ✅ Cache price data in Redis
 
 #### Analytics & Performance
-- 📋 Calculate portfolio total value
-- 📋 Calculate ROI (Return on Investment)
-- 📋 Calculate XIRR (Extended Internal Rate of Return)
-- 📋 Calculate TWR (Time-Weighted Return)
-- 📋 Asset allocation breakdown
-- 📋 Gain/loss per holding
-- 📋 Dividend tracking and yield
+- ✅ Calculate portfolio total value
+- ✅ Calculate ROI (Return on Investment)
+- ✅ Calculate XIRR (Extended Internal Rate of Return)
+- ✅ Calculate TWR (Time-Weighted Return)
+- ✅ Asset allocation breakdown
+- ✅ Gain/loss per holding
+- ✅ Dividend tracking and yield
 
 ### 1.5 API Gateway 📋
 
