@@ -2,7 +2,10 @@
 Pydantic schemas for portfolio transaction management.
 """
 
-from datetime import datetime, date
+from __future__ import annotations
+
+from datetime import datetime
+from datetime import date as DateType
 from typing import Optional
 from uuid import UUID
 from decimal import Decimal
@@ -45,7 +48,7 @@ class TransactionBase(BaseModel):
     exchange_rate: Decimal = Field(
         default=Decimal("1.0"), gt=0, description="Exchange rate to base currency"
     )
-    date: date = Field(..., description="Transaction date")
+    date: DateType = Field(..., description="Transaction date")
     notes: Optional[str] = Field(None, description="Additional notes")
     reference_number: Optional[str] = Field(
         None, max_length=100, description="Reference/confirmation number"
@@ -79,7 +82,7 @@ class TransactionUpdate(BaseModel):
     exchange_rate: Optional[Decimal] = Field(
         None, gt=0, description="Exchange rate to base currency"
     )
-    date: Optional[date] = Field(None, description="Transaction date")
+    date: Optional[DateType] = Field(None, description="Transaction date")
     notes: Optional[str] = Field(None, description="Additional notes")
     reference_number: Optional[str] = Field(
         None, max_length=100, description="Reference/confirmation number"
@@ -107,7 +110,7 @@ class TransactionResponse(BaseModel):
     tax: Decimal = Field(..., description="Transaction tax")
     currency: str = Field(..., description="Currency code")
     exchange_rate: Decimal = Field(..., description="Exchange rate to base currency")
-    date: date = Field(..., description="Transaction date")
+    date: DateType = Field(..., description="Transaction date")
     notes: Optional[str] = Field(None, description="Additional notes")
     reference_number: Optional[str] = Field(None, description="Reference/confirmation number")
     external_id: Optional[str] = Field(None, description="External system ID")
