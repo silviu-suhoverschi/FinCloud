@@ -5,11 +5,10 @@ Pydantic schemas for budget management.
 from __future__ import annotations
 
 from datetime import datetime, date
-from typing import Optional, Annotated
+from typing import Optional
 from uuid import UUID
 from decimal import Decimal
 from pydantic import BaseModel, Field, field_validator, ConfigDict
-from pydantic.types import condecimal
 from enum import Enum
 
 
@@ -28,8 +27,12 @@ class BudgetBase(BaseModel):
     """Base schema for budget."""
 
     name: str = Field(..., min_length=1, max_length=255, description="Budget name")
-    amount: Annotated[Decimal, condecimal(gt=0, max_digits=15, decimal_places=2)] = Field(
-        ..., description="Budget amount"
+    amount: Decimal = Field(
+        ...,
+        gt=0,
+        max_digits=15,
+        decimal_places=2,
+        description="Budget amount (must be positive)"
     )
     currency: str = Field(
         default="USD",
@@ -102,8 +105,12 @@ class BudgetUpdate(BaseModel):
     name: Optional[str] = Field(
         None, min_length=1, max_length=255, description="Budget name"
     )
-    amount: Optional[Annotated[Decimal, condecimal(gt=0, max_digits=15, decimal_places=2)]] = Field(
-        None, description="Budget amount"
+    amount: Optional[Decimal] = Field(
+        None,
+        gt=0,
+        max_digits=15,
+        decimal_places=2,
+        description="Budget amount (must be positive)"
     )
     currency: Optional[str] = Field(
         None, min_length=3, max_length=3, description="Currency code"
