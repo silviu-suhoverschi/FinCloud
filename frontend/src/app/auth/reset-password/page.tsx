@@ -138,7 +138,7 @@ export default function ResetPasswordPage() {
                   </p>
                 )}
                 <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                  We'll send you an email with instructions to reset your password.
+                  We&apos;ll send you an email with instructions to reset your password.
                 </p>
               </div>
 

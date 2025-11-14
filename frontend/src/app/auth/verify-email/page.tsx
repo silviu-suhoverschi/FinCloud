@@ -15,32 +15,32 @@ export default function VerifyEmailPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    const verifyEmail = async (verificationToken: string) => {
+      setIsVerifying(true)
+      setError(null)
+
+      try {
+        await authService.verifyEmail({ token: verificationToken })
+        setIsVerified(true)
+        setTimeout(() => {
+          router.push('/auth/login')
+        }, 3000)
+      } catch (err: any) {
+        setError(
+          err.response?.data?.detail ||
+            'Email verification failed. The link may have expired or is invalid.'
+        )
+      } finally {
+        setIsVerifying(false)
+      }
+    }
+
     if (token) {
       verifyEmail(token)
     } else {
       setError('Verification token is missing. Please check your email link.')
     }
-  }, [token])
-
-  const verifyEmail = async (verificationToken: string) => {
-    setIsVerifying(true)
-    setError(null)
-
-    try {
-      await authService.verifyEmail({ token: verificationToken })
-      setIsVerified(true)
-      setTimeout(() => {
-        router.push('/auth/login')
-      }, 3000)
-    } catch (err: any) {
-      setError(
-        err.response?.data?.detail ||
-          'Email verification failed. The link may have expired or is invalid.'
-      )
-    } finally {
-      setIsVerifying(false)
-    }
-  }
+  }, [token, router])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 px-4">
