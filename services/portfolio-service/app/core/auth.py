@@ -56,3 +56,51 @@ async def get_current_user_id(
         raise credentials_exception
 
     return int(user_id)
+
+
+async def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+) -> dict:
+    """
+    Dependency to get the current authenticated user information from JWT token.
+
+    Args:
+        credentials: HTTP Bearer token credentials
+
+    Returns:
+        dict: Dictionary with user information (id, email, role)
+
+    Raises:
+        HTTPException: If token is invalid or user_id not found
+    """
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+
+    # Decode the token
+    token = credentials.credentials
+    payload = decode_token(token)
+    if payload is None:
+        raise credentials_exception
+
+    # Verify token type
+    if not verify_token_type(payload, "access"):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token type",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # Get user_id from payload
+    user_id: Optional[int] = payload.get("sub")
+    if user_id is None:
+        raise credentials_exception
+
+    # Return user dict with available information from token
+    return {
+        "id": int(user_id),
+        "email": payload.get("email"),
+        "role": payload.get("role", "user"),
+    }

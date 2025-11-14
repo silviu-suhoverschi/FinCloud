@@ -3,6 +3,7 @@ Tests for portfolio analytics service
 """
 
 import pytest
+import pytest_asyncio
 from datetime import date, datetime
 from decimal import Decimal
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,6 +13,32 @@ from app.models.portfolio import Portfolio
 from app.models.asset import Asset
 from app.models.holding import Holding
 from app.models.portfolio_transaction import PortfolioTransaction
+from app.core.auth import get_current_user
+from app.main import app
+
+
+# Mock user for testing
+TEST_USER_ID = 1
+
+
+@pytest_asyncio.fixture(scope="function")
+async def mock_auth():
+    """Override authentication to return a test user"""
+
+    async def override_get_current_user():
+        return {
+            "id": TEST_USER_ID,
+            "email": "test@example.com",
+            "role": "user",
+        }
+
+    app.dependency_overrides[get_current_user] = override_get_current_user
+
+    yield
+
+    # Clean up
+    if get_current_user in app.dependency_overrides:
+        del app.dependency_overrides[get_current_user]
 
 
 @pytest.mark.asyncio
@@ -19,7 +46,7 @@ async def test_get_portfolio_total_value_empty(db_session: AsyncSession):
     """Test portfolio total value calculation for empty portfolio"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=1,
+        user_id=TEST_USER_ID,
         name="Test Portfolio",
         currency="USD"
     )
@@ -38,7 +65,7 @@ async def test_get_portfolio_total_value_with_holdings(db_session: AsyncSession)
     """Test portfolio total value calculation with holdings"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=1,
+        user_id=TEST_USER_ID,
         name="Test Portfolio",
         currency="USD"
     )
@@ -94,7 +121,7 @@ async def test_calculate_roi(db_session: AsyncSession):
     """Test ROI calculation"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=1,
+        user_id=TEST_USER_ID,
         name="Test Portfolio",
         currency="USD"
     )
@@ -157,7 +184,7 @@ async def test_calculate_roi_with_sales(db_session: AsyncSession):
     """Test ROI calculation with buy and sell transactions"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=1,
+        user_id=TEST_USER_ID,
         name="Test Portfolio",
         currency="USD"
     )
@@ -231,7 +258,7 @@ async def test_get_asset_allocation(db_session: AsyncSession):
     """Test asset allocation breakdown"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=1,
+        user_id=TEST_USER_ID,
         name="Test Portfolio",
         currency="USD"
     )
@@ -327,7 +354,7 @@ async def test_get_holdings_performance(db_session: AsyncSession):
     """Test holdings performance calculation"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=1,
+        user_id=TEST_USER_ID,
         name="Test Portfolio",
         currency="USD"
     )
@@ -375,7 +402,7 @@ async def test_get_dividend_metrics(db_session: AsyncSession):
     """Test dividend metrics calculation"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=1,
+        user_id=TEST_USER_ID,
         name="Test Portfolio",
         currency="USD"
     )
@@ -470,7 +497,7 @@ async def test_calculate_xirr_simple(db_session: AsyncSession):
     """Test XIRR calculation with simple investment"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=1,
+        user_id=TEST_USER_ID,
         name="Test Portfolio",
         currency="USD"
     )
@@ -529,7 +556,7 @@ async def test_calculate_twr_simple(db_session: AsyncSession):
     """Test TWR calculation with simple investment"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=1,
+        user_id=TEST_USER_ID,
         name="Test Portfolio",
         currency="USD"
     )
@@ -588,7 +615,7 @@ async def test_comprehensive_analytics(db_session: AsyncSession):
     """Test comprehensive analytics"""
     # Create portfolio
     portfolio = Portfolio(
-        user_id=1,
+        user_id=TEST_USER_ID,
         name="Test Portfolio",
         currency="USD"
     )
