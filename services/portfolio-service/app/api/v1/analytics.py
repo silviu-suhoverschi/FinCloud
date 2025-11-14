@@ -23,7 +23,9 @@ from app.schemas.analytics import (
 router = APIRouter()
 
 
-@router.get("/portfolio/{portfolio_id}/value", response_model=PortfolioValueResponse)
+@router.get(
+    "/portfolio/{portfolio_id}/value", response_model=PortfolioValueResponse
+)
 async def get_portfolio_value(
     portfolio_id: int,
     db: AsyncSession = Depends(get_db),

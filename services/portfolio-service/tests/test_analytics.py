@@ -165,7 +165,10 @@ async def test_calculate_roi(db_session: AsyncSession):
     assert roi_metrics["net_invested"] == Decimal("1510.00")
     assert roi_metrics["absolute_gain_loss"] == Decimal("245.00")
     # ROI = (245 / 1510) * 100 = 16.225...%
-    assert roi_metrics["roi_percent"] > Decimal("16") and roi_metrics["roi_percent"] < Decimal("17")
+    assert (
+        roi_metrics["roi_percent"] > Decimal("16")
+        and roi_metrics["roi_percent"] < Decimal("17")
+    )
 
 
 @pytest.mark.asyncio
