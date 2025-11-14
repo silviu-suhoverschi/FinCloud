@@ -83,7 +83,9 @@ async def test_rate_limit_exceeded_per_hour(client: AsyncClient, mock_redis):
 
 
 @pytest.mark.asyncio
-async def test_rate_limit_uses_user_id(client: AsyncClient, mock_redis, valid_jwt_token, mock_service_proxy):
+async def test_rate_limit_uses_user_id(
+    client: AsyncClient, mock_redis, valid_jwt_token, mock_service_proxy
+):
     """Test rate limiter uses user_id for authenticated requests"""
     from httpx import Response
 
@@ -91,7 +93,7 @@ async def test_rate_limit_uses_user_id(client: AsyncClient, mock_redis, valid_jw
     mock_response = Response(
         status_code=200,
         json={"data": "test"},
-        headers={"content-type": "application/json"}
+        headers={"content-type": "application/json"},
     )
     mock_service_proxy.request = AsyncMock(return_value=mock_response)
 
@@ -101,9 +103,9 @@ async def test_rate_limit_uses_user_id(client: AsyncClient, mock_redis, valid_jw
     pipeline_mock.execute = AsyncMock(return_value=[1, True])
     mock_redis.pipeline.return_value = pipeline_mock
 
-    response = await client.get(
+    _ = await client.get(
         "/api/v1/budget/accounts",
-        headers={"Authorization": f"Bearer {valid_jwt_token}"}
+        headers={"Authorization": f"Bearer {valid_jwt_token}"},
     )
 
     # Verify rate limiter was called
@@ -119,7 +121,7 @@ async def test_rate_limit_uses_ip_for_unauthenticated(client: AsyncClient, mock_
     pipeline_mock.execute = AsyncMock(return_value=[1, True])
     mock_redis.pipeline.return_value = pipeline_mock
 
-    response = await client.get("/")
+    _ = await client.get("/")
 
     # Verify rate limiter was called
     assert mock_redis.pipeline.called

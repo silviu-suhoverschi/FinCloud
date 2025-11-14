@@ -3,7 +3,11 @@ Tests for circuit breaker pattern
 """
 
 import pytest
-from app.middleware.circuit_breaker import CircuitBreaker, CircuitState, circuit_breaker_registry
+from app.middleware.circuit_breaker import (
+    CircuitBreaker,
+    CircuitState,
+    circuit_breaker_registry,
+)
 
 
 def test_circuit_breaker_initial_state():

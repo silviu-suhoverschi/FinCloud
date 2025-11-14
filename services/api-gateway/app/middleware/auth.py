@@ -5,7 +5,7 @@ Validates JWT tokens and adds user context to requests.
 
 from typing import Optional
 from fastapi import Request, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPBearer
 from app.core.security import decode_token, verify_token_type
 
 

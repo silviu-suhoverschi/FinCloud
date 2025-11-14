@@ -62,14 +62,13 @@ async def test_readiness_probe_without_redis(client: AsyncClient):
 
 
 @pytest.mark.asyncio
-@patch('app.api.v1.health.check_service_health')
-async def test_detailed_health_all_services_healthy(mock_check_health, client: AsyncClient, mock_redis):
+@patch("app.api.v1.health.check_service_health")
+async def test_detailed_health_all_services_healthy(
+    mock_check_health, client: AsyncClient, mock_redis
+):
     """Test detailed health check when all services are healthy"""
     # Mock all services as healthy
-    mock_check_health.return_value = {
-        "status": "healthy",
-        "response_time_ms": 50
-    }
+    mock_check_health.return_value = {"status": "healthy", "response_time_ms": 50}
 
     mock_redis.ping = AsyncMock(return_value=True)
 
@@ -85,9 +84,12 @@ async def test_detailed_health_all_services_healthy(mock_check_health, client: A
 
 
 @pytest.mark.asyncio
-@patch('app.api.v1.health.check_service_health')
-async def test_detailed_health_some_services_unhealthy(mock_check_health, client: AsyncClient, mock_redis):
+@patch("app.api.v1.health.check_service_health")
+async def test_detailed_health_some_services_unhealthy(
+    mock_check_health, client: AsyncClient, mock_redis
+):
     """Test detailed health check when some services are unhealthy"""
+
     # Mock one service as unhealthy
     async def mock_health_func(service_name, service_url):
         if service_name == "budget_service":
@@ -125,7 +127,7 @@ async def test_status_endpoint(client: AsyncClient):
 
 
 @pytest.mark.asyncio
-@patch('httpx.AsyncClient.get')
+@patch("httpx.AsyncClient.get")
 async def test_check_service_health_success(mock_get):
     """Test checking service health when service responds"""
     from app.api.v1.health import check_service_health
@@ -150,7 +152,7 @@ async def test_check_service_health_success(mock_get):
 
 
 @pytest.mark.asyncio
-@patch('httpx.AsyncClient.get')
+@patch("httpx.AsyncClient.get")
 async def test_check_service_health_failure(mock_get):
     """Test checking service health when service fails"""
     from app.api.v1.health import check_service_health
@@ -170,7 +172,7 @@ async def test_check_service_health_failure(mock_get):
 
 
 @pytest.mark.asyncio
-@patch('httpx.AsyncClient.get')
+@patch("httpx.AsyncClient.get")
 async def test_check_service_health_timeout(mock_get):
     """Test checking service health when service times out"""
     from app.api.v1.health import check_service_health
@@ -185,7 +187,7 @@ async def test_check_service_health_timeout(mock_get):
 
 
 @pytest.mark.asyncio
-@patch('httpx.AsyncClient.get')
+@patch("httpx.AsyncClient.get")
 async def test_check_service_health_connection_error(mock_get):
     """Test checking service health when connection fails"""
     from app.api.v1.health import check_service_health

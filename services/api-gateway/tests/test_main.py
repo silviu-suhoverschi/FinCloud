@@ -63,8 +63,8 @@ async def test_cors_headers(client: AsyncClient):
         "/",
         headers={
             "Origin": "http://localhost:3000",
-            "Access-Control-Request-Method": "GET"
-        }
+            "Access-Control-Request-Method": "GET",
+        },
     )
 
     assert response.status_code == 200

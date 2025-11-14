@@ -16,7 +16,7 @@ router = APIRouter()
 @router.api_route(
     "/budget/{path:path}",
     methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
-    include_in_schema=False
+    include_in_schema=False,
 )
 async def proxy_to_budget_service(request: Request, path: str) -> Response:
     """
@@ -28,9 +28,7 @@ async def proxy_to_budget_service(request: Request, path: str) -> Response:
     # Forward to budget service with the original path
     service_path = f"/api/v1/{path}"
     return await service_proxy.proxy_request(
-        request=request,
-        service_name="budget",
-        path=service_path
+        request=request, service_name="budget", path=service_path
     )
 
 
@@ -38,7 +36,7 @@ async def proxy_to_budget_service(request: Request, path: str) -> Response:
 @router.api_route(
     "/portfolio/{path:path}",
     methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
-    include_in_schema=False
+    include_in_schema=False,
 )
 async def proxy_to_portfolio_service(request: Request, path: str) -> Response:
     """
@@ -50,9 +48,7 @@ async def proxy_to_portfolio_service(request: Request, path: str) -> Response:
     # Forward to portfolio service with the original path
     service_path = f"/api/v1/{path}"
     return await service_proxy.proxy_request(
-        request=request,
-        service_name="portfolio",
-        path=service_path
+        request=request, service_name="portfolio", path=service_path
     )
 
 
@@ -60,7 +56,7 @@ async def proxy_to_portfolio_service(request: Request, path: str) -> Response:
 @router.api_route(
     "/notifications/{path:path}",
     methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
-    include_in_schema=False
+    include_in_schema=False,
 )
 async def proxy_to_notification_service(request: Request, path: str) -> Response:
     """
@@ -72,9 +68,7 @@ async def proxy_to_notification_service(request: Request, path: str) -> Response
     # Forward to notification service with the original path
     service_path = f"/api/v1/{path}"
     return await service_proxy.proxy_request(
-        request=request,
-        service_name="notification",
-        path=service_path
+        request=request, service_name="notification", path=service_path
     )
 
 
@@ -82,7 +76,7 @@ async def proxy_to_notification_service(request: Request, path: str) -> Response
 @router.api_route(
     "/auth/{path:path}",
     methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
-    include_in_schema=False
+    include_in_schema=False,
 )
 async def proxy_auth_routes(request: Request, path: str) -> Response:
     """
@@ -93,9 +87,7 @@ async def proxy_auth_routes(request: Request, path: str) -> Response:
     """
     service_path = f"/api/v1/auth/{path}"
     return await service_proxy.proxy_request(
-        request=request,
-        service_name="budget",
-        path=service_path
+        request=request, service_name="budget", path=service_path
     )
 
 
@@ -103,7 +95,7 @@ async def proxy_auth_routes(request: Request, path: str) -> Response:
 @router.api_route(
     "/users/{path:path}",
     methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
-    include_in_schema=False
+    include_in_schema=False,
 )
 async def proxy_users_routes(request: Request, path: str) -> Response:
     """
@@ -111,7 +103,5 @@ async def proxy_users_routes(request: Request, path: str) -> Response:
     """
     service_path = f"/api/v1/users/{path}"
     return await service_proxy.proxy_request(
-        request=request,
-        service_name="budget",
-        path=service_path
+        request=request, service_name="budget", path=service_path
     )

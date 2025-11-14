@@ -33,7 +33,7 @@ structlog.configure(
         structlog.stdlib.add_log_level,
         structlog.processors.StackInfoRenderer(),
         structlog.processors.format_exc_info,
-        structlog.processors.JSONRenderer()
+        structlog.processors.JSONRenderer(),
     ],
     wrapper_class=structlog.stdlib.BoundLogger,
     context_class=dict,
@@ -64,7 +64,7 @@ async def lifespan(app: FastAPI):
         "API Gateway started successfully",
         port=settings.SERVICE_PORT,
         cors_origins=settings.CORS_ORIGINS,
-        rate_limiting=settings.RATE_LIMIT_ENABLED
+        rate_limiting=settings.RATE_LIMIT_ENABLED,
     )
 
     yield
@@ -134,8 +134,7 @@ app = FastAPI(
 
     Check circuit breaker status: `GET /api/v1/health/detailed`
     """.format(
-        settings.RATE_LIMIT_PER_MINUTE,
-        settings.RATE_LIMIT_PER_HOUR
+        settings.RATE_LIMIT_PER_MINUTE, settings.RATE_LIMIT_PER_HOUR
     ),
     version="0.1.0",
     lifespan=lifespan,
@@ -172,9 +171,7 @@ async def authentication_middleware(request: Request, call_next):
     except HTTPException as e:
         # Return authentication error
         return JSONResponse(
-            status_code=e.status_code,
-            content={"detail": e.detail},
-            headers=e.headers
+            status_code=e.status_code, content={"detail": e.detail}, headers=e.headers
         )
 
 
@@ -193,9 +190,7 @@ async def rate_limiting_middleware(request: Request, call_next):
     except HTTPException as e:
         # Return rate limit error
         return JSONResponse(
-            status_code=e.status_code,
-            content={"detail": e.detail},
-            headers=e.headers
+            status_code=e.status_code, content={"detail": e.detail}, headers=e.headers
         )
 
 
@@ -208,12 +203,10 @@ async def http_exception_handler(request: Request, exc: HTTPException):
         path=request.url.path,
         status_code=exc.status_code,
         detail=exc.detail,
-        user_id=getattr(request.state, "user_id", None)
+        user_id=getattr(request.state, "user_id", None),
     )
     return JSONResponse(
-        status_code=exc.status_code,
-        content={"detail": exc.detail},
-        headers=exc.headers
+        status_code=exc.status_code, content={"detail": exc.detail}, headers=exc.headers
     )
 
 
@@ -225,7 +218,7 @@ async def general_exception_handler(request: Request, exc: Exception):
         path=request.url.path,
         error=str(exc),
         error_type=type(exc).__name__,
-        user_id=getattr(request.state, "user_id", None)
+        user_id=getattr(request.state, "user_id", None),
     )
     return JSONResponse(
         status_code=500,
@@ -250,36 +243,26 @@ async def root():
             "budget": f"{settings.BUDGET_SERVICE_URL}",
             "portfolio": f"{settings.PORTFOLIO_SERVICE_URL}",
             "notifications": f"{settings.NOTIFICATION_SERVICE_URL}",
-        }
+        },
     }
 
 
 # Include routers
 # Health router at root level (for Kubernetes/Docker health checks)
-app.include_router(
-    health.router,
-    tags=["Health"]
-)
+app.include_router(health.router, tags=["Health"])
 
 # Also include health router under /api/v1 for consistency
-app.include_router(
-    health.router,
-    prefix="/api/v1",
-    tags=["Health API"]
-)
+app.include_router(health.router, prefix="/api/v1", tags=["Health API"])
 
-app.include_router(
-    routes.router,
-    prefix="/api/v1",
-    tags=["Services"]
-)
+app.include_router(routes.router, prefix="/api/v1", tags=["Services"])
 
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(
         app,
         host="0.0.0.0",
         port=settings.SERVICE_PORT,
-        log_level=settings.LOG_LEVEL.lower()
+        log_level=settings.LOG_LEVEL.lower(),
     )

@@ -16,6 +16,7 @@ logger = structlog.get_logger()
 
 class CircuitState(Enum):
     """Circuit breaker states"""
+
     CLOSED = "closed"  # Normal operation
     OPEN = "open"  # Failing fast, not calling service
     HALF_OPEN = "half_open"  # Testing if service recovered
@@ -46,8 +47,12 @@ class CircuitBreaker:
             recovery_timeout: Seconds to wait before attempting recovery
         """
         self.service_name = service_name
-        self.failure_threshold = failure_threshold or settings.CIRCUIT_BREAKER_FAILURE_THRESHOLD
-        self.recovery_timeout = recovery_timeout or settings.CIRCUIT_BREAKER_RECOVERY_TIMEOUT
+        self.failure_threshold = (
+            failure_threshold or settings.CIRCUIT_BREAKER_FAILURE_THRESHOLD
+        )
+        self.recovery_timeout = (
+            recovery_timeout or settings.CIRCUIT_BREAKER_RECOVERY_TIMEOUT
+        )
 
         self.state = CircuitState.CLOSED
         self.failure_count = 0
@@ -74,7 +79,7 @@ class CircuitBreaker:
             if self._should_attempt_recovery():
                 logger.info(
                     "Circuit breaker transitioning to HALF_OPEN",
-                    service=self.service_name
+                    service=self.service_name,
                 )
                 self.state = CircuitState.HALF_OPEN
                 self.success_count = 0
@@ -82,12 +87,12 @@ class CircuitBreaker:
                 logger.warning(
                     "Circuit breaker is OPEN, failing fast",
                     service=self.service_name,
-                    time_until_retry=self._time_until_retry()
+                    time_until_retry=self._time_until_retry(),
                 )
                 raise HTTPException(
                     status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                     detail=f"Service {self.service_name} is currently unavailable. Circuit breaker is OPEN.",
-                    headers={"Retry-After": str(int(self._time_until_retry()))}
+                    headers={"Retry-After": str(int(self._time_until_retry()))},
                 )
 
         # Execute function
@@ -95,7 +100,7 @@ class CircuitBreaker:
             result = func(*args, **kwargs)
             self._on_success()
             return result
-        except Exception as e:
+        except Exception:
             self._on_failure()
             raise
 
@@ -107,7 +112,7 @@ class CircuitBreaker:
             if self.success_count >= 3:
                 logger.info(
                     "Circuit breaker closing after successful recovery",
-                    service=self.service_name
+                    service=self.service_name,
                 )
                 self.state = CircuitState.CLOSED
                 self.failure_count = 0
@@ -125,7 +130,7 @@ class CircuitBreaker:
             # Immediately reopen on failure during recovery
             logger.warning(
                 "Circuit breaker reopening after failed recovery attempt",
-                service=self.service_name
+                service=self.service_name,
             )
             self.state = CircuitState.OPEN
             self.success_count = 0
@@ -136,7 +141,7 @@ class CircuitBreaker:
                     "Circuit breaker opening due to failures",
                     service=self.service_name,
                     failure_count=self.failure_count,
-                    threshold=self.failure_threshold
+                    threshold=self.failure_threshold,
                 )
                 self.state = CircuitState.OPEN
 
@@ -167,9 +172,13 @@ class CircuitBreaker:
             "service": self.service_name,
             "state": self.state.value,
             "failure_count": self.failure_count,
-            "success_count": self.success_count if self.state == CircuitState.HALF_OPEN else 0,
+            "success_count": (
+                self.success_count if self.state == CircuitState.HALF_OPEN else 0
+            ),
             "last_failure_time": self.last_failure_time,
-            "time_until_retry": self._time_until_retry() if self.state == CircuitState.OPEN else 0,
+            "time_until_retry": (
+                self._time_until_retry() if self.state == CircuitState.OPEN else 0
+            ),
         }
 
 
@@ -204,10 +213,7 @@ class CircuitBreakerRegistry:
         Returns:
             dict: State of all breakers
         """
-        return {
-            name: breaker.get_state()
-            for name, breaker in self.breakers.items()
-        }
+        return {name: breaker.get_state() for name, breaker in self.breakers.items()}
 
 
 # Global circuit breaker registry

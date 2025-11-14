@@ -6,9 +6,9 @@ import pytest
 import pytest_asyncio
 from typing import AsyncGenerator
 from datetime import datetime, timezone, timedelta
-from httpx import AsyncClient, ASGITransport, Response
+from httpx import AsyncClient, ASGITransport
 import redis.asyncio as redis
-from unittest.mock import AsyncMock, MagicMock, Mock
+from unittest.mock import AsyncMock, MagicMock
 
 from app.main import app
 from app.middleware.rate_limit import rate_limiter
@@ -59,6 +59,7 @@ async def mock_service_proxy():
     # Create a mock that raises service unavailable by default
     async def mock_proxy(*args, **kwargs):
         from fastapi import HTTPException
+
         raise HTTPException(status_code=503, detail="Service unavailable (mocked)")
 
     service_proxy.proxy_request = mock_proxy
@@ -80,7 +81,7 @@ def valid_jwt_token():
         "email": "test@example.com",
         "role": "user",
         "type": "access",
-        "exp": datetime.now(timezone.utc) + timedelta(minutes=30)
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=30),
     }
 
     token = jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
@@ -98,7 +99,7 @@ def expired_jwt_token():
         "email": "test@example.com",
         "role": "user",
         "type": "access",
-        "exp": datetime.now(timezone.utc) - timedelta(minutes=10)  # Expired
+        "exp": datetime.now(timezone.utc) - timedelta(minutes=10),  # Expired
     }
 
     token = jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
@@ -116,7 +117,7 @@ def invalid_token_type():
         "email": "test@example.com",
         "role": "user",
         "type": "refresh",  # Wrong type
-        "exp": datetime.now(timezone.utc) + timedelta(days=7)
+        "exp": datetime.now(timezone.utc) + timedelta(days=7),
     }
 
     token = jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)

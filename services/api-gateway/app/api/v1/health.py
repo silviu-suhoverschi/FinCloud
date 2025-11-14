@@ -4,7 +4,7 @@ Aggregates health from all backend services.
 """
 
 import httpx
-from fastapi import APIRouter, status
+from fastapi import APIRouter
 from typing import Dict, Any
 import structlog
 
@@ -36,24 +36,18 @@ async def check_service_health(service_name: str, service_url: str) -> Dict[str,
                 return {
                     "status": "healthy",
                     "response_time_ms": int(response.elapsed.total_seconds() * 1000),
-                    "details": response.json() if response.content else {}
+                    "details": response.json() if response.content else {},
                 }
             else:
                 return {
                     "status": "unhealthy",
                     "error": f"HTTP {response.status_code}",
-                    "response_time_ms": int(response.elapsed.total_seconds() * 1000)
+                    "response_time_ms": int(response.elapsed.total_seconds() * 1000),
                 }
     except httpx.TimeoutException:
-        return {
-            "status": "unhealthy",
-            "error": "Timeout"
-        }
+        return {"status": "unhealthy", "error": "Timeout"}
     except Exception as e:
-        return {
-            "status": "unhealthy",
-            "error": str(e)
-        }
+        return {"status": "unhealthy", "error": str(e)}
 
 
 @router.get("/health")
@@ -61,11 +55,7 @@ async def health_check():
     """
     Simple health check for the API Gateway itself.
     """
-    return {
-        "status": "healthy",
-        "service": "api-gateway",
-        "version": "0.1.0"
-    }
+    return {"status": "healthy", "service": "api-gateway", "version": "0.1.0"}
 
 
 @router.get("/health/detailed")
@@ -110,7 +100,7 @@ async def detailed_health_check():
         "version": "0.1.0",
         "services": service_health,
         "redis": redis_status,
-        "circuit_breakers": circuit_breaker_registry.get_all_states()
+        "circuit_breakers": circuit_breaker_registry.get_all_states(),
     }
 
 
@@ -128,15 +118,6 @@ async def readiness_check():
             redis_ready = True
         except Exception:
             pass
-
-    # Check if at least one backend service is reachable
-    budget_service_ready = False
-    try:
-        async with httpx.AsyncClient(timeout=2.0) as client:
-            response = await client.get(f"{settings.BUDGET_SERVICE_URL}/health")
-            budget_service_ready = response.status_code == 200
-    except Exception:
-        pass
 
     # Gateway is ready if Redis is available (rate limiter dependency)
     # Backend services can be down temporarily (circuit breaker will handle)
@@ -173,5 +154,5 @@ async def api_status():
             "rate_limiting": settings.RATE_LIMIT_ENABLED,
             "circuit_breaker": True,
             "cors": True,
-        }
+        },
     }

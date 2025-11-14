@@ -29,9 +29,7 @@ class RateLimiter:
 
         try:
             self.redis_client = redis.from_url(
-                settings.REDIS_URL,
-                encoding="utf-8",
-                decode_responses=True
+                settings.REDIS_URL, encoding="utf-8", decode_responses=True
             )
             # Test connection
             await self.redis_client.ping()
@@ -73,17 +71,19 @@ class RateLimiter:
                 "Rate limit exceeded (per minute)",
                 client_id=client_id,
                 count=minute_count,
-                limit=settings.RATE_LIMIT_PER_MINUTE
+                limit=settings.RATE_LIMIT_PER_MINUTE,
             )
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 detail=f"Rate limit exceeded: {settings.RATE_LIMIT_PER_MINUTE} requests per minute",
                 headers={
                     "X-RateLimit-Limit": str(settings.RATE_LIMIT_PER_MINUTE),
-                    "X-RateLimit-Remaining": str(max(0, settings.RATE_LIMIT_PER_MINUTE - minute_count)),
+                    "X-RateLimit-Remaining": str(
+                        max(0, settings.RATE_LIMIT_PER_MINUTE - minute_count)
+                    ),
                     "X-RateLimit-Reset": str((current_time // 60 + 1) * 60),
-                    "Retry-After": str(60 - (current_time % 60))
-                }
+                    "Retry-After": str(60 - (current_time % 60)),
+                },
             )
 
         # Check per-hour limit
@@ -95,25 +95,31 @@ class RateLimiter:
                 "Rate limit exceeded (per hour)",
                 client_id=client_id,
                 count=hour_count,
-                limit=settings.RATE_LIMIT_PER_HOUR
+                limit=settings.RATE_LIMIT_PER_HOUR,
             )
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 detail=f"Rate limit exceeded: {settings.RATE_LIMIT_PER_HOUR} requests per hour",
                 headers={
                     "X-RateLimit-Limit": str(settings.RATE_LIMIT_PER_HOUR),
-                    "X-RateLimit-Remaining": str(max(0, settings.RATE_LIMIT_PER_HOUR - hour_count)),
+                    "X-RateLimit-Remaining": str(
+                        max(0, settings.RATE_LIMIT_PER_HOUR - hour_count)
+                    ),
                     "X-RateLimit-Reset": str((current_time // 3600 + 1) * 3600),
-                    "Retry-After": str(3600 - (current_time % 3600))
-                }
+                    "Retry-After": str(3600 - (current_time % 3600)),
+                },
             )
 
         # Add rate limit headers to response
         request.state.rate_limit_headers = {
             "X-RateLimit-Limit-Minute": str(settings.RATE_LIMIT_PER_MINUTE),
-            "X-RateLimit-Remaining-Minute": str(max(0, settings.RATE_LIMIT_PER_MINUTE - minute_count)),
+            "X-RateLimit-Remaining-Minute": str(
+                max(0, settings.RATE_LIMIT_PER_MINUTE - minute_count)
+            ),
             "X-RateLimit-Limit-Hour": str(settings.RATE_LIMIT_PER_HOUR),
-            "X-RateLimit-Remaining-Hour": str(max(0, settings.RATE_LIMIT_PER_HOUR - hour_count)),
+            "X-RateLimit-Remaining-Hour": str(
+                max(0, settings.RATE_LIMIT_PER_HOUR - hour_count)
+            ),
         }
 
         return True
@@ -160,7 +166,9 @@ class RateLimiter:
             result = await pipe.execute()
             return result[0]
         except Exception as e:
-            logger.error("Failed to increment rate limit counter", key=key, error=str(e))
+            logger.error(
+                "Failed to increment rate limit counter", key=key, error=str(e)
+            )
             # Fail open - allow request if Redis is down
             return 0
 

@@ -35,8 +35,7 @@ async def test_protected_endpoint_no_token(client: AsyncClient):
 async def test_protected_endpoint_invalid_token(client: AsyncClient):
     """Test protected endpoints reject invalid tokens"""
     response = await client.get(
-        "/api/v1/budget/accounts",
-        headers={"Authorization": "Bearer invalid-token"}
+        "/api/v1/budget/accounts", headers={"Authorization": "Bearer invalid-token"}
     )
     assert response.status_code == 401
     assert "Invalid or expired token" in response.json()["detail"]
@@ -47,29 +46,33 @@ async def test_protected_endpoint_expired_token(client: AsyncClient, expired_jwt
     """Test protected endpoints reject expired tokens"""
     response = await client.get(
         "/api/v1/budget/accounts",
-        headers={"Authorization": f"Bearer {expired_jwt_token}"}
+        headers={"Authorization": f"Bearer {expired_jwt_token}"},
     )
     assert response.status_code == 401
 
 
 @pytest.mark.asyncio
-async def test_protected_endpoint_wrong_token_type(client: AsyncClient, invalid_token_type):
+async def test_protected_endpoint_wrong_token_type(
+    client: AsyncClient, invalid_token_type
+):
     """Test protected endpoints reject wrong token type (refresh instead of access)"""
     response = await client.get(
         "/api/v1/budget/accounts",
-        headers={"Authorization": f"Bearer {invalid_token_type}"}
+        headers={"Authorization": f"Bearer {invalid_token_type}"},
     )
     assert response.status_code == 401
     assert "Invalid token type" in response.json()["detail"]
 
 
 @pytest.mark.asyncio
-async def test_protected_endpoint_valid_token(client: AsyncClient, valid_jwt_token, mock_service_proxy):
+async def test_protected_endpoint_valid_token(
+    client: AsyncClient, valid_jwt_token, mock_service_proxy
+):
     """Test protected endpoints work with valid token"""
     # With valid token, auth should pass and request reaches proxy (which returns 503 in test)
     response = await client.get(
         "/api/v1/budget/accounts",
-        headers={"Authorization": f"Bearer {valid_jwt_token}"}
+        headers={"Authorization": f"Bearer {valid_jwt_token}"},
     )
 
     # Should pass authentication, so we get 503 from mocked proxy (not 401)
@@ -90,8 +93,7 @@ async def test_malformed_auth_header(client: AsyncClient):
     """Test malformed Authorization header"""
     # Missing 'Bearer' prefix
     response = await client.get(
-        "/api/v1/budget/accounts",
-        headers={"Authorization": "invalid-format"}
+        "/api/v1/budget/accounts", headers={"Authorization": "invalid-format"}
     )
     assert response.status_code == 401
 

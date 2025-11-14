@@ -62,7 +62,7 @@ class ServiceProxy:
         if service_name not in self.service_urls:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Unknown service: {service_name}"
+                detail=f"Unknown service: {service_name}",
             )
 
         service_url = self.service_urls[service_name]
@@ -77,7 +77,7 @@ class ServiceProxy:
                 self._execute_request,
                 request=request,
                 target_url=target_url,
-                service_name=service_name
+                service_name=service_name,
             )
             return await response
         except HTTPException:
@@ -89,18 +89,15 @@ class ServiceProxy:
                 service=service_name,
                 path=path,
                 error=str(e),
-                error_type=type(e).__name__
+                error_type=type(e).__name__,
             )
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail=f"Service {service_name} is unavailable: {str(e)}"
+                detail=f"Service {service_name} is unavailable: {str(e)}",
             )
 
     async def _execute_request(
-        self,
-        request: Request,
-        target_url: str,
-        service_name: str
+        self, request: Request, target_url: str, service_name: str
     ) -> Response:
         """
         Execute the actual HTTP request to backend service.
@@ -149,7 +146,7 @@ class ServiceProxy:
             service=service_name,
             method=request.method,
             url=target_url,
-            user_id=getattr(request.state, "user_id", None)
+            user_id=getattr(request.state, "user_id", None),
         )
 
         try:
@@ -176,16 +173,16 @@ class ServiceProxy:
                 media_type=response.headers.get("content-type"),
             )
 
-        except httpx.TimeoutException as e:
+        except httpx.TimeoutException:
             logger.error(
                 "Service request timeout",
                 service=service_name,
                 url=target_url,
-                timeout=settings.REQUEST_TIMEOUT
+                timeout=settings.REQUEST_TIMEOUT,
             )
             raise HTTPException(
                 status_code=status.HTTP_504_GATEWAY_TIMEOUT,
-                detail=f"Service {service_name} request timeout"
+                detail=f"Service {service_name} request timeout",
             )
 
         except httpx.ConnectError as e:
@@ -193,11 +190,11 @@ class ServiceProxy:
                 "Failed to connect to service",
                 service=service_name,
                 url=target_url,
-                error=str(e)
+                error=str(e),
             )
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail=f"Cannot connect to service {service_name}"
+                detail=f"Cannot connect to service {service_name}",
             )
 
         except Exception as e:
@@ -206,7 +203,7 @@ class ServiceProxy:
                 service=service_name,
                 url=target_url,
                 error=str(e),
-                error_type=type(e).__name__
+                error_type=type(e).__name__,
             )
             raise
 

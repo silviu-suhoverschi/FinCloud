@@ -2,7 +2,6 @@
 Tests for security utilities
 """
 
-import pytest
 from datetime import datetime, timezone, timedelta
 from jose import jwt
 from app.core.config import settings
@@ -11,7 +10,7 @@ from app.core.security import (
     verify_token_type,
     get_user_id_from_token,
     get_user_email_from_token,
-    get_user_role_from_token
+    get_user_role_from_token,
 )
 
 
@@ -22,16 +21,14 @@ def create_token(payload_override=None, secret=None):
         "email": "test@example.com",
         "role": "user",
         "type": "access",
-        "exp": datetime.now(timezone.utc) + timedelta(minutes=30)
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=30),
     }
 
     if payload_override:
         payload.update(payload_override)
 
     return jwt.encode(
-        payload,
-        secret or settings.JWT_SECRET,
-        algorithm=settings.JWT_ALGORITHM
+        payload, secret or settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM
     )
 
 
@@ -55,9 +52,7 @@ def test_decode_invalid_token():
 
 def test_decode_expired_token():
     """Test decoding an expired token"""
-    token = create_token({
-        "exp": datetime.now(timezone.utc) - timedelta(minutes=10)
-    })
+    token = create_token({"exp": datetime.now(timezone.utc) - timedelta(minutes=10)})
 
     payload = decode_token(token)
     assert payload is None
@@ -166,12 +161,9 @@ def test_get_user_role_missing():
 
 def test_token_with_all_fields():
     """Test token with all user information"""
-    token = create_token({
-        "sub": "789",
-        "email": "admin@example.com",
-        "role": "admin",
-        "type": "access"
-    })
+    token = create_token(
+        {"sub": "789", "email": "admin@example.com", "role": "admin", "type": "access"}
+    )
 
     user_id = get_user_id_from_token(token)
     email = get_user_email_from_token(token)
