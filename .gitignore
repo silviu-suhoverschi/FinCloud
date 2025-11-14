@@ -60,6 +60,7 @@ yarn-error.log*
 .pnpm-debug.log*
 .npm
 .next/
+next-env.d.ts
 out/
 build/
 dist/
