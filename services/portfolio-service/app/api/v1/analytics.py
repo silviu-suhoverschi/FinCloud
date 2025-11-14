@@ -23,9 +23,7 @@ from app.schemas.analytics import (
 router = APIRouter()
 
 
-@router.get(
-    "/portfolio/{portfolio_id}/value", response_model=PortfolioValueResponse
-)
+@router.get("/portfolio/{portfolio_id}/value", response_model=PortfolioValueResponse)
 async def get_portfolio_value(
     portfolio_id: int,
     db: AsyncSession = Depends(get_db),
@@ -120,9 +118,7 @@ async def get_roi(
         )
 
 
-@router.get(
-    "/portfolio/{portfolio_id}/performance", response_model=PerformanceMetrics
-)
+@router.get("/portfolio/{portfolio_id}/performance", response_model=PerformanceMetrics)
 async def get_performance(
     portfolio_id: int,
     end_date: Optional[date] = Query(None, description="End date for calculations"),
@@ -177,9 +173,7 @@ async def get_performance(
         )
 
 
-@router.get(
-    "/portfolio/{portfolio_id}/allocation", response_model=AssetAllocation
-)
+@router.get("/portfolio/{portfolio_id}/allocation", response_model=AssetAllocation)
 async def get_allocation(
     portfolio_id: int,
     db: AsyncSession = Depends(get_db),
@@ -276,9 +270,7 @@ async def get_holdings_performance(
         )
 
 
-@router.get(
-    "/portfolio/{portfolio_id}/dividends", response_model=DividendMetrics
-)
+@router.get("/portfolio/{portfolio_id}/dividends", response_model=DividendMetrics)
 async def get_dividend_metrics(
     portfolio_id: int,
     start_date: Optional[date] = Query(

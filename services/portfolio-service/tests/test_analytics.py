@@ -45,9 +45,7 @@ async def mock_auth():
 async def test_get_portfolio_total_value_empty(db_session: AsyncSession):
     """Test portfolio total value calculation for empty portfolio"""
     # Create portfolio
-    portfolio = Portfolio(
-        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
-    )
+    portfolio = Portfolio(user_id=TEST_USER_ID, name="Test Portfolio", currency="USD")
     db_session.add(portfolio)
     await db_session.commit()
     await db_session.refresh(portfolio)
@@ -62,25 +60,13 @@ async def test_get_portfolio_total_value_empty(db_session: AsyncSession):
 async def test_get_portfolio_total_value_with_holdings(db_session: AsyncSession):
     """Test portfolio total value calculation with holdings"""
     # Create portfolio
-    portfolio = Portfolio(
-        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
-    )
+    portfolio = Portfolio(user_id=TEST_USER_ID, name="Test Portfolio", currency="USD")
     db_session.add(portfolio)
     await db_session.flush()
 
     # Create assets
-    asset1 = Asset(
-        symbol="AAPL",
-        name="Apple Inc.",
-        type="stock",
-        currency="USD"
-    )
-    asset2 = Asset(
-        symbol="GOOGL",
-        name="Alphabet Inc.",
-        type="stock",
-        currency="USD"
-    )
+    asset1 = Asset(symbol="AAPL", name="Apple Inc.", type="stock", currency="USD")
+    asset2 = Asset(symbol="GOOGL", name="Alphabet Inc.", type="stock", currency="USD")
     db_session.add_all([asset1, asset2])
     await db_session.flush()
 
@@ -92,7 +78,7 @@ async def test_get_portfolio_total_value_with_holdings(db_session: AsyncSession)
         average_cost=Decimal("150.00"),
         cost_basis=Decimal("1500.00"),
         current_price=Decimal("175.50"),
-        current_value=Decimal("1755.00")
+        current_value=Decimal("1755.00"),
     )
     holding2 = Holding(
         portfolio_id=portfolio.id,
@@ -101,7 +87,7 @@ async def test_get_portfolio_total_value_with_holdings(db_session: AsyncSession)
         average_cost=Decimal("2800.00"),
         cost_basis=Decimal("14000.00"),
         current_price=Decimal("2950.00"),
-        current_value=Decimal("14750.00")
+        current_value=Decimal("14750.00"),
     )
     db_session.add_all([holding1, holding2])
     await db_session.commit()
@@ -116,9 +102,7 @@ async def test_get_portfolio_total_value_with_holdings(db_session: AsyncSession)
 async def test_calculate_roi(db_session: AsyncSession):
     """Test ROI calculation"""
     # Create portfolio
-    portfolio = Portfolio(
-        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
-    )
+    portfolio = Portfolio(user_id=TEST_USER_ID, name="Test Portfolio", currency="USD")
     db_session.add(portfolio)
     await db_session.flush()
 
@@ -135,7 +119,7 @@ async def test_calculate_roi(db_session: AsyncSession):
         average_cost=Decimal("150.00"),
         cost_basis=Decimal("1500.00"),
         current_price=Decimal("175.50"),
-        current_value=Decimal("1755.00")
+        current_value=Decimal("1755.00"),
     )
     db_session.add(holding)
     await db_session.flush()
@@ -151,7 +135,7 @@ async def test_calculate_roi(db_session: AsyncSession):
         fee=Decimal("10.00"),
         tax=Decimal("0.00"),
         currency="USD",
-        date=date(2024, 1, 1)
+        date=date(2024, 1, 1),
     )
     db_session.add(transaction)
     await db_session.commit()
@@ -165,19 +149,16 @@ async def test_calculate_roi(db_session: AsyncSession):
     assert roi_metrics["net_invested"] == Decimal("1510.00")
     assert roi_metrics["absolute_gain_loss"] == Decimal("245.00")
     # ROI = (245 / 1510) * 100 = 16.225...%
-    assert (
-        roi_metrics["roi_percent"] > Decimal("16")
-        and roi_metrics["roi_percent"] < Decimal("17")
-    )
+    assert roi_metrics["roi_percent"] > Decimal("16") and roi_metrics[
+        "roi_percent"
+    ] < Decimal("17")
 
 
 @pytest.mark.asyncio
 async def test_calculate_roi_with_sales(db_session: AsyncSession):
     """Test ROI calculation with buy and sell transactions"""
     # Create portfolio
-    portfolio = Portfolio(
-        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
-    )
+    portfolio = Portfolio(user_id=TEST_USER_ID, name="Test Portfolio", currency="USD")
     db_session.add(portfolio)
     await db_session.flush()
 
@@ -194,7 +175,7 @@ async def test_calculate_roi_with_sales(db_session: AsyncSession):
         average_cost=Decimal("150.00"),
         cost_basis=Decimal("750.00"),
         current_price=Decimal("175.50"),
-        current_value=Decimal("877.50")
+        current_value=Decimal("877.50"),
     )
     db_session.add(holding)
     await db_session.flush()
@@ -210,7 +191,7 @@ async def test_calculate_roi_with_sales(db_session: AsyncSession):
         fee=Decimal("10.00"),
         tax=Decimal("0.00"),
         currency="USD",
-        date=date(2024, 1, 1)
+        date=date(2024, 1, 1),
     )
     # Create sell transaction (5 shares)
     sell_txn = PortfolioTransaction(
@@ -223,7 +204,7 @@ async def test_calculate_roi_with_sales(db_session: AsyncSession):
         fee=Decimal("5.00"),
         tax=Decimal("0.00"),
         currency="USD",
-        date=date(2024, 6, 1)
+        date=date(2024, 6, 1),
     )
     db_session.add_all([buy_txn, sell_txn])
     await db_session.commit()
@@ -242,9 +223,7 @@ async def test_calculate_roi_with_sales(db_session: AsyncSession):
 async def test_get_asset_allocation(db_session: AsyncSession):
     """Test asset allocation breakdown"""
     # Create portfolio
-    portfolio = Portfolio(
-        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
-    )
+    portfolio = Portfolio(user_id=TEST_USER_ID, name="Test Portfolio", currency="USD")
     db_session.add(portfolio)
     await db_session.flush()
 
@@ -254,21 +233,21 @@ async def test_get_asset_allocation(db_session: AsyncSession):
         name="Apple Inc.",
         type="stock",
         asset_class="equity",
-        currency="USD"
+        currency="USD",
     )
     asset2 = Asset(
         symbol="BTC",
         name="Bitcoin",
         type="crypto",
         asset_class="cryptocurrency",
-        currency="USD"
+        currency="USD",
     )
     asset3 = Asset(
         symbol="GOOGL",
         name="Alphabet Inc.",
         type="stock",
         asset_class="equity",
-        currency="USD"
+        currency="USD",
     )
     db_session.add_all([asset1, asset2, asset3])
     await db_session.flush()
@@ -281,7 +260,7 @@ async def test_get_asset_allocation(db_session: AsyncSession):
         average_cost=Decimal("150.00"),
         cost_basis=Decimal("1500.00"),
         current_price=Decimal("175.50"),
-        current_value=Decimal("1755.00")
+        current_value=Decimal("1755.00"),
     )
     holding2 = Holding(
         portfolio_id=portfolio.id,
@@ -290,7 +269,7 @@ async def test_get_asset_allocation(db_session: AsyncSession):
         average_cost=Decimal("40000.00"),
         cost_basis=Decimal("20000.00"),
         current_price=Decimal("45000.00"),
-        current_value=Decimal("22500.00")
+        current_value=Decimal("22500.00"),
     )
     holding3 = Holding(
         portfolio_id=portfolio.id,
@@ -299,7 +278,7 @@ async def test_get_asset_allocation(db_session: AsyncSession):
         average_cost=Decimal("2800.00"),
         cost_basis=Decimal("14000.00"),
         current_price=Decimal("2950.00"),
-        current_value=Decimal("14750.00")
+        current_value=Decimal("14750.00"),
     )
     db_session.add_all([holding1, holding2, holding3])
     await db_session.commit()
@@ -336,9 +315,7 @@ async def test_get_asset_allocation(db_session: AsyncSession):
 async def test_get_holdings_performance(db_session: AsyncSession):
     """Test holdings performance calculation"""
     # Create portfolio
-    portfolio = Portfolio(
-        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
-    )
+    portfolio = Portfolio(user_id=TEST_USER_ID, name="Test Portfolio", currency="USD")
     db_session.add(portfolio)
     await db_session.flush()
 
@@ -355,7 +332,7 @@ async def test_get_holdings_performance(db_session: AsyncSession):
         average_cost=Decimal("150.00"),
         cost_basis=Decimal("1500.00"),
         current_price=Decimal("175.50"),
-        current_value=Decimal("1755.00")
+        current_value=Decimal("1755.00"),
     )
     db_session.add(holding)
     await db_session.commit()
@@ -377,9 +354,7 @@ async def test_get_holdings_performance(db_session: AsyncSession):
 async def test_get_dividend_metrics(db_session: AsyncSession):
     """Test dividend metrics calculation"""
     # Create portfolio
-    portfolio = Portfolio(
-        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
-    )
+    portfolio = Portfolio(user_id=TEST_USER_ID, name="Test Portfolio", currency="USD")
     db_session.add(portfolio)
     await db_session.flush()
 
@@ -396,7 +371,7 @@ async def test_get_dividend_metrics(db_session: AsyncSession):
         average_cost=Decimal("150.00"),
         cost_basis=Decimal("15000.00"),
         current_price=Decimal("175.50"),
-        current_value=Decimal("17550.00")
+        current_value=Decimal("17550.00"),
     )
     db_session.add(holding)
     await db_session.flush()
@@ -412,7 +387,7 @@ async def test_get_dividend_metrics(db_session: AsyncSession):
         fee=Decimal("0.00"),
         tax=Decimal("3.00"),
         currency="USD",
-        date=date(2024, 3, 15)
+        date=date(2024, 3, 15),
     )
     div2 = PortfolioTransaction(
         portfolio_id=portfolio.id,
@@ -424,7 +399,7 @@ async def test_get_dividend_metrics(db_session: AsyncSession):
         fee=Decimal("0.00"),
         tax=Decimal("3.00"),
         currency="USD",
-        date=date(2024, 6, 15)
+        date=date(2024, 6, 15),
     )
     div3 = PortfolioTransaction(
         portfolio_id=portfolio.id,
@@ -436,16 +411,14 @@ async def test_get_dividend_metrics(db_session: AsyncSession):
         fee=Decimal("0.00"),
         tax=Decimal("3.00"),
         currency="USD",
-        date=date(2024, 9, 15)
+        date=date(2024, 9, 15),
     )
     db_session.add_all([div1, div2, div3])
     await db_session.commit()
 
     analytics_service = AnalyticsService(db_session)
     dividends = await analytics_service.get_dividend_metrics(
-        portfolio.id,
-        start_date=date(2024, 1, 1),
-        end_date=date(2024, 12, 31)
+        portfolio.id, start_date=date(2024, 1, 1), end_date=date(2024, 12, 31)
     )
 
     # Total dividends = 20 + 21 + 21 = 62 (after tax)
@@ -465,9 +438,7 @@ async def test_get_dividend_metrics(db_session: AsyncSession):
 async def test_calculate_xirr_simple(db_session: AsyncSession):
     """Test XIRR calculation with simple investment"""
     # Create portfolio
-    portfolio = Portfolio(
-        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
-    )
+    portfolio = Portfolio(user_id=TEST_USER_ID, name="Test Portfolio", currency="USD")
     db_session.add(portfolio)
     await db_session.flush()
 
@@ -484,7 +455,7 @@ async def test_calculate_xirr_simple(db_session: AsyncSession):
         average_cost=Decimal("100.00"),
         cost_basis=Decimal("1000.00"),
         current_price=Decimal("150.00"),
-        current_value=Decimal("1500.00")
+        current_value=Decimal("1500.00"),
     )
     db_session.add(holding)
     await db_session.flush()
@@ -500,13 +471,15 @@ async def test_calculate_xirr_simple(db_session: AsyncSession):
         fee=Decimal("0.00"),
         tax=Decimal("0.00"),
         currency="USD",
-        date=date(2023, 1, 1)
+        date=date(2023, 1, 1),
     )
     db_session.add(transaction)
     await db_session.commit()
 
     analytics_service = AnalyticsService(db_session)
-    xirr = await analytics_service.calculate_xirr(portfolio.id, end_date=date(2024, 1, 1))
+    xirr = await analytics_service.calculate_xirr(
+        portfolio.id, end_date=date(2024, 1, 1)
+    )
 
     # With $1000 invested becoming $1500 in 1 year, XIRR should be ~50%
     assert xirr is not None
@@ -517,9 +490,7 @@ async def test_calculate_xirr_simple(db_session: AsyncSession):
 async def test_calculate_twr_simple(db_session: AsyncSession):
     """Test TWR calculation with simple investment"""
     # Create portfolio
-    portfolio = Portfolio(
-        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
-    )
+    portfolio = Portfolio(user_id=TEST_USER_ID, name="Test Portfolio", currency="USD")
     db_session.add(portfolio)
     await db_session.flush()
 
@@ -536,7 +507,7 @@ async def test_calculate_twr_simple(db_session: AsyncSession):
         average_cost=Decimal("100.00"),
         cost_basis=Decimal("1000.00"),
         current_price=Decimal("150.00"),
-        current_value=Decimal("1500.00")
+        current_value=Decimal("1500.00"),
     )
     db_session.add(holding)
     await db_session.flush()
@@ -552,7 +523,7 @@ async def test_calculate_twr_simple(db_session: AsyncSession):
         fee=Decimal("0.00"),
         tax=Decimal("0.00"),
         currency="USD",
-        date=date(2023, 1, 1)
+        date=date(2023, 1, 1),
     )
     db_session.add(transaction)
     await db_session.commit()
@@ -569,9 +540,7 @@ async def test_calculate_twr_simple(db_session: AsyncSession):
 async def test_comprehensive_analytics(db_session: AsyncSession):
     """Test comprehensive analytics"""
     # Create portfolio
-    portfolio = Portfolio(
-        user_id=TEST_USER_ID, name="Test Portfolio", currency="USD"
-    )
+    portfolio = Portfolio(user_id=TEST_USER_ID, name="Test Portfolio", currency="USD")
     db_session.add(portfolio)
     await db_session.flush()
 
@@ -581,7 +550,7 @@ async def test_comprehensive_analytics(db_session: AsyncSession):
         name="Apple Inc.",
         type="stock",
         asset_class="equity",
-        currency="USD"
+        currency="USD",
     )
     db_session.add(asset)
     await db_session.flush()
@@ -594,7 +563,7 @@ async def test_comprehensive_analytics(db_session: AsyncSession):
         average_cost=Decimal("150.00"),
         cost_basis=Decimal("1500.00"),
         current_price=Decimal("175.50"),
-        current_value=Decimal("1755.00")
+        current_value=Decimal("1755.00"),
     )
     db_session.add(holding)
     await db_session.flush()
@@ -610,7 +579,7 @@ async def test_comprehensive_analytics(db_session: AsyncSession):
         fee=Decimal("10.00"),
         tax=Decimal("0.00"),
         currency="USD",
-        date=date(2024, 1, 1)
+        date=date(2024, 1, 1),
     )
     db_session.add(transaction)
     await db_session.commit()
