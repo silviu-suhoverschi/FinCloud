@@ -167,14 +167,14 @@
 - ✅ Automatic holding updates for BUY/SELL transactions
 - ✅ Advanced filtering (portfolio, asset, type, date range)
 
-#### Price Fetching
-- 📋 Implement Yahoo Finance integration
-- 📋 Implement Alpha Vantage integration
-- 📋 Implement CoinGecko integration (crypto)
-- 📋 Create Celery task for price updates
-- 📋 Schedule hourly price refreshes
-- 📋 Handle API rate limits and retries
-- 📋 Cache price data in Redis
+#### Price Fetching ✅
+- ✅ Implement Yahoo Finance integration
+- ✅ Implement Alpha Vantage integration
+- ✅ Implement CoinGecko integration (crypto)
+- ✅ Create Celery task for price updates
+- ✅ Schedule hourly price refreshes
+- ✅ Handle API rate limits and retries
+- ✅ Cache price data in Redis
 
 #### Analytics & Performance
 - 📋 Calculate portfolio total value
