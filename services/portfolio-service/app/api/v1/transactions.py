@@ -95,7 +95,9 @@ async def list_transactions(
         select(PortfolioTransaction)
         .join(Portfolio, PortfolioTransaction.portfolio_id == Portfolio.id)
         .filter(and_(*filters))
-        .order_by(PortfolioTransaction.date.desc(), PortfolioTransaction.created_at.desc())
+        .order_by(
+            PortfolioTransaction.date.desc(), PortfolioTransaction.created_at.desc()
+        )
         .offset(skip)
         .limit(limit)
     )
@@ -105,7 +107,9 @@ async def list_transactions(
     return TransactionList(total=total, transactions=transactions)
 
 
-@router.post("/", response_model=TransactionResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/", response_model=TransactionResponse, status_code=status.HTTP_201_CREATED
+)
 async def create_transaction(
     transaction_data: TransactionCreate,
     db: AsyncSession = Depends(get_db),
@@ -355,7 +359,12 @@ async def _update_holding(
     if transaction_type == TransactionType.BUY:
         if holding:
             # Update existing holding
-            total_cost = (holding.quantity * holding.average_cost) + (quantity * price) + fee + tax
+            total_cost = (
+                (holding.quantity * holding.average_cost)
+                + (quantity * price)
+                + fee
+                + tax
+            )
             new_quantity = holding.quantity + quantity
             holding.average_cost = total_cost / new_quantity if new_quantity > 0 else 0
             holding.quantity = new_quantity

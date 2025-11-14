@@ -186,9 +186,7 @@ async def test_list_holdings_filter_by_portfolio(
 ):
     """Test filtering holdings by portfolio ID"""
     # Create another portfolio
-    portfolio2 = Portfolio(
-        user_id=TEST_USER_ID, name="Portfolio 2", currency="USD"
-    )
+    portfolio2 = Portfolio(user_id=TEST_USER_ID, name="Portfolio 2", currency="USD")
     db_session.add(portfolio2)
     await db_session.flush()
 
