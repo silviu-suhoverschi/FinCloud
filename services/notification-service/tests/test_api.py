@@ -2,18 +2,28 @@
 Test API endpoints
 """
 
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock
 
+import fakeredis.aioredis
 import pytest
 from fastapi.testclient import TestClient
 
+from app.core.redis import get_redis
 from app.main import app
 
 
 @pytest.fixture
-def client():
-    """Test client"""
-    return TestClient(app)
+def mock_redis():
+    """Mock Redis client for API tests"""
+    return fakeredis.aioredis.FakeRedis(decode_responses=True)
+
+
+@pytest.fixture
+def client(mock_redis):
+    """Test client with mocked Redis"""
+    app.dependency_overrides[get_redis] = lambda: mock_redis
+    yield TestClient(app)
+    app.dependency_overrides.clear()
 
 
 def test_root_endpoint(client):
@@ -41,61 +51,41 @@ def test_service_info(client):
     assert "features" in data
 
 
-@pytest.mark.asyncio
-async def test_send_notification(client):
+def test_send_notification(client):
     """Test send notification endpoint"""
-    with patch("app.api.v1.endpoints.notifications.get_event_queue_service") as mock_service:
-        mock_queue = AsyncMock()
-        mock_queue.enqueue_event = AsyncMock(return_value=True)
-        mock_service.return_value = mock_queue
+    notification_data = {
+        "user_id": "test-user-123",
+        "notification_type": "budget_alert",
+        "channels": ["email"],
+        "subject": "Budget Alert",
+        "message": "Test message",
+        "priority": 1,
+    }
 
-        notification_data = {
-            "user_id": "test-user-123",
-            "notification_type": "budget_alert",
-            "channels": ["email"],
-            "subject": "Budget Alert",
-            "message": "Test message",
-            "priority": 1,
-        }
-
-        response = client.post("/api/v1/notifications/send", json=notification_data)
-        assert response.status_code == 202
-        data = response.json()
-        assert data["status"] == "accepted"
+    response = client.post("/api/v1/notifications/send", json=notification_data)
+    assert response.status_code == 202
+    data = response.json()
+    assert data["status"] == "accepted"
+    assert "event_id" in data
 
 
-@pytest.mark.asyncio
-async def test_get_preferences(client):
+def test_get_preferences(client):
     """Test get preferences endpoint"""
-    with patch("app.api.v1.endpoints.preferences.get_preference_service") as mock_service:
-        from app.schemas.preferences import NotificationPreferences
-
-        mock_pref_service = AsyncMock()
-        mock_pref_service.get_preferences = AsyncMock(
-            return_value=NotificationPreferences(user_id="test-user")
-        )
-        mock_service.return_value = mock_pref_service
-
-        response = client.get("/api/v1/preferences/test-user")
-        assert response.status_code == 200
-        data = response.json()
-        assert data["user_id"] == "test-user"
+    response = client.get("/api/v1/preferences/test-user")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["user_id"] == "test-user"
+    # Default preferences
+    assert data["email_enabled"] is True
 
 
-@pytest.mark.asyncio
-async def test_update_preferences(client):
+def test_update_preferences(client):
     """Test update preferences endpoint"""
-    with patch("app.api.v1.endpoints.preferences.get_preference_service") as mock_service:
-        from app.schemas.preferences import NotificationPreferences
+    update_data = {"email_enabled": False, "telegram_enabled": True}
 
-        mock_pref_service = AsyncMock()
-        updated_prefs = NotificationPreferences(user_id="test-user", email_enabled=False)
-        mock_pref_service.update_preferences = AsyncMock(return_value=updated_prefs)
-        mock_service.return_value = mock_pref_service
-
-        update_data = {"email_enabled": False}
-
-        response = client.put("/api/v1/preferences/test-user", json=update_data)
-        assert response.status_code == 200
-        data = response.json()
-        assert data["user_id"] == "test-user"
+    response = client.put("/api/v1/preferences/test-user", json=update_data)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["user_id"] == "test-user"
+    assert data["email_enabled"] is False
+    assert data["telegram_enabled"] is True

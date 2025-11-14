@@ -22,8 +22,10 @@ def test_client():
 async def redis_client():
     """Get fake Redis client for testing"""
     client = fakeredis.aioredis.FakeRedis(decode_responses=True)
+    # Ensure clean state for each test
+    await client.flushdb()
     yield client
-    await client.close()
+    await client.aclose()
 
 
 @pytest.fixture
