@@ -275,12 +275,8 @@ async def test_update_portfolio_duplicate_name(
 ):
     """Test updating portfolio to a name that already exists"""
     # Create two portfolios
-    portfolio1 = Portfolio(
-        user_id=TEST_USER_ID, name="Portfolio 1", currency="USD"
-    )
-    portfolio2 = Portfolio(
-        user_id=TEST_USER_ID, name="Portfolio 2", currency="USD"
-    )
+    portfolio1 = Portfolio(user_id=TEST_USER_ID, name="Portfolio 1", currency="USD")
+    portfolio2 = Portfolio(user_id=TEST_USER_ID, name="Portfolio 2", currency="USD")
     db_session.add(portfolio1)
     db_session.add(portfolio2)
     await db_session.commit()

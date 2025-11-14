@@ -64,7 +64,9 @@ class HoldingResponse(BaseModel):
     asset_id: int = Field(..., description="Asset ID")
     quantity: Decimal = Field(..., description="Quantity of the asset held")
     average_cost: Decimal = Field(..., description="Average cost per unit")
-    cost_basis: Decimal = Field(..., description="Total cost basis (quantity × average_cost)")
+    cost_basis: Decimal = Field(
+        ..., description="Total cost basis (quantity × average_cost)"
+    )
     current_price: Optional[Decimal] = Field(None, description="Current market price")
     current_value: Optional[Decimal] = Field(None, description="Current market value")
     unrealized_gain_loss: Optional[Decimal] = Field(
