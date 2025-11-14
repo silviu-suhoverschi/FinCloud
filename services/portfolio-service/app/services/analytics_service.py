@@ -12,7 +12,7 @@ Implements:
 """
 
 import logging
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from decimal import Decimal
 from typing import List, Dict, Optional, Tuple
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -571,5 +571,5 @@ class AnalyticsService:
             "allocation": allocation,
             "holdings": holdings_performance,
             "dividends": dividend_metrics,
-            "last_updated": datetime.utcnow(),
+            "last_updated": datetime.now(timezone.utc),
         }
