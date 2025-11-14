@@ -3,7 +3,7 @@ Tests for price fetching functionality
 """
 
 import pytest
-from datetime import date, timedelta
+from datetime import date
 from decimal import Decimal
 
 from app.services.price_fetcher import PriceData
