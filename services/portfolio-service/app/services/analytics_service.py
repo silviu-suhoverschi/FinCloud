@@ -44,8 +44,7 @@ class AnalyticsService:
             Total portfolio value
         """
         result = await self.db.execute(
-            select(Holding)
-            .where(
+            select(Holding).where(
                 and_(
                     Holding.portfolio_id == portfolio_id,
                     Holding.deleted_at.is_(None),
@@ -81,8 +80,7 @@ class AnalyticsService:
 
         # Get total invested (sum of all BUY transactions minus SELL transactions)
         result = await self.db.execute(
-            select(PortfolioTransaction)
-            .where(
+            select(PortfolioTransaction).where(
                 and_(
                     PortfolioTransaction.portfolio_id == portfolio_id,
                     PortfolioTransaction.deleted_at.is_(None),
@@ -197,7 +195,8 @@ class AnalyticsService:
             # XIRR function to minimize
             def xirr_formula(rate):
                 return sum(
-                    cf / ((1 + rate) ** (day / 365.0)) for cf, day in zip(cash_flows, days)
+                    cf / ((1 + rate) ** (day / 365.0))
+                    for cf, day in zip(cash_flows, days)
                 )
 
             # Find the rate that makes NPV = 0
@@ -269,9 +268,7 @@ class AnalyticsService:
 
         return twr
 
-    async def get_asset_allocation(
-        self, portfolio_id: int
-    ) -> List[Dict[str, any]]:
+    async def get_asset_allocation(self, portfolio_id: int) -> List[Dict[str, any]]:
         """
         Get asset allocation breakdown by asset class and type
 
@@ -364,12 +361,12 @@ class AnalyticsService:
             "total_value": total_value,
             "by_class": sorted(by_class, key=lambda x: x["value"], reverse=True),
             "by_type": sorted(by_type, key=lambda x: x["value"], reverse=True),
-            "by_asset": sorted(allocation_by_asset, key=lambda x: x["value"], reverse=True),
+            "by_asset": sorted(
+                allocation_by_asset, key=lambda x: x["value"], reverse=True
+            ),
         }
 
-    async def get_holdings_performance(
-        self, portfolio_id: int
-    ) -> List[Dict[str, any]]:
+    async def get_holdings_performance(self, portfolio_id: int) -> List[Dict[str, any]]:
         """
         Get gain/loss for each holding
 
@@ -528,9 +525,7 @@ class AnalyticsService:
             "history": dividend_history,
         }
 
-    async def get_comprehensive_analytics(
-        self, portfolio_id: int
-    ) -> Dict[str, any]:
+    async def get_comprehensive_analytics(self, portfolio_id: int) -> Dict[str, any]:
         """
         Get all analytics in a single call
 
@@ -543,9 +538,7 @@ class AnalyticsService:
         # Verify portfolio exists
         result = await self.db.execute(
             select(Portfolio).where(
-                and_(
-                    Portfolio.id == portfolio_id, Portfolio.deleted_at.is_(None)
-                )
+                and_(Portfolio.id == portfolio_id, Portfolio.deleted_at.is_(None))
             )
         )
         portfolio = result.scalar_one_or_none()
