@@ -1,14 +1,15 @@
 """
 Test notification services
 """
-import pytest
+
 from unittest.mock import AsyncMock, MagicMock, patch
+
+import pytest
 
 from app.services.email_service import EmailService
 from app.services.telegram_service import TelegramService
-from app.services.webhook_service import WebhookService
 from app.services.template_service import TemplateService
-from app.schemas.notification import EmailNotification, TelegramNotification, WebhookNotification
+from app.services.webhook_service import WebhookService
 
 
 class TestEmailService:

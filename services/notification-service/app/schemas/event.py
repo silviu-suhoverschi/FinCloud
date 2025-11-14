@@ -1,14 +1,17 @@
 """
 Event schemas for event queue
 """
-from pydantic import BaseModel, Field
-from typing import Optional, Dict, Any
+
 from datetime import datetime
 from enum import Enum
+from typing import Any
+
+from pydantic import BaseModel, Field
 
 
 class EventType(str, Enum):
     """Event types"""
+
     BUDGET_THRESHOLD_EXCEEDED = "budget_threshold_exceeded"
     BUDGET_THRESHOLD_WARNING = "budget_threshold_warning"
     TRANSACTION_CREATED = "transaction_created"
@@ -23,11 +26,12 @@ class EventType(str, Enum):
 
 class NotificationEvent(BaseModel):
     """Notification event for queue processing"""
+
     event_id: str = Field(default_factory=lambda: f"evt_{datetime.utcnow().timestamp()}")
     event_type: EventType
     user_id: str
     timestamp: datetime = Field(default_factory=datetime.utcnow)
-    data: Dict[str, Any]
+    data: dict[str, Any]
     priority: int = Field(default=1, ge=1, le=5)
     retry_count: int = 0
     max_retries: int = 3
@@ -43,8 +47,8 @@ class NotificationEvent(BaseModel):
                     "budget_name": "Groceries",
                     "spent": 520.00,
                     "limit": 500.00,
-                    "percentage": 104.0
+                    "percentage": 104.0,
                 },
-                "priority": 2
+                "priority": 2,
             }
         }

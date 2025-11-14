@@ -1,13 +1,13 @@
 """
 Test event queue service
 """
-import pytest
-from unittest.mock import AsyncMock, MagicMock
-import fakeredis.aioredis
 
-from app.services.event_queue import EventQueueService
-from app.schemas.event import NotificationEvent, EventType
 from datetime import datetime
+
+import pytest
+
+from app.schemas.event import EventType, NotificationEvent
+from app.services.event_queue import EventQueueService
 
 
 @pytest.mark.asyncio
@@ -19,8 +19,8 @@ async def test_enqueue_event(
     sample_notification_event,
 ):
     """Test enqueueing an event"""
-    from app.services.template_service import TemplateService
     from app.services.preference_service import PreferenceService
+    from app.services.template_service import TemplateService
 
     template_service = TemplateService()
     preference_service = PreferenceService(redis_client)
@@ -50,8 +50,8 @@ async def test_dequeue_event(
     sample_notification_event,
 ):
     """Test dequeueing an event"""
-    from app.services.template_service import TemplateService
     from app.services.preference_service import PreferenceService
+    from app.services.template_service import TemplateService
 
     template_service = TemplateService()
     preference_service = PreferenceService(redis_client)
@@ -86,8 +86,8 @@ async def test_process_event(
     sample_notification_preferences,
 ):
     """Test processing an event"""
-    from app.services.template_service import TemplateService
     from app.services.preference_service import PreferenceService
+    from app.services.template_service import TemplateService
 
     template_service = TemplateService()
     preference_service = PreferenceService(redis_client)
@@ -122,8 +122,8 @@ async def test_get_queue_length(
     mock_webhook_service,
 ):
     """Test getting queue length"""
-    from app.services.template_service import TemplateService
     from app.services.preference_service import PreferenceService
+    from app.services.template_service import TemplateService
 
     template_service = TemplateService()
     preference_service = PreferenceService(redis_client)

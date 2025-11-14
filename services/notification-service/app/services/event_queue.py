@@ -1,20 +1,21 @@
 """
 Event queue service for processing notification events
 """
-import json
+
 import asyncio
-from typing import Optional, Dict, Any
-import structlog
+import json
+from typing import Any
+
 import redis.asyncio as redis
+import structlog
 
 from app.core.config import settings
-from app.schemas.event import NotificationEvent, EventType
-from app.schemas.notification import NotificationType, NotificationChannel
+from app.schemas.event import EventType, NotificationEvent
 from app.services.email_service import EmailService
-from app.services.telegram_service import TelegramService
-from app.services.webhook_service import WebhookService
-from app.services.template_service import TemplateService
 from app.services.preference_service import PreferenceService
+from app.services.telegram_service import TelegramService
+from app.services.template_service import TemplateService
+from app.services.webhook_service import WebhookService
 
 logger = structlog.get_logger()
 
@@ -71,7 +72,7 @@ class EventQueueService:
             )
             return False
 
-    async def dequeue_event(self) -> Optional[NotificationEvent]:
+    async def dequeue_event(self) -> NotificationEvent | None:
         """
         Get next event from the queue
 
@@ -192,7 +193,7 @@ class EventQueueService:
 
     def _prepare_notification_data(
         self, event: NotificationEvent, preferences: Any
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Prepare notification data from event"""
         data = event.data.copy()
         data["user_id"] = event.user_id
@@ -201,16 +202,14 @@ class EventQueueService:
         return data
 
     async def _send_email_notification(
-        self, event: NotificationEvent, data: Dict[str, Any], email: str
+        self, event: NotificationEvent, data: dict[str, Any], email: str
     ) -> bool:
         """Send email notification"""
         try:
             notification_type = self._map_event_to_notification_type(event.event_type)
 
             # Render email template
-            plain_text, html = self.template_service.get_email_template(
-                notification_type, data
-            )
+            plain_text, html = self.template_service.get_email_template(notification_type, data)
 
             # Send email
             return await self.email_service.send_email(
@@ -225,7 +224,7 @@ class EventQueueService:
             return False
 
     async def _send_telegram_notification(
-        self, event: NotificationEvent, data: Dict[str, Any], chat_id: str
+        self, event: NotificationEvent, data: dict[str, Any], chat_id: str
     ) -> bool:
         """Send Telegram notification"""
         try:
@@ -243,9 +242,7 @@ class EventQueueService:
             logger.error("send_telegram_notification_failed", error=str(e))
             return False
 
-    def _format_telegram_message(
-        self, event: NotificationEvent, data: Dict[str, Any]
-    ) -> str:
+    def _format_telegram_message(self, event: NotificationEvent, data: dict[str, Any]) -> str:
         """Format message for Telegram"""
         subject = data.get("subject", event.event_type)
         message = data.get("message", "")
@@ -253,7 +250,7 @@ class EventQueueService:
         return f"<b>{subject}</b>\n\n{message}"
 
     async def _send_webhook_notification(
-        self, event: NotificationEvent, data: Dict[str, Any], url: str, secret: Optional[str]
+        self, event: NotificationEvent, data: dict[str, Any], url: str, secret: str | None
     ) -> bool:
         """Send webhook notification"""
         try:

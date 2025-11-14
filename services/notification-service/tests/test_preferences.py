@@ -1,10 +1,11 @@
 """
 Test preference service
 """
+
 import pytest
 
+from app.schemas.preferences import NotificationPreferencesUpdate
 from app.services.preference_service import PreferenceService
-from app.schemas.preferences import NotificationPreferences, NotificationPreferencesUpdate
 
 
 @pytest.mark.asyncio

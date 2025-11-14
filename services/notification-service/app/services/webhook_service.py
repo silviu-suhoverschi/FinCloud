@@ -1,12 +1,14 @@
 """
 Webhook dispatcher service
 """
-import httpx
-import hmac
+
 import hashlib
-from typing import Optional, Dict, Any
-import structlog
+import hmac
 from asyncio import sleep
+from typing import Any
+
+import httpx
+import structlog
 
 from app.core.config import settings
 from app.schemas.notification import WebhookNotification
@@ -42,10 +44,10 @@ class WebhookService:
     async def send_webhook(
         self,
         url: str,
-        payload: Dict[str, Any],
+        payload: dict[str, Any],
         method: str = "POST",
-        headers: Optional[Dict[str, str]] = None,
-        secret: Optional[str] = None,
+        headers: dict[str, str] | None = None,
+        secret: str | None = None,
         retry_count: int = 0,
     ) -> bool:
         """
@@ -71,6 +73,7 @@ class WebhookService:
             # Generate signature if secret is provided
             if secret:
                 import json
+
                 payload_str = json.dumps(payload, sort_keys=True)
                 signature = self._generate_signature(payload_str, secret)
                 request_headers["X-FinCloud-Signature"] = f"sha256={signature}"
@@ -101,10 +104,7 @@ class WebhookService:
                         response=response.text[:200],
                     )
                     # Retry on server errors
-                    if (
-                        response.status_code >= 500
-                        and retry_count < self.max_retries
-                    ):
+                    if response.status_code >= 500 and retry_count < self.max_retries:
                         await sleep(self.retry_delay * (retry_count + 1))
                         return await self.send_webhook(
                             url=url,

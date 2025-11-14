@@ -1,14 +1,15 @@
 """
 Test configuration and fixtures
 """
+
+from unittest.mock import AsyncMock, MagicMock
+
+import fakeredis.aioredis
 import pytest
 import pytest_asyncio
 from fastapi.testclient import TestClient
-from unittest.mock import AsyncMock, MagicMock
-import fakeredis.aioredis
 
 from app.main import app
-from app.core.redis import redis_manager
 
 
 @pytest.fixture
@@ -63,8 +64,9 @@ def mock_webhook_service():
 @pytest.fixture
 def sample_notification_event():
     """Sample notification event"""
-    from app.schemas.event import NotificationEvent, EventType
     from datetime import datetime
+
+    from app.schemas.event import EventType, NotificationEvent
 
     return NotificationEvent(
         event_id="test-event-123",

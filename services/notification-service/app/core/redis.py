@@ -1,8 +1,8 @@
 """
 Redis connection management
 """
+
 import redis.asyncio as redis
-from typing import Optional
 import structlog
 
 from app.core.config import settings
@@ -14,7 +14,7 @@ class RedisManager:
     """Redis connection manager"""
 
     def __init__(self):
-        self.redis_client: Optional[redis.Redis] = None
+        self.redis_client: redis.Redis | None = None
 
     async def connect(self):
         """Connect to Redis"""
@@ -23,7 +23,7 @@ class RedisManager:
                 settings.REDIS_URL,
                 encoding="utf-8",
                 decode_responses=True,
-                max_connections=settings.REDIS_MAX_CONNECTIONS
+                max_connections=settings.REDIS_MAX_CONNECTIONS,
             )
             await self.redis_client.ping()
             logger.info("redis_connected", url=settings.REDIS_URL)

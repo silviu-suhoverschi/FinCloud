@@ -1,10 +1,11 @@
 """
 Email notification service using SMTP
 """
-import aiosmtplib
-from email.mime.text import MIMEText
+
 from email.mime.multipart import MIMEMultipart
-from typing import Optional, List
+from email.mime.text import MIMEText
+
+import aiosmtplib
 import structlog
 
 from app.core.config import settings
@@ -27,20 +28,22 @@ class EmailService:
 
     def is_configured(self) -> bool:
         """Check if email service is properly configured"""
-        return all([
-            self.smtp_host,
-            self.smtp_user,
-            self.smtp_password,
-        ])
+        return all(
+            [
+                self.smtp_host,
+                self.smtp_user,
+                self.smtp_password,
+            ]
+        )
 
     async def send_email(
         self,
         to: str,
         subject: str,
         body: str,
-        html: Optional[str] = None,
-        cc: Optional[List[str]] = None,
-        bcc: Optional[List[str]] = None,
+        html: str | None = None,
+        cc: list[str] | None = None,
+        bcc: list[str] | None = None,
     ) -> bool:
         """
         Send an email

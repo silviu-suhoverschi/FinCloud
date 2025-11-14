@@ -1,16 +1,17 @@
 """
 Notification preferences endpoints
 """
-from fastapi import APIRouter, Depends, HTTPException, status, Path
-import structlog
 
+import redis.asyncio as redis
+import structlog
+from fastapi import APIRouter, Depends, HTTPException, Path, status
+
+from app.core.redis import get_redis
 from app.schemas.preferences import (
     NotificationPreferences,
     NotificationPreferencesUpdate,
 )
-from app.core.redis import get_redis
 from app.services.preference_service import PreferenceService
-import redis.asyncio as redis
 
 logger = structlog.get_logger()
 
@@ -44,7 +45,7 @@ async def get_preferences(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get preferences: {str(e)}",
-        )
+        ) from e
 
 
 @router.put("/{user_id}", response_model=NotificationPreferences)
@@ -57,9 +58,7 @@ async def update_preferences(
     Update notification preferences for a user
     """
     try:
-        preferences = await preference_service.update_preferences(
-            user_id, preferences_update
-        )
+        preferences = await preference_service.update_preferences(user_id, preferences_update)
 
         if not preferences:
             raise HTTPException(
@@ -76,7 +75,7 @@ async def update_preferences(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to update preferences: {str(e)}",
-        )
+        ) from e
 
 
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -103,4 +102,4 @@ async def delete_preferences(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to delete preferences: {str(e)}",
-        )
+        ) from e

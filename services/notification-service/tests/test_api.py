@@ -1,9 +1,11 @@
 """
 Test API endpoints
 """
+
+from unittest.mock import AsyncMock, patch
+
 import pytest
 from fastapi.testclient import TestClient
-from unittest.mock import patch, AsyncMock
 
 from app.main import app
 
@@ -87,9 +89,7 @@ async def test_update_preferences(client):
         from app.schemas.preferences import NotificationPreferences
 
         mock_pref_service = AsyncMock()
-        updated_prefs = NotificationPreferences(
-            user_id="test-user", email_enabled=False
-        )
+        updated_prefs = NotificationPreferences(user_id="test-user", email_enabled=False)
         mock_pref_service.update_preferences = AsyncMock(return_value=updated_prefs)
         mock_service.return_value = mock_pref_service
 

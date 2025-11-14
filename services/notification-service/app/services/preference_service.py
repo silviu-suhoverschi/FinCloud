@@ -1,10 +1,11 @@
 """
 Notification preferences service
 """
+
 import json
-from typing import Optional
-import structlog
+
 import redis.asyncio as redis
+import structlog
 
 from app.schemas.preferences import NotificationPreferences, NotificationPreferencesUpdate
 
@@ -22,7 +23,7 @@ class PreferenceService:
         """Get Redis key for user preferences"""
         return f"{self.key_prefix}{user_id}"
 
-    async def get_preferences(self, user_id: str) -> Optional[NotificationPreferences]:
+    async def get_preferences(self, user_id: str) -> NotificationPreferences | None:
         """
         Get user notification preferences
 
@@ -55,7 +56,7 @@ class PreferenceService:
         self,
         user_id: str,
         preferences_update: NotificationPreferencesUpdate,
-    ) -> Optional[NotificationPreferences]:
+    ) -> NotificationPreferences | None:
         """
         Update user notification preferences
 

@@ -1,24 +1,25 @@
 """
 Pydantic schemas for the Notification Service
 """
+
+from .event import (
+    EventType,
+    NotificationEvent,
+)
 from .notification import (
+    EmailNotification,
+    NotificationChannel,
     NotificationCreate,
     NotificationResponse,
-    NotificationType,
     NotificationStatus,
-    NotificationChannel,
-    EmailNotification,
+    NotificationType,
     TelegramNotification,
     WebhookNotification,
 )
 from .preferences import (
+    ChannelPreferences,
     NotificationPreferences,
     NotificationPreferencesUpdate,
-    ChannelPreferences,
-)
-from .event import (
-    NotificationEvent,
-    EventType,
 )
 
 __all__ = [

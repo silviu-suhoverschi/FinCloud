@@ -1,21 +1,22 @@
 """
 Notification preferences schemas
 """
+
 from pydantic import BaseModel, EmailStr
-from typing import Optional, Dict
-from app.schemas.notification import NotificationChannel, NotificationType
 
 
 class ChannelPreferences(BaseModel):
     """Channel-specific preferences"""
+
     enabled: bool = True
-    email: Optional[EmailStr] = None
-    telegram_chat_id: Optional[str] = None
-    webhook_url: Optional[str] = None
+    email: EmailStr | None = None
+    telegram_chat_id: str | None = None
+    webhook_url: str | None = None
 
 
 class NotificationPreferences(BaseModel):
     """User notification preferences"""
+
     user_id: str
     email_enabled: bool = True
     telegram_enabled: bool = False
@@ -23,14 +24,14 @@ class NotificationPreferences(BaseModel):
     webpush_enabled: bool = False
 
     # Email settings
-    email_address: Optional[EmailStr] = None
+    email_address: EmailStr | None = None
 
     # Telegram settings
-    telegram_chat_id: Optional[str] = None
+    telegram_chat_id: str | None = None
 
     # Webhook settings
-    webhook_url: Optional[str] = None
-    webhook_secret: Optional[str] = None
+    webhook_url: str | None = None
+    webhook_secret: str | None = None
 
     # Type-specific preferences
     budget_alerts_enabled: bool = True
@@ -41,8 +42,8 @@ class NotificationPreferences(BaseModel):
 
     # Quiet hours
     quiet_hours_enabled: bool = False
-    quiet_hours_start: Optional[str] = None  # HH:MM format
-    quiet_hours_end: Optional[str] = None  # HH:MM format
+    quiet_hours_start: str | None = None  # HH:MM format
+    quiet_hours_end: str | None = None  # HH:MM format
 
     class Config:
         json_schema_extra = {
@@ -56,29 +57,30 @@ class NotificationPreferences(BaseModel):
                 "transaction_alerts_enabled": False,
                 "quiet_hours_enabled": True,
                 "quiet_hours_start": "22:00",
-                "quiet_hours_end": "08:00"
+                "quiet_hours_end": "08:00",
             }
         }
 
 
 class NotificationPreferencesUpdate(BaseModel):
     """Update notification preferences"""
-    email_enabled: Optional[bool] = None
-    telegram_enabled: Optional[bool] = None
-    webhook_enabled: Optional[bool] = None
-    webpush_enabled: Optional[bool] = None
 
-    email_address: Optional[EmailStr] = None
-    telegram_chat_id: Optional[str] = None
-    webhook_url: Optional[str] = None
-    webhook_secret: Optional[str] = None
+    email_enabled: bool | None = None
+    telegram_enabled: bool | None = None
+    webhook_enabled: bool | None = None
+    webpush_enabled: bool | None = None
 
-    budget_alerts_enabled: Optional[bool] = None
-    transaction_alerts_enabled: Optional[bool] = None
-    portfolio_alerts_enabled: Optional[bool] = None
-    price_alerts_enabled: Optional[bool] = None
-    system_alerts_enabled: Optional[bool] = None
+    email_address: EmailStr | None = None
+    telegram_chat_id: str | None = None
+    webhook_url: str | None = None
+    webhook_secret: str | None = None
 
-    quiet_hours_enabled: Optional[bool] = None
-    quiet_hours_start: Optional[str] = None
-    quiet_hours_end: Optional[str] = None
+    budget_alerts_enabled: bool | None = None
+    transaction_alerts_enabled: bool | None = None
+    portfolio_alerts_enabled: bool | None = None
+    price_alerts_enabled: bool | None = None
+    system_alerts_enabled: bool | None = None
+
+    quiet_hours_enabled: bool | None = None
+    quiet_hours_start: str | None = None
+    quiet_hours_end: str | None = None

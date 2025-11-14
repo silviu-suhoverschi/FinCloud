@@ -1,10 +1,12 @@
 """
 Notification template service using Jinja2
 """
-from jinja2 import Environment, FileSystemLoader, select_autoescape, Template
+
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any
+
 import structlog
+from jinja2 import Environment, FileSystemLoader, Template, select_autoescape
 
 logger = structlog.get_logger()
 
@@ -19,11 +21,11 @@ class TemplateService:
 
         self.env = Environment(
             loader=FileSystemLoader(str(template_dir)),
-            autoescape=select_autoescape(['html', 'xml']),
+            autoescape=select_autoescape(["html", "xml"]),
         )
 
         # Add custom filters
-        self.env.filters['currency'] = self._currency_filter
+        self.env.filters["currency"] = self._currency_filter
 
     def _currency_filter(self, value: float, currency: str = "USD") -> str:
         """Format value as currency"""
@@ -39,7 +41,7 @@ class TemplateService:
     def render_template(
         self,
         template_name: str,
-        context: Dict[str, Any],
+        context: dict[str, Any],
     ) -> str:
         """
         Render a template
@@ -65,7 +67,7 @@ class TemplateService:
     def render_string(
         self,
         template_string: str,
-        context: Dict[str, Any],
+        context: dict[str, Any],
     ) -> str:
         """
         Render a template from string
@@ -90,7 +92,7 @@ class TemplateService:
     def get_email_template(
         self,
         notification_type: str,
-        context: Dict[str, Any],
+        context: dict[str, Any],
     ) -> tuple[str, str]:
         """
         Get email template (plain text and HTML)
@@ -121,11 +123,11 @@ class TemplateService:
     def _get_default_text_template(
         self,
         notification_type: str,
-        context: Dict[str, Any],
+        context: dict[str, Any],
     ) -> str:
         """Get default plain text template"""
-        subject = context.get('subject', 'Notification')
-        message = context.get('message', '')
+        subject = context.get("subject", "Notification")
+        message = context.get("message", "")
 
         return f"""
 {subject}
@@ -139,11 +141,11 @@ This is an automated notification from FinCloud.
     def _get_default_html_template(
         self,
         notification_type: str,
-        context: Dict[str, Any],
+        context: dict[str, Any],
     ) -> str:
         """Get default HTML template"""
-        subject = context.get('subject', 'Notification')
-        message = context.get('message', '')
+        subject = context.get("subject", "Notification")
+        message = context.get("message", "")
 
         return f"""
 <!DOCTYPE html>

@@ -1,21 +1,23 @@
 """
 Notification Service - Event-driven notification service for FinCloud
 """
+
+import asyncio
+from contextlib import asynccontextmanager
+
+import structlog
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from contextlib import asynccontextmanager
-import asyncio
-import structlog
 
+from app.api.v1.endpoints import notifications, preferences, webhooks
 from app.core.config import settings
 from app.core.redis import redis_manager
-from app.api.v1.endpoints import notifications, preferences, webhooks
-from app.services.event_queue import EventQueueService
 from app.services.email_service import EmailService
-from app.services.telegram_service import TelegramService
-from app.services.webhook_service import WebhookService
-from app.services.template_service import TemplateService
+from app.services.event_queue import EventQueueService
 from app.services.preference_service import PreferenceService
+from app.services.telegram_service import TelegramService
+from app.services.template_service import TemplateService
+from app.services.webhook_service import WebhookService
 
 logger = structlog.get_logger()
 

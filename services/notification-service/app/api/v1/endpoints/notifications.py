@@ -1,22 +1,24 @@
 """
 Notification endpoints
 """
-from fastapi import APIRouter, Depends, HTTPException, status
-from typing import Dict, Any
-import structlog
 
-from app.schemas.notification import NotificationCreate, NotificationResponse, NotificationStatus
-from app.schemas.event import NotificationEvent, EventType
-from app.core.redis import get_redis
-from app.services.event_queue import EventQueueService
-from app.services.email_service import EmailService
-from app.services.telegram_service import TelegramService
-from app.services.webhook_service import WebhookService
-from app.services.template_service import TemplateService
-from app.services.preference_service import PreferenceService
-import redis.asyncio as redis
-from datetime import datetime
 import uuid
+from datetime import datetime
+from typing import Any
+
+import redis.asyncio as redis
+import structlog
+from fastapi import APIRouter, Depends, HTTPException, status
+
+from app.core.redis import get_redis
+from app.schemas.event import EventType, NotificationEvent
+from app.schemas.notification import NotificationCreate
+from app.services.email_service import EmailService
+from app.services.event_queue import EventQueueService
+from app.services.preference_service import PreferenceService
+from app.services.telegram_service import TelegramService
+from app.services.template_service import TemplateService
+from app.services.webhook_service import WebhookService
 
 logger = structlog.get_logger()
 
@@ -41,7 +43,7 @@ async def get_event_queue_service(redis_client: redis.Redis = Depends(get_redis)
     )
 
 
-@router.post("/send", response_model=Dict[str, Any], status_code=status.HTTP_202_ACCEPTED)
+@router.post("/send", response_model=dict[str, Any], status_code=status.HTTP_202_ACCEPTED)
 async def send_notification(
     notification: NotificationCreate,
     event_queue: EventQueueService = Depends(get_event_queue_service),
@@ -92,12 +94,14 @@ async def send_notification(
             "message": "Notification queued for processing",
         }
 
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error("send_notification_failed", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to send notification: {str(e)}",
-        )
+        ) from e
 
 
 @router.post("/event", status_code=status.HTTP_202_ACCEPTED)
@@ -123,12 +127,14 @@ async def enqueue_event(
             "message": "Event queued for processing",
         }
 
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error("enqueue_event_failed", error=str(e))
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to enqueue event: {str(e)}",
-        )
+        ) from e
 
 
 @router.get("/queue/stats")
@@ -151,4 +157,4 @@ async def get_queue_stats(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to get queue stats: {str(e)}",
-        )
+        ) from e

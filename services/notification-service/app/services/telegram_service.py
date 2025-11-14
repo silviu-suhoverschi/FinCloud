@@ -1,7 +1,7 @@
 """
 Telegram notification service
 """
-from typing import Optional
+
 import structlog
 from telegram import Bot
 from telegram.error import TelegramError
@@ -17,7 +17,7 @@ class TelegramService:
 
     def __init__(self):
         self.bot_token = settings.TELEGRAM_BOT_TOKEN
-        self.bot: Optional[Bot] = None
+        self.bot: Bot | None = None
         if self.bot_token:
             self.bot = Bot(token=self.bot_token)
 
@@ -95,7 +95,7 @@ class TelegramService:
             disable_notification=notification.disable_notification,
         )
 
-    async def get_bot_info(self) -> Optional[dict]:
+    async def get_bot_info(self) -> dict | None:
         """Get bot information"""
         if not self.is_configured():
             return None

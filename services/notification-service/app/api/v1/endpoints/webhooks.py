@@ -1,9 +1,9 @@
 """
 Webhook testing endpoints
 """
-from fastapi import APIRouter, Depends, HTTPException, status
-from typing import Dict, Any
+
 import structlog
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.schemas.notification import WebhookNotification
 from app.services.webhook_service import WebhookService
@@ -47,4 +47,4 @@ async def test_webhook(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to test webhook: {str(e)}",
-        )
+        ) from e
