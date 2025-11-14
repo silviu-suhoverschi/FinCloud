@@ -26,10 +26,15 @@ class Settings(BaseSettings):
     REDIS_URL: str = "redis://localhost:6379/1"
     CELERY_BROKER_URL: str = "redis://localhost:6379/2"
 
-    # API Keys
+    # API Keys for Price Fetching
+    YAHOO_FINANCE_ENABLED: bool = True
     ALPHA_VANTAGE_API_KEY: str = "demo"
     COINGECKO_API_KEY: str = ""
-    YAHOO_FINANCE_ENABLED: bool = True
+
+    # Price Fetching Configuration
+    PRICE_CACHE_TTL_SECONDS: int = 3600  # 1 hour
+    PRICE_UPDATE_RETRY_COUNT: int = 3
+    PRICE_UPDATE_RETRY_DELAY: int = 2  # seconds
 
     # CORS
     CORS_ORIGINS: List[str] = ["http://localhost:3000"]
