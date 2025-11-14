@@ -14,11 +14,10 @@ Implements:
 import logging
 from datetime import date, datetime, timezone
 from decimal import Decimal
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func, and_
+from sqlalchemy import select, and_
 from scipy import optimize
-import numpy as np
 
 from app.models.portfolio import Portfolio
 from app.models.holding import Holding

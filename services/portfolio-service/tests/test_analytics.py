@@ -4,7 +4,7 @@ Tests for portfolio analytics service
 
 import pytest
 import pytest_asyncio
-from datetime import date, datetime
+from datetime import date
 from decimal import Decimal
 from sqlalchemy.ext.asyncio import AsyncSession
 
