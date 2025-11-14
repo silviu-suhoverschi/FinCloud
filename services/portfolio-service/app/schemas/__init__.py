@@ -17,6 +17,15 @@ from app.schemas.holding import (
     HoldingWithAssetResponse,
     HoldingList,
 )
+from app.schemas.transaction import (
+    TransactionType,
+    TransactionBase,
+    TransactionCreate,
+    TransactionUpdate,
+    TransactionResponse,
+    TransactionWithAssetResponse,
+    TransactionList,
+)
 
 __all__ = [
     # Portfolio schemas
@@ -32,4 +41,12 @@ __all__ = [
     "HoldingResponse",
     "HoldingWithAssetResponse",
     "HoldingList",
+    # Transaction schemas
+    "TransactionType",
+    "TransactionBase",
+    "TransactionCreate",
+    "TransactionUpdate",
+    "TransactionResponse",
+    "TransactionWithAssetResponse",
+    "TransactionList",
 ]
