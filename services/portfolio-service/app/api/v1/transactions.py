@@ -7,7 +7,7 @@ from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_, or_
+from sqlalchemy import select, and_
 
 from app.core.database import get_db
 from app.core.auth import get_current_user_id
@@ -393,5 +393,5 @@ async def _update_holding(
         else:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Cannot sell asset. No holding found for this asset in the portfolio.",
+                detail="Cannot sell asset. No holding found for this asset in the portfolio.",
             )
