@@ -56,7 +56,22 @@ function ResetPasswordContent() {
       await authService.requestPasswordReset(data)
       setSuccess('Password reset instructions have been sent to your email.')
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Failed to send reset email. Please try again.')
+      // Handle different error response formats
+      let errorMessage = 'Failed to send reset email. Please try again.'
+
+      if (err.response?.data?.detail) {
+        const detail = err.response.data.detail
+        // Check if detail is an array (validation errors)
+        if (Array.isArray(detail)) {
+          // Extract error messages from validation errors
+          errorMessage = detail.map((e: any) => e.msg || e.message || 'Validation error').join(', ')
+        } else if (typeof detail === 'string') {
+          // Detail is a string
+          errorMessage = detail
+        }
+      }
+
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }
@@ -82,7 +97,22 @@ function ResetPasswordContent() {
         router.push('/auth/login')
       }, 2000)
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Failed to reset password. Please try again.')
+      // Handle different error response formats
+      let errorMessage = 'Failed to reset password. Please try again.'
+
+      if (err.response?.data?.detail) {
+        const detail = err.response.data.detail
+        // Check if detail is an array (validation errors)
+        if (Array.isArray(detail)) {
+          // Extract error messages from validation errors
+          errorMessage = detail.map((e: any) => e.msg || e.message || 'Validation error').join(', ')
+        } else if (typeof detail === 'string') {
+          // Detail is a string
+          errorMessage = detail
+        }
+      }
+
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }

@@ -46,7 +46,22 @@ export default function AddHoldingForm({ portfolioId, onSuccess, onCancel }: Add
 
       onSuccess()
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Failed to add holding')
+      // Handle different error response formats
+      let errorMessage = 'Failed to add holding'
+
+      if (err.response?.data?.detail) {
+        const detail = err.response.data.detail
+        // Check if detail is an array (validation errors)
+        if (Array.isArray(detail)) {
+          // Extract error messages from validation errors
+          errorMessage = detail.map((e: any) => e.msg || e.message || 'Validation error').join(', ')
+        } else if (typeof detail === 'string') {
+          // Detail is a string
+          errorMessage = detail
+        }
+      }
+
+      setError(errorMessage)
       console.error(err)
     } finally {
       setSubmitting(false)
