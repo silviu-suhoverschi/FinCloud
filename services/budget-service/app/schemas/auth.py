@@ -112,9 +112,7 @@ class UserUpdate(BaseModel):
         None, min_length=3, max_length=3, description="Preferred currency code"
     )
     timezone: Optional[str] = Field(None, max_length=50, description="User's timezone")
-    theme: Optional[str] = Field(
-        None, description="Theme preference (light/dark/auto)"
-    )
+    theme: Optional[str] = Field(None, description="Theme preference (light/dark/auto)")
 
     @field_validator("preferred_currency")
     @classmethod
