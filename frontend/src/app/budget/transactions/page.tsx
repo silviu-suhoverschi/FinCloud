@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import AppLayout from '@/components/layout/AppLayout'
 import budgetService, { Transaction, Account, Category } from '@/lib/budget'
 import Link from 'next/link'
 
-export default function TransactionsPage() {
+function TransactionsContent() {
   const searchParams = useSearchParams()
   const initialAccountId = searchParams.get('account_id')
 
@@ -401,5 +401,19 @@ export default function TransactionsPage() {
         )}
       </div>
     </AppLayout>
+  )
+}
+
+export default function TransactionsPage() {
+  return (
+    <Suspense fallback={
+      <AppLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <p className="text-gray-500 dark:text-gray-400">Loading transactions...</p>
+        </div>
+      </AppLayout>
+    }>
+      <TransactionsContent />
+    </Suspense>
   )
 }
