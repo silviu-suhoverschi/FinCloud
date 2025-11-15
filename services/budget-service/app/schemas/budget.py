@@ -32,7 +32,7 @@ class BudgetBase(BaseModel):
         gt=0,
         max_digits=15,
         decimal_places=2,
-        description="Budget amount (must be positive)"
+        description="Budget amount (must be positive)",
     )
     currency: str = Field(
         default="USD",
@@ -110,7 +110,7 @@ class BudgetUpdate(BaseModel):
         gt=0,
         max_digits=15,
         decimal_places=2,
-        description="Budget amount (must be positive)"
+        description="Budget amount (must be positive)",
     )
     currency: Optional[str] = Field(
         None, min_length=3, max_length=3, description="Currency code"
