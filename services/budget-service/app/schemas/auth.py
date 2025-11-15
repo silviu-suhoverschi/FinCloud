@@ -91,6 +91,7 @@ class UserResponse(BaseModel):
     last_login_at: Optional[datetime] = Field(None, description="Last login timestamp")
     preferred_currency: str = Field(..., description="Preferred currency code")
     timezone: str = Field(..., description="User's timezone")
+    theme: str = Field(..., description="Theme preference (light/dark/auto)")
     role: str = Field(..., description="User role")
     created_at: datetime = Field(..., description="Account creation timestamp")
     updated_at: datetime = Field(..., description="Last update timestamp")
@@ -111,12 +112,23 @@ class UserUpdate(BaseModel):
         None, min_length=3, max_length=3, description="Preferred currency code"
     )
     timezone: Optional[str] = Field(None, max_length=50, description="User's timezone")
+    theme: Optional[str] = Field(
+        None, description="Theme preference (light/dark/auto)"
+    )
 
     @field_validator("preferred_currency")
     @classmethod
     def validate_currency(cls, v: Optional[str]) -> Optional[str]:
         """Validate currency code."""
         return v.upper() if v else v
+
+    @field_validator("theme")
+    @classmethod
+    def validate_theme(cls, v: Optional[str]) -> Optional[str]:
+        """Validate theme preference."""
+        if v is not None and v not in ["light", "dark", "auto"]:
+            raise ValueError("Theme must be one of: light, dark, auto")
+        return v
 
 
 class PasswordChange(BaseModel):
