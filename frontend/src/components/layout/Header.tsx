@@ -3,12 +3,14 @@
 import { MenuIcon, SunIcon, MoonIcon } from '@/components/icons'
 import { useTheme } from '@/providers/ThemeProvider'
 import UserDropdown from './UserDropdown'
+import { User } from '@/types/auth'
 
 interface HeaderProps {
   onMenuClick: () => void
+  user: User
 }
 
-export default function Header({ onMenuClick }: HeaderProps) {
+export default function Header({ onMenuClick, user }: HeaderProps) {
   const { theme, toggleTheme } = useTheme()
 
   return (
@@ -44,7 +46,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
         </button>
 
         {/* User dropdown */}
-        <UserDropdown />
+        <UserDropdown user={user} />
       </div>
     </header>
   )

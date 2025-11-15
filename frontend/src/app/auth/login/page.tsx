@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -15,8 +15,9 @@ const loginSchema = z.object({
 
 type LoginFormData = z.infer<typeof loginSchema>
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -28,13 +29,23 @@ export default function LoginPage() {
     resolver: zodResolver(loginSchema),
   })
 
+  // Check if user is already authenticated and redirect
+  useEffect(() => {
+    if (authService.isAuthenticated()) {
+      const redirect = searchParams.get('redirect') || '/dashboard'
+      router.push(redirect)
+    }
+  }, [router, searchParams])
+
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true)
     setError(null)
 
     try {
       await authService.login(data)
-      router.push('/dashboard')
+      // Redirect to the original page or dashboard
+      const redirect = searchParams.get('redirect') || '/dashboard'
+      router.push(redirect)
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Invalid email or password')
     } finally {
@@ -155,5 +166,20 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+        <div className="text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
+          <p className="mt-2 text-gray-600 dark:text-gray-400">Loading...</p>
+        </div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   )
 }
