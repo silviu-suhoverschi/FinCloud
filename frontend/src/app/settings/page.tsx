@@ -61,6 +61,7 @@ export default function SettingsPage() {
   useEffect(() => {
     loadProfile()
     loadApiKeys()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const loadProfile = async () => {
@@ -512,7 +513,7 @@ export default function SettingsPage() {
                   Notification Preferences
                 </h3>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                  Notification preferences will be available soon. You'll be able to configure email,
+                  Notification preferences will be available soon. You&apos;ll be able to configure email,
                   Telegram, and webhook notifications.
                 </p>
               </div>
@@ -557,7 +558,7 @@ export default function SettingsPage() {
                         </h4>
                         <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
                           <p className="text-sm text-yellow-800 dark:text-yellow-200 font-semibold mb-2">
-                            ⚠️ Save this key now! It won't be shown again.
+                            ⚠️ Save this key now! It won&apos;t be shown again.
                           </p>
                           <div className="mt-2 p-2 bg-white dark:bg-gray-900 rounded font-mono text-sm break-all">
                             {newlyCreatedKey.key}
