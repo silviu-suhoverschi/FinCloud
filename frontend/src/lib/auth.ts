@@ -12,6 +12,18 @@ import {
   User,
 } from '@/types/auth'
 
+// Helper function to set cookies
+const setCookie = (name: string, value: string, days: number = 7) => {
+  const expires = new Date()
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000)
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Strict`
+}
+
+// Helper function to delete cookies
+const deleteCookie = (name: string) => {
+  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`
+}
+
 export const authService = {
   async login(data: LoginRequest): Promise<LoginResponse> {
     const formData = new FormData()
@@ -24,9 +36,12 @@ export const authService = {
       },
     })
 
-    // Store tokens
+    // Store tokens in localStorage
     localStorage.setItem('access_token', response.data.access_token)
     localStorage.setItem('refresh_token', response.data.refresh_token)
+
+    // Also store access token in cookie for middleware
+    setCookie('access_token', response.data.access_token, 7)
 
     return response.data
   },
@@ -62,6 +77,7 @@ export const authService = {
   logout() {
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
+    deleteCookie('access_token')
     window.location.href = '/auth/login'
   },
 
