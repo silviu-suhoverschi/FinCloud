@@ -162,8 +162,8 @@ export default function AccountDetailPage() {
             </div>
             <div className="text-right">
               <p className="text-sm text-gray-500 dark:text-gray-400">Current Balance</p>
-              <p className={`text-3xl font-bold ${account.balance >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                {formatCurrency(account.balance, account.currency)}
+              <p className={`text-3xl font-bold ${account.current_balance >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                {formatCurrency(account.current_balance, account.currency)}
               </p>
             </div>
           </div>
