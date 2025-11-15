@@ -160,6 +160,11 @@ app.add_middleware(LoggingMiddleware)
 @app.middleware("http")
 async def authentication_middleware(request: Request, call_next):
     """Validate JWT tokens and inject user context."""
+    # Skip authentication for OPTIONS requests (CORS preflight)
+    if request.method == "OPTIONS":
+        response = await call_next(request)
+        return response
+
     try:
         # Validate token and inject user info
         await AuthMiddleware.validate_and_inject_user(request)
