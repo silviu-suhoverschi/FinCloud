@@ -166,8 +166,8 @@ export const budgetService = {
     start_date?: string
     end_date?: string
   }): Promise<Transaction[]> {
-    const response = await api.get<Transaction[]>('/api/v1/transactions', { params })
-    return response.data
+    const response = await api.get<{ total: number; transactions: Transaction[] }>('/api/v1/transactions', { params })
+    return response.data.transactions || []
   },
 
   async getTransaction(id: number): Promise<Transaction> {

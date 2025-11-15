@@ -265,3 +265,131 @@ async def proxy_reports_root(request: Request) -> Response:
     return await service_proxy.proxy_request(
         request=request, service_name="budget", path=service_path
     )
+
+
+# Portfolios routes - forward to portfolio service
+@router.api_route(
+    "/portfolios/{path:path}",
+    methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
+    include_in_schema=False,
+)
+async def proxy_portfolios_routes(request: Request, path: str) -> Response:
+    """
+    Proxy portfolio management routes to portfolio service.
+    """
+    service_path = f"/api/v1/portfolios/{path}"
+    return await service_proxy.proxy_request(
+        request=request, service_name="portfolio", path=service_path
+    )
+
+
+# Portfolios root route - forward to portfolio service
+@router.api_route(
+    "/portfolios",
+    methods=["GET", "POST"],
+    include_in_schema=False,
+)
+async def proxy_portfolios_root(request: Request) -> Response:
+    """
+    Proxy portfolio root routes to portfolio service.
+    """
+    service_path = "/api/v1/portfolios"
+    return await service_proxy.proxy_request(
+        request=request, service_name="portfolio", path=service_path
+    )
+
+
+# Holdings routes - forward to portfolio service
+@router.api_route(
+    "/holdings/{path:path}",
+    methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
+    include_in_schema=False,
+)
+async def proxy_holdings_routes(request: Request, path: str) -> Response:
+    """
+    Proxy holdings management routes to portfolio service.
+    """
+    service_path = f"/api/v1/holdings/{path}"
+    return await service_proxy.proxy_request(
+        request=request, service_name="portfolio", path=service_path
+    )
+
+
+# Holdings root route - forward to portfolio service
+@router.api_route(
+    "/holdings",
+    methods=["GET", "POST"],
+    include_in_schema=False,
+)
+async def proxy_holdings_root(request: Request) -> Response:
+    """
+    Proxy holdings root routes to portfolio service.
+    """
+    service_path = "/api/v1/holdings"
+    return await service_proxy.proxy_request(
+        request=request, service_name="portfolio", path=service_path
+    )
+
+
+# Analytics routes - forward to portfolio service
+@router.api_route(
+    "/analytics/{path:path}",
+    methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
+    include_in_schema=False,
+)
+async def proxy_analytics_routes(request: Request, path: str) -> Response:
+    """
+    Proxy analytics routes to portfolio service.
+    """
+    service_path = f"/api/v1/analytics/{path}"
+    return await service_proxy.proxy_request(
+        request=request, service_name="portfolio", path=service_path
+    )
+
+
+# Analytics root route - forward to portfolio service
+@router.api_route(
+    "/analytics",
+    methods=["GET", "POST"],
+    include_in_schema=False,
+)
+async def proxy_analytics_root(request: Request) -> Response:
+    """
+    Proxy analytics root routes to portfolio service.
+    """
+    service_path = "/api/v1/analytics"
+    return await service_proxy.proxy_request(
+        request=request, service_name="portfolio", path=service_path
+    )
+
+
+# Assets routes - forward to portfolio service
+@router.api_route(
+    "/assets/{path:path}",
+    methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
+    include_in_schema=False,
+)
+async def proxy_assets_routes(request: Request, path: str) -> Response:
+    """
+    Proxy assets routes to portfolio service.
+    """
+    service_path = f"/api/v1/assets/{path}"
+    return await service_proxy.proxy_request(
+        request=request, service_name="portfolio", path=service_path
+    )
+
+
+# Assets root route - forward to portfolio service
+@router.api_route(
+    "/assets",
+    methods=["GET", "POST"],
+    include_in_schema=False,
+)
+async def proxy_assets_root(request: Request) -> Response:
+    """
+    Proxy assets root routes to portfolio service.
+    """
+    service_path = "/api/v1/assets"
+    return await service_proxy.proxy_request(
+        request=request, service_name="portfolio", path=service_path
+    )
