@@ -3,6 +3,7 @@ Authentication endpoints for user registration, login, and token management.
 """
 
 from fastapi import APIRouter, Depends, status
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
@@ -55,19 +56,23 @@ async def register(
     description="Authenticate with email and password to receive access and refresh tokens",
 )
 async def login(
-    login_data: UserLogin,
+    form_data: OAuth2PasswordRequestForm = Depends(),
     db: AsyncSession = Depends(get_db),
 ):
     """
     Authenticate and receive access tokens.
 
-    - **email**: User's email address
+    - **username**: User's email address (sent as 'username' per OAuth2 spec)
     - **password**: User's password
 
     Returns both access and refresh tokens.
     The access token should be used for API requests (expires in 30 minutes).
     The refresh token can be used to get a new access token (expires in 7 days).
+
+    Note: This endpoint follows OAuth2 password flow, so the email is sent in the 'username' field.
     """
+    # Create UserLogin object from form data (username field contains email)
+    login_data = UserLogin(email=form_data.username, password=form_data.password)
     user = await AuthService.authenticate_user(login_data, db)
     tokens = AuthService.create_tokens(user)
     return tokens
