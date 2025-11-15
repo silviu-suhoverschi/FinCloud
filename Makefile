@@ -1,4 +1,4 @@
-.PHONY: help dev up down logs clean test lint build deploy
+.PHONY: help dev up down logs clean test lint build deploy migrate-budget migrate-portfolio migrate
 
 help: ## Show this help message
 	@echo 'Usage: make [target]'
@@ -50,3 +50,13 @@ frontend-install: ## Install frontend dependencies
 services-install: ## Install Python dependencies for services
 	cd services/budget-service && pip install -r requirements.txt
 	cd services/portfolio-service && pip install -r requirements.txt
+
+migrate-budget: ## Run budget service database migrations
+	docker-compose exec budget-service alembic upgrade head
+
+migrate-portfolio: ## Run portfolio service database migrations
+	docker-compose exec portfolio-service alembic upgrade head
+
+migrate: ## Run all database migrations
+	docker-compose exec budget-service alembic upgrade head
+	docker-compose exec portfolio-service alembic upgrade head
