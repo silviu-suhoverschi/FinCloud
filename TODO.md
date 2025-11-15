@@ -242,13 +242,13 @@
 - ✅ Budget progress visualization
 
 #### Portfolio Module
-- 📋 Portfolio list page
-- 📋 Portfolio detail page with charts
-- 📋 Holdings table
-- 📋 Add holding form
-- 📋 Transaction history
-- 📋 Performance charts (ROI, allocation)
-- 📋 Asset search/autocomplete
+- ✅ Portfolio list page
+- ✅ Portfolio detail page with charts
+- ✅ Holdings table
+- ✅ Add holding form
+- ✅ Transaction history
+- ✅ Performance charts (ROI, allocation)
+- ✅ Asset search/autocomplete
 
 #### Reports
 - 📋 Cashflow report with charts
