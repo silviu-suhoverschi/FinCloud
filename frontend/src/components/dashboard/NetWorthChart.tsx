@@ -13,10 +13,10 @@ import {
   Area,
   AreaChart,
 } from 'recharts'
-import { NetWorthDataPoint } from '@/lib/reports'
+import { NetWorthDataPointLegacy } from '@/lib/reports'
 
 export interface NetWorthChartProps {
-  data: NetWorthDataPoint[]
+  data: NetWorthDataPointLegacy[]
   isLoading?: boolean
 }
 
