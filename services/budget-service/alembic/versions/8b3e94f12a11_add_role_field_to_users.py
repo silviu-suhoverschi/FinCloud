@@ -21,28 +21,50 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     """Add role field to users table."""
-    # Add role column
-    op.add_column(
-        "users",
-        sa.Column("role", sa.String(length=20), server_default="user", nullable=False),
-    )
+    # Check if role column exists
+    connection = op.get_bind()
+    inspector = sa.inspect(connection)
+    columns = [col["name"] for col in inspector.get_columns("users")]
 
-    # Add check constraint for valid roles
-    op.create_check_constraint(
-        "chk_role_valid", "users", "role IN ('user', 'admin', 'premium')"
-    )
+    # Add role column only if it doesn't exist
+    if "role" not in columns:
+        op.add_column(
+            "users",
+            sa.Column("role", sa.String(length=20), server_default="user", nullable=False),
+        )
 
-    # Add index on role column
-    op.create_index("idx_users_role", "users", ["role"])
+    # Check if constraint exists
+    constraints = [const["name"] for const in inspector.get_check_constraints("users")]
+    if "chk_role_valid" not in constraints:
+        # Add check constraint for valid roles
+        op.create_check_constraint(
+            "chk_role_valid", "users", "role IN ('user', 'admin', 'premium')"
+        )
+
+    # Check if index exists
+    indexes = [idx["name"] for idx in inspector.get_indexes("users")]
+    if "idx_users_role" not in indexes:
+        # Add index on role column
+        op.create_index("idx_users_role", "users", ["role"])
 
 
 def downgrade() -> None:
     """Remove role field from users table."""
-    # Drop index
-    op.drop_index("idx_users_role", table_name="users")
+    # Check what exists before dropping
+    connection = op.get_bind()
+    inspector = sa.inspect(connection)
 
-    # Drop check constraint
-    op.drop_constraint("chk_role_valid", "users", type_="check")
+    # Drop index if it exists
+    indexes = [idx["name"] for idx in inspector.get_indexes("users")]
+    if "idx_users_role" in indexes:
+        op.drop_index("idx_users_role", table_name="users")
 
-    # Drop column
-    op.drop_column("users", "role")
+    # Drop check constraint if it exists
+    constraints = [const["name"] for const in inspector.get_check_constraints("users")]
+    if "chk_role_valid" in constraints:
+        op.drop_constraint("chk_role_valid", "users", type_="check")
+
+    # Drop column if it exists
+    columns = [col["name"] for col in inspector.get_columns("users")]
+    if "role" in columns:
+        op.drop_column("users", "role")
