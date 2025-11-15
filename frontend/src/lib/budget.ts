@@ -225,8 +225,13 @@ export const budgetService = {
 
   // Budgets
   async getBudgets(): Promise<Budget[]> {
-    const response = await api.get<Budget[]>('/api/v1/budgets')
-    return response.data
+    try {
+      const response = await api.get<Budget[]>('/api/v1/budgets')
+      return Array.isArray(response.data) ? response.data : []
+    } catch (error) {
+      console.error('Error fetching budgets:', error)
+      return []
+    }
   },
 
   async getBudget(id: number): Promise<Budget> {
