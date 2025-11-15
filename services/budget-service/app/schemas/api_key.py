@@ -46,7 +46,9 @@ class ApiKeyWithSecret(ApiKeyResponse):
 class ApiKeyUpdate(BaseModel):
     """Schema for updating an API key."""
 
-    name: Optional[str] = Field(None, min_length=1, max_length=100, description="API key name")
+    name: Optional[str] = Field(
+        None, min_length=1, max_length=100, description="API key name"
+    )
     description: Optional[str] = Field(None, description="API key description")
     permissions: Optional[str] = Field(None, description="Permissions")
     is_active: Optional[bool] = Field(None, description="Whether the key is active")

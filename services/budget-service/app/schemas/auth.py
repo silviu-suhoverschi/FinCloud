@@ -201,3 +201,4 @@ class EmailVerificationRequest(BaseModel):
     """Schema for email verification request."""
 
     token: str = Field(..., description="Email verification token")
+

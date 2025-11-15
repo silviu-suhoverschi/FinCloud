@@ -10,7 +10,13 @@ from contextlib import asynccontextmanager
 from app.core.config import settings
 from app.core.database import engine, Base
 from app.api.v1 import accounts, transactions, budgets, categories, reports
-from app.api.v1.endpoints import auth, users, password_reset, email_verification, api_keys
+from app.api.v1.endpoints import (
+    auth,
+    users,
+    password_reset,
+    email_verification,
+    api_keys,
+)
 
 
 @asynccontextmanager
