@@ -105,3 +105,163 @@ async def proxy_users_routes(request: Request, path: str) -> Response:
     return await service_proxy.proxy_request(
         request=request, service_name="budget", path=service_path
     )
+
+
+# Accounts routes - forward to budget service
+@router.api_route(
+    "/accounts/{path:path}",
+    methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
+    include_in_schema=False,
+)
+async def proxy_accounts_routes(request: Request, path: str) -> Response:
+    """
+    Proxy account management routes to budget service.
+    """
+    service_path = f"/api/v1/accounts/{path}"
+    return await service_proxy.proxy_request(
+        request=request, service_name="budget", path=service_path
+    )
+
+
+# Accounts root route - forward to budget service
+@router.api_route(
+    "/accounts",
+    methods=["GET", "POST"],
+    include_in_schema=False,
+)
+async def proxy_accounts_root(request: Request) -> Response:
+    """
+    Proxy account root routes to budget service.
+    """
+    service_path = "/api/v1/accounts"
+    return await service_proxy.proxy_request(
+        request=request, service_name="budget", path=service_path
+    )
+
+
+# Transactions routes - forward to budget service
+@router.api_route(
+    "/transactions/{path:path}",
+    methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
+    include_in_schema=False,
+)
+async def proxy_transactions_routes(request: Request, path: str) -> Response:
+    """
+    Proxy transaction management routes to budget service.
+    """
+    service_path = f"/api/v1/transactions/{path}"
+    return await service_proxy.proxy_request(
+        request=request, service_name="budget", path=service_path
+    )
+
+
+# Transactions root route - forward to budget service
+@router.api_route(
+    "/transactions",
+    methods=["GET", "POST"],
+    include_in_schema=False,
+)
+async def proxy_transactions_root(request: Request) -> Response:
+    """
+    Proxy transaction root routes to budget service.
+    """
+    service_path = "/api/v1/transactions"
+    return await service_proxy.proxy_request(
+        request=request, service_name="budget", path=service_path
+    )
+
+
+# Budgets routes - forward to budget service
+@router.api_route(
+    "/budgets/{path:path}",
+    methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
+    include_in_schema=False,
+)
+async def proxy_budgets_routes(request: Request, path: str) -> Response:
+    """
+    Proxy budget management routes to budget service.
+    """
+    service_path = f"/api/v1/budgets/{path}"
+    return await service_proxy.proxy_request(
+        request=request, service_name="budget", path=service_path
+    )
+
+
+# Budgets root route - forward to budget service
+@router.api_route(
+    "/budgets",
+    methods=["GET", "POST"],
+    include_in_schema=False,
+)
+async def proxy_budgets_root(request: Request) -> Response:
+    """
+    Proxy budget root routes to budget service.
+    """
+    service_path = "/api/v1/budgets"
+    return await service_proxy.proxy_request(
+        request=request, service_name="budget", path=service_path
+    )
+
+
+# Categories routes - forward to budget service
+@router.api_route(
+    "/categories/{path:path}",
+    methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
+    include_in_schema=False,
+)
+async def proxy_categories_routes(request: Request, path: str) -> Response:
+    """
+    Proxy category management routes to budget service.
+    """
+    service_path = f"/api/v1/categories/{path}"
+    return await service_proxy.proxy_request(
+        request=request, service_name="budget", path=service_path
+    )
+
+
+# Categories root route - forward to budget service
+@router.api_route(
+    "/categories",
+    methods=["GET", "POST"],
+    include_in_schema=False,
+)
+async def proxy_categories_root(request: Request) -> Response:
+    """
+    Proxy category root routes to budget service.
+    """
+    service_path = "/api/v1/categories"
+    return await service_proxy.proxy_request(
+        request=request, service_name="budget", path=service_path
+    )
+
+
+# Reports routes - forward to budget service
+@router.api_route(
+    "/reports/{path:path}",
+    methods=["GET", "POST", "PUT", "DELETE", "PATCH"],
+    include_in_schema=False,
+)
+async def proxy_reports_routes(request: Request, path: str) -> Response:
+    """
+    Proxy report routes to budget service.
+    """
+    service_path = f"/api/v1/reports/{path}"
+    return await service_proxy.proxy_request(
+        request=request, service_name="budget", path=service_path
+    )
+
+
+# Reports root route - forward to budget service
+@router.api_route(
+    "/reports",
+    methods=["GET", "POST"],
+    include_in_schema=False,
+)
+async def proxy_reports_root(request: Request) -> Response:
+    """
+    Proxy report root routes to budget service.
+    """
+    service_path = "/api/v1/reports"
+    return await service_proxy.proxy_request(
+        request=request, service_name="budget", path=service_path
+    )
