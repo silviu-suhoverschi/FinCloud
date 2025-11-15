@@ -59,6 +59,66 @@ export interface Category {
   updated_at: string
 }
 
+export interface CreateAccountData {
+  name: string
+  type: 'bank' | 'savings' | 'cash' | 'credit' | 'investment'
+  currency: string
+  balance: number
+}
+
+export interface UpdateAccountData {
+  name?: string
+  type?: 'bank' | 'savings' | 'cash' | 'credit' | 'investment'
+  currency?: string
+  balance?: number
+}
+
+export interface CreateTransactionData {
+  account_id: number
+  category_id?: number
+  amount: number
+  description: string
+  date: string
+  type: 'income' | 'expense'
+}
+
+export interface UpdateTransactionData {
+  account_id?: number
+  category_id?: number
+  amount?: number
+  description?: string
+  date?: string
+  type?: 'income' | 'expense'
+}
+
+export interface CreateCategoryData {
+  name: string
+  type: 'income' | 'expense'
+  parent_id?: number
+}
+
+export interface UpdateCategoryData {
+  name?: string
+  type?: 'income' | 'expense'
+  parent_id?: number
+}
+
+export interface CreateBudgetData {
+  category_id: number
+  amount: number
+  period: 'monthly' | 'yearly'
+  start_date: string
+  end_date?: string
+}
+
+export interface UpdateBudgetData {
+  category_id?: number
+  amount?: number
+  period?: 'monthly' | 'yearly'
+  start_date?: string
+  end_date?: string
+}
+
 export const budgetService = {
   // Accounts
   async getAccounts(): Promise<Account[]> {
@@ -71,9 +131,28 @@ export const budgetService = {
     return response.data
   },
 
+  async createAccount(data: CreateAccountData): Promise<Account> {
+    const response = await api.post<Account>('/api/v1/accounts', data)
+    return response.data
+  },
+
+  async updateAccount(id: number, data: UpdateAccountData): Promise<Account> {
+    const response = await api.put<Account>(`/api/v1/accounts/${id}`, data)
+    return response.data
+  },
+
+  async deleteAccount(id: number): Promise<void> {
+    await api.delete(`/api/v1/accounts/${id}`)
+  },
+
   async getTotalBalance(): Promise<number> {
     const accounts = await this.getAccounts()
     return accounts.reduce((sum, account) => sum + account.balance, 0)
+  },
+
+  async getAccountBalance(id: number): Promise<{ balance: number }> {
+    const response = await api.get<{ balance: number }>(`/api/v1/accounts/${id}/balance`)
+    return response.data
   },
 
   // Transactions
@@ -90,14 +169,82 @@ export const budgetService = {
     return response.data
   },
 
+  async getTransaction(id: number): Promise<Transaction> {
+    const response = await api.get<Transaction>(`/api/v1/transactions/${id}`)
+    return response.data
+  },
+
+  async createTransaction(data: CreateTransactionData): Promise<Transaction> {
+    const response = await api.post<Transaction>('/api/v1/transactions', data)
+    return response.data
+  },
+
+  async updateTransaction(id: number, data: UpdateTransactionData): Promise<Transaction> {
+    const response = await api.put<Transaction>(`/api/v1/transactions/${id}`, data)
+    return response.data
+  },
+
+  async deleteTransaction(id: number): Promise<void> {
+    await api.delete(`/api/v1/transactions/${id}`)
+  },
+
   async getRecentTransactions(limit: number = 5): Promise<Transaction[]> {
     return this.getTransactions({ limit })
+  },
+
+  // Categories
+  async getCategories(): Promise<Category[]> {
+    const response = await api.get<Category[]>('/api/v1/categories')
+    return response.data
+  },
+
+  async getCategory(id: number): Promise<Category> {
+    const response = await api.get<Category>(`/api/v1/categories/${id}`)
+    return response.data
+  },
+
+  async createCategory(data: CreateCategoryData): Promise<Category> {
+    const response = await api.post<Category>('/api/v1/categories', data)
+    return response.data
+  },
+
+  async updateCategory(id: number, data: UpdateCategoryData): Promise<Category> {
+    const response = await api.put<Category>(`/api/v1/categories/${id}`, data)
+    return response.data
+  },
+
+  async deleteCategory(id: number): Promise<void> {
+    await api.delete(`/api/v1/categories/${id}`)
+  },
+
+  async getCategoryTree(): Promise<Category[]> {
+    const response = await api.get<Category[]>('/api/v1/categories/tree')
+    return response.data
   },
 
   // Budgets
   async getBudgets(): Promise<Budget[]> {
     const response = await api.get<Budget[]>('/api/v1/budgets')
     return response.data
+  },
+
+  async getBudget(id: number): Promise<Budget> {
+    const response = await api.get<Budget>(`/api/v1/budgets/${id}`)
+    return response.data
+  },
+
+  async createBudget(data: CreateBudgetData): Promise<Budget> {
+    const response = await api.post<Budget>('/api/v1/budgets', data)
+    return response.data
+  },
+
+  async updateBudget(id: number, data: UpdateBudgetData): Promise<Budget> {
+    const response = await api.put<Budget>(`/api/v1/budgets/${id}`, data)
+    return response.data
+  },
+
+  async deleteBudget(id: number): Promise<void> {
+    await api.delete(`/api/v1/budgets/${id}`)
   },
 
   async getBudgetProgress(id: number): Promise<{
@@ -107,12 +254,6 @@ export const budgetService = {
     percentage: number
   }> {
     const response = await api.get(`/api/v1/budgets/${id}/progress`)
-    return response.data
-  },
-
-  // Categories
-  async getCategories(): Promise<Category[]> {
-    const response = await api.get<Category[]>('/api/v1/categories')
     return response.data
   },
 }

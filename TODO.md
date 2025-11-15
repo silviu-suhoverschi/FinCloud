@@ -232,14 +232,14 @@
 - ✅ Net worth timeline chart
 
 #### Budget Module
-- 📋 Accounts list page
-- 📋 Account detail page
-- 📋 Transaction list with filters
-- 📋 Transaction create/edit form
-- 📋 Category management page
-- 📋 Budget list page
-- 📋 Budget create/edit form
-- 📋 Budget progress visualization
+- ✅ Accounts list page
+- ✅ Account detail page
+- ✅ Transaction list with filters
+- ✅ Transaction create/edit form
+- ✅ Category management page
+- ✅ Budget list page
+- ✅ Budget create/edit form
+- ✅ Budget progress visualization
 
 #### Portfolio Module
 - 📋 Portfolio list page
