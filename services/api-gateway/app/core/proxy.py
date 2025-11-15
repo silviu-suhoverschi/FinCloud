@@ -37,7 +37,7 @@ class ServiceProxy:
     async def close(self):
         """Close HTTP client."""
         if self.client:
-            await self.client.close()
+            await self.client.aclose()
 
     async def proxy_request(
         self,
