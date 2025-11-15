@@ -4,7 +4,7 @@ export interface Account {
   id: number
   user_id: number
   name: string
-  type: 'bank' | 'savings' | 'cash' | 'credit_card' | 'investment' | 'loan' | 'mortgage' | 'other'
+  type: 'checking' | 'savings' | 'cash' | 'credit_card' | 'investment' | 'loan' | 'mortgage' | 'other'
   currency: string
   current_balance: number
   initial_balance?: number
@@ -62,14 +62,14 @@ export interface Category {
 
 export interface CreateAccountData {
   name: string
-  type: 'bank' | 'savings' | 'cash' | 'credit_card' | 'investment' | 'loan' | 'mortgage' | 'other'
+  type: 'checking' | 'savings' | 'cash' | 'credit_card' | 'investment' | 'loan' | 'mortgage' | 'other'
   currency: string
   initial_balance: number
 }
 
 export interface UpdateAccountData {
   name?: string
-  type?: 'bank' | 'savings' | 'cash' | 'credit_card' | 'investment' | 'loan' | 'mortgage' | 'other'
+  type?: 'checking' | 'savings' | 'cash' | 'credit_card' | 'investment' | 'loan' | 'mortgage' | 'other'
   currency?: string
   current_balance?: number
 }
