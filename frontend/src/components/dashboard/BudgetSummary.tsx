@@ -7,6 +7,9 @@ export interface BudgetSummaryProps {
 }
 
 export default function BudgetSummary({ budgets, isLoading = false }: BudgetSummaryProps) {
+  // Ensure budgets is always an array
+  const budgetList = Array.isArray(budgets) ? budgets : []
+
   const formatAmount = (amount: number): string => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -44,7 +47,7 @@ export default function BudgetSummary({ budgets, isLoading = false }: BudgetSumm
     )
   }
 
-  if (budgets.length === 0) {
+  if (budgetList.length === 0) {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -66,7 +69,7 @@ export default function BudgetSummary({ budgets, isLoading = false }: BudgetSumm
       </div>
       <div className="p-6">
         <div className="space-y-4">
-          {budgets.slice(0, 5).map((budget) => {
+          {budgetList.slice(0, 5).map((budget) => {
             const spent = budget.spent || 0
             const percentage = (spent / budget.amount) * 100
             const progressColor = getProgressColor(percentage)
