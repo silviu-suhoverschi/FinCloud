@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import AppLayout from '@/components/layout/AppLayout'
 import portfolioService, {
@@ -27,13 +27,7 @@ export default function PortfolioDetailPage() {
   const [error, setError] = useState<string | null>(null)
   const [showAddHolding, setShowAddHolding] = useState(false)
 
-  useEffect(() => {
-    if (portfolioId) {
-      loadPortfolioData()
-    }
-  }, [portfolioId])
-
-  const loadPortfolioData = async () => {
+  const loadPortfolioData = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
@@ -55,7 +49,13 @@ export default function PortfolioDetailPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [portfolioId])
+
+  useEffect(() => {
+    if (portfolioId) {
+      loadPortfolioData()
+    }
+  }, [portfolioId, loadPortfolioData])
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {

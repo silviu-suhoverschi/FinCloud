@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect, useCallback, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import AppLayout from '@/components/layout/AppLayout'
 import budgetService, { Transaction, Account, Category } from '@/lib/budget'
@@ -28,15 +28,7 @@ function TransactionsContent() {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 20
 
-  useEffect(() => {
-    loadInitialData()
-  }, [])
-
-  useEffect(() => {
-    loadTransactions()
-  }, [accountFilter, categoryFilter, typeFilter, startDate, endDate])
-
-  const loadInitialData = async () => {
+  const loadInitialData = useCallback(async () => {
     try {
       const [accountsData, categoriesData] = await Promise.all([
         budgetService.getAccounts(),
@@ -47,9 +39,9 @@ function TransactionsContent() {
     } catch (err) {
       console.error('Failed to load initial data:', err)
     }
-  }
+  }, [])
 
-  const loadTransactions = async () => {
+  const loadTransactions = useCallback(async () => {
     try {
       setLoading(true)
       const params: any = {}
@@ -69,7 +61,15 @@ function TransactionsContent() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [accountFilter, categoryFilter, typeFilter, startDate, endDate])
+
+  useEffect(() => {
+    loadInitialData()
+  }, [loadInitialData])
+
+  useEffect(() => {
+    loadTransactions()
+  }, [loadTransactions])
 
   const handleDeleteTransaction = async (id: number) => {
     if (!confirm('Are you sure you want to delete this transaction?')) return

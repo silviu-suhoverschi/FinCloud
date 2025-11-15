@@ -17,13 +17,13 @@ export const dashboardService = {
   async getMetrics(): Promise<DashboardMetrics> {
     try {
       // Fetch all data in parallel
-      const [totalBalance, portfolioValue, portfolios, budgets, netWorthData] = await Promise.all([
+      const [totalBalance, portfolioValue, portfolios, budgets, netWorthTimeline] = await Promise.all([
         budgetService.getTotalBalance().catch(() => 0),
         portfolioService.getTotalPortfolioValue().catch(() => 0),
         portfolioService.getPortfolios().catch(() => []),
         budgetService.getBudgets().catch(() => []),
         reportsService
-          .getNetWorth({
+          .getNetWorthLegacy({
             interval: 'monthly',
           })
           .catch(() => []),
@@ -69,9 +69,9 @@ export const dashboardService = {
 
       // Calculate net worth change (YTD)
       let netWorthChange = 0
-      if (netWorthData.length >= 2) {
-        const oldestValue = netWorthData[0].net_worth
-        const latestValue = netWorthData[netWorthData.length - 1].net_worth
+      if (netWorthTimeline.length >= 2) {
+        const oldestValue = netWorthTimeline[0].net_worth
+        const latestValue = netWorthTimeline[netWorthTimeline.length - 1].net_worth
         if (oldestValue > 0) {
           netWorthChange = ((latestValue - oldestValue) / oldestValue) * 100
         }

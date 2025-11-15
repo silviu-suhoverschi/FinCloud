@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { PortfolioPerformance, PortfolioValueHistory } from '@/lib/portfolio'
 import portfolioService from '@/lib/portfolio'
 import {
@@ -39,11 +39,7 @@ export default function PerformanceCharts({ performance, portfolioId }: Performa
   const [loading, setLoading] = useState(true)
   const [timeRange, setTimeRange] = useState<'7' | '30' | '90' | '365'>('30')
 
-  useEffect(() => {
-    loadValueHistory()
-  }, [portfolioId, timeRange])
-
-  const loadValueHistory = async () => {
+  const loadValueHistory = useCallback(async () => {
     try {
       setLoading(true)
       const history = await portfolioService.getPortfolioValueHistory(
@@ -57,7 +53,11 @@ export default function PerformanceCharts({ performance, portfolioId }: Performa
     } finally {
       setLoading(false)
     }
-  }
+  }, [portfolioId, timeRange])
+
+  useEffect(() => {
+    loadValueHistory()
+  }, [loadValueHistory])
 
   // Portfolio Value Chart Data
   const valueChartData = {

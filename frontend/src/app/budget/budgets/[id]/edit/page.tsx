@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import AppLayout from '@/components/layout/AppLayout'
 import budgetService, { Budget, Category, UpdateBudgetData } from '@/lib/budget'
@@ -19,11 +19,7 @@ export default function EditBudgetPage() {
   const [formData, setFormData] = useState<UpdateBudgetData>({})
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  useEffect(() => {
-    loadData()
-  }, [budgetId])
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true)
       const [budgetData, categoriesData] = await Promise.all([
@@ -50,7 +46,11 @@ export default function EditBudgetPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [budgetId])
+
+  useEffect(() => {
+    loadData()
+  }, [loadData])
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {}

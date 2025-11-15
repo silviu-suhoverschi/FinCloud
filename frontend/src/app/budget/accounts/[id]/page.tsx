@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import AppLayout from '@/components/layout/AppLayout'
 import budgetService, { Account, Transaction, UpdateAccountData } from '@/lib/budget'
@@ -19,11 +19,7 @@ export default function AccountDetailPage() {
   const [formData, setFormData] = useState<UpdateAccountData>({})
   const [submitting, setSubmitting] = useState(false)
 
-  useEffect(() => {
-    loadAccountData()
-  }, [accountId])
-
-  const loadAccountData = async () => {
+  const loadAccountData = useCallback(async () => {
     try {
       setLoading(true)
       const [accountData, transactionsData] = await Promise.all([
@@ -45,7 +41,11 @@ export default function AccountDetailPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [accountId])
+
+  useEffect(() => {
+    loadAccountData()
+  }, [loadAccountData])
 
   const handleUpdateAccount = async (e: React.FormEvent) => {
     e.preventDefault()

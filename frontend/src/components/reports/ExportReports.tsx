@@ -194,7 +194,7 @@ export default function ExportReports({
       <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
         <strong>CSV:</strong> Download raw data for use in Excel or other spreadsheet applications.
         <br />
-        <strong>PDF:</strong> Print-friendly version using your browser's print dialog (Ctrl/Cmd + P → Save as PDF).
+        <strong>PDF:</strong> Print-friendly version using your browser&apos;s print dialog (Ctrl/Cmd + P → Save as PDF).
       </p>
     </div>
   )
