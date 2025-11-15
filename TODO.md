@@ -251,11 +251,11 @@
 - ✅ Asset search/autocomplete
 
 #### Reports
-- 📋 Cashflow report with charts
-- 📋 Spending by category (pie chart)
-- 📋 Income vs expenses timeline
-- 📋 Net worth chart
-- 📋 Export reports (PDF/CSV)
+- ✅ Cashflow report with charts
+- ✅ Spending by category (pie chart)
+- ✅ Income vs expenses timeline
+- ✅ Net worth chart
+- ✅ Export reports (PDF/CSV)
 
 #### Settings
 - 📋 User profile settings

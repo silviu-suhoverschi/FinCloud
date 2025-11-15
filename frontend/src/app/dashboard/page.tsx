@@ -10,14 +10,14 @@ import NetWorthChart from '@/components/dashboard/NetWorthChart'
 import dashboardService, { DashboardMetrics } from '@/lib/dashboard'
 import budgetService, { Transaction, Budget } from '@/lib/budget'
 import portfolioService, { PortfolioValueHistory } from '@/lib/portfolio'
-import reportsService, { NetWorthDataPoint } from '@/lib/reports'
+import reportsService, { NetWorthDataPointLegacy } from '@/lib/reports'
 
 export default function DashboardPage() {
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null)
   const [recentTransactions, setRecentTransactions] = useState<Transaction[]>([])
   const [budgets, setBudgets] = useState<Budget[]>([])
   const [portfolioHistory, setPortfolioHistory] = useState<PortfolioValueHistory[]>([])
-  const [netWorthHistory, setNetWorthHistory] = useState<NetWorthDataPoint[]>([])
+  const [netWorthHistory, setNetWorthHistory] = useState<NetWorthDataPointLegacy[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function DashboardPage() {
           dashboardService.getMetrics(),
           budgetService.getRecentTransactions(5),
           budgetService.getBudgets(),
-          reportsService.getNetWorth({ interval: 'monthly' }),
+          reportsService.getNetWorthLegacy({ interval: 'monthly' }),
         ])
 
         setMetrics(metricsData)
