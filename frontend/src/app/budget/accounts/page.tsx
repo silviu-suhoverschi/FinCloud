@@ -12,7 +12,7 @@ export default function AccountsPage() {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [formData, setFormData] = useState<CreateAccountData>({
     name: '',
-    type: 'bank',
+    type: 'checking',
     currency: 'USD',
     initial_balance: 0,
   })
@@ -42,7 +42,7 @@ export default function AccountsPage() {
       setSubmitting(true)
       await budgetService.createAccount(formData)
       setShowCreateModal(false)
-      setFormData({ name: '', type: 'bank', currency: 'USD', initial_balance: 0 })
+      setFormData({ name: '', type: 'checking', currency: 'USD', initial_balance: 0 })
       await loadAccounts()
     } catch (err) {
       alert('Failed to create account')
@@ -66,7 +66,7 @@ export default function AccountsPage() {
 
   const getAccountTypeColor = (type: string) => {
     const colors: Record<string, string> = {
-      bank: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
+      checking: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
       savings: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
       cash: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
       credit_card: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
@@ -228,7 +228,7 @@ export default function AccountsPage() {
                   onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                 >
-                  <option value="bank">Bank</option>
+                  <option value="checking">Checking</option>
                   <option value="savings">Savings</option>
                   <option value="cash">Cash</option>
                   <option value="credit_card">Credit Card</option>
