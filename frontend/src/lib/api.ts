@@ -2,6 +2,12 @@ import axios, { AxiosError } from 'axios'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
+// Debug: Log the API base URL being used
+if (typeof window !== 'undefined') {
+  console.log('[API Config] Base URL:', API_BASE_URL)
+  console.log('[API Config] NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL)
+}
+
 // Helper function to set cookies
 const setCookie = (name: string, value: string, days: number = 7) => {
   const expires = new Date()

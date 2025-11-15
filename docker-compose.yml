@@ -200,7 +200,8 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-      - /app/.next
+      # Note: Removed /app/.next volume to prevent caching environment variables
+      # The .next directory will be rebuilt fresh on each container start
     networks:
       - fincloud-network
     restart: unless-stopped

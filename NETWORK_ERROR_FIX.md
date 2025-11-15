@@ -10,13 +10,26 @@ GET http://budget-service:8001/api/v1/accounts/ net::ERR_NAME_NOT_RESOLVED
 
 ## Root Cause
 
-The Next.js application has a cached build (`.next` directory) that was created with incorrect environment variables. The `NEXT_PUBLIC_API_URL` was likely set to `http://budget-service:8001` during an initial build, which is incorrect because:
+The issue was caused by TWO problems:
 
-1. `budget-service:8001` is a Docker internal hostname that only works within the Docker network
-2. The browser (running on the host machine) cannot resolve Docker service names
-3. The frontend should connect through the API Gateway at `http://localhost:8000`
+1. **Docker Volume Caching**: The `docker-compose.yml` had an anonymous volume mount for `/app/.next` which preserved the Next.js build cache across container restarts, keeping old environment variables baked in.
+
+2. **Environment Variable Embedding**: Next.js embeds `NEXT_PUBLIC_*` environment variables into the client-side JavaScript bundle at build time. The cached `.next` directory had `NEXT_PUBLIC_API_URL=http://budget-service:8001` (internal Docker hostname) instead of `http://localhost:8000` (API Gateway).
+
+Why `budget-service:8001` doesn't work:
+- `budget-service:8001` is a Docker internal hostname that only works within the Docker network
+- The browser (running on the host machine) cannot resolve Docker service names
+- The frontend must connect through the API Gateway at `http://localhost:8000`
 
 ## Solution
+
+The fix involves two changes:
+
+1. **Code Changes** (already applied):
+   - Removed the `/app/.next` volume mount from `docker-compose.yml`
+   - Added debug logging to `frontend/src/lib/api.ts`
+
+2. **Clean Rebuild** (you need to run this):
 
 ### Quick Fix (Recommended)
 
@@ -28,17 +41,21 @@ Run the provided fix script:
 
 This script will:
 1. Stop the frontend service
-2. Remove the cached container
-3. Restart the frontend service with correct environment variables
+2. Remove the container and anonymous volumes
+3. Remove the local `.next` build cache
+4. Restart the frontend service with correct environment variables
 
 ### Manual Fix
 
 If you prefer to fix it manually:
 
 ```bash
-# Stop and remove the frontend container
+# Stop and remove the frontend container with volumes
 docker-compose stop frontend
-docker-compose rm -f frontend
+docker-compose rm -f -v frontend
+
+# Remove the local .next cache
+rm -rf frontend/.next
 
 # Start the frontend service again
 docker-compose up -d frontend
@@ -76,19 +93,33 @@ After applying the fix:
 
 ## Configuration Files
 
-The following files have been updated/created to fix this issue:
+The following files have been updated to fix this issue:
 
-1. **`frontend/.env.local`** (created) - Sets correct environment variables for local development:
-   - `NEXT_PUBLIC_API_URL=http://localhost:8000`
-   - `NEXT_PUBLIC_WS_URL=ws://localhost:8000/ws`
-
-2. **`docker-compose.yml`** (already correct) - Has correct environment variables:
+1. **`docker-compose.yml`** (FIXED) - Removed the problematic `/app/.next` volume mount:
    ```yaml
    frontend:
      environment:
        NEXT_PUBLIC_API_URL: http://localhost:8000
        NEXT_PUBLIC_WS_URL: ws://localhost:8000/ws
+     volumes:
+       - ./frontend:/app
+       - /app/node_modules
+       # REMOVED: - /app/.next (was caching old environment variables)
    ```
+
+2. **`frontend/src/lib/api.ts`** (ENHANCED) - Added debug logging to show API URL:
+   ```typescript
+   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+
+   // Debug: Log the API base URL being used
+   if (typeof window !== 'undefined') {
+     console.log('[API Config] Base URL:', API_BASE_URL)
+   }
+   ```
+
+3. **`frontend/.env.local`** (created, not committed) - Local override for development:
+   - `NEXT_PUBLIC_API_URL=http://localhost:8000`
+   - `NEXT_PUBLIC_WS_URL=ws://localhost:8000/ws`
 
 ## Why This Happens
 
