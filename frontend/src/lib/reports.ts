@@ -96,7 +96,7 @@ export const reportsService = {
     end_date: string
     currency?: string
   }): Promise<NetWorthReport> {
-    const response = await api.get<NetWorthReport>('/budget/api/v1/reports/net-worth', { params })
+    const response = await api.get<NetWorthReport>('/api/v1/reports/net-worth', { params })
     return response.data
   },
 
@@ -109,7 +109,7 @@ export const reportsService = {
     const endDate = params?.end_date || new Date().toISOString().split('T')[0]
     const startDate = params?.start_date || new Date(new Date().setMonth(new Date().getMonth() - 6)).toISOString().split('T')[0]
 
-    const response = await api.get<NetWorthReport>('/budget/api/v1/reports/net-worth', {
+    const response = await api.get<NetWorthReport>('/api/v1/reports/net-worth', {
       params: { start_date: startDate, end_date: endDate }
     })
 
@@ -128,7 +128,7 @@ export const reportsService = {
     end_date: string
     currency?: string
   }): Promise<CashflowReport> {
-    const response = await api.get<CashflowReport>('/budget/api/v1/reports/cashflow', { params })
+    const response = await api.get<CashflowReport>('/api/v1/reports/cashflow', { params })
     return response.data
   },
 
@@ -138,7 +138,7 @@ export const reportsService = {
     end_date: string
     currency?: string
   }): Promise<SpendingReport> {
-    const response = await api.get<SpendingReport>('/budget/api/v1/reports/spending', { params })
+    const response = await api.get<SpendingReport>('/api/v1/reports/spending', { params })
     return response.data
   },
 
@@ -148,7 +148,7 @@ export const reportsService = {
     end_date: string
     currency?: string
   }): Promise<IncomeReport> {
-    const response = await api.get<IncomeReport>('/budget/api/v1/reports/income', { params })
+    const response = await api.get<IncomeReport>('/api/v1/reports/income', { params })
     return response.data
   },
 }

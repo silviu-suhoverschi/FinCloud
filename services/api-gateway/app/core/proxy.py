@@ -30,7 +30,7 @@ class ServiceProxy:
         """Initialize HTTP client."""
         self.client = httpx.AsyncClient(
             timeout=httpx.Timeout(settings.REQUEST_TIMEOUT),
-            follow_redirects=False,
+            follow_redirects=True,
         )
         logger.info("Service proxy initialized")
 
