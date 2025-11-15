@@ -1,7 +1,7 @@
 """Add theme preference and API keys management
 
 Revision ID: 009_add_theme_and_api_keys
-Revises: 008_add_tags_and_budget_cache
+Revises: 8b3e94f12a11
 Create Date: 2025-11-15 19:30:00.000000
 
 """
@@ -12,7 +12,7 @@ from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
 revision = "009_add_theme_and_api_keys"
-down_revision = "008_add_tags_and_budget_cache"
+down_revision = "8b3e94f12a11"
 branch_labels = None
 depends_on = None
 
