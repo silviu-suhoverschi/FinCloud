@@ -2,16 +2,17 @@
 Database configuration for Portfolio Service
 """
 
+from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from app.core.config import settings
 
 
-# Base class for models
+# Base class for models with portfolio schema
 class Base(DeclarativeBase):
     """Base class for all database models"""
 
-    pass
+    metadata = MetaData(schema="portfolio")
 
 
 # Create async engine
