@@ -13,7 +13,7 @@ import re
 class AccountType:
     """Valid account types."""
 
-    BANK = "bank"
+    CHECKING = "checking"
     SAVINGS = "savings"
     CREDIT_CARD = "credit_card"
     CASH = "cash"
@@ -26,7 +26,7 @@ class AccountType:
     def values(cls):
         """Get all valid account type values."""
         return [
-            cls.BANK,
+            cls.CHECKING,
             cls.SAVINGS,
             cls.CREDIT_CARD,
             cls.CASH,
