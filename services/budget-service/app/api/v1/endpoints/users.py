@@ -69,6 +69,9 @@ async def update_profile(
     if profile_data.timezone is not None:
         current_user.timezone = profile_data.timezone
 
+    if profile_data.theme is not None:
+        current_user.theme = profile_data.theme
+
     # Update timestamp
     current_user.updated_at = datetime.utcnow()
 

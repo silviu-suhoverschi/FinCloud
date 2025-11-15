@@ -10,7 +10,7 @@ from contextlib import asynccontextmanager
 from app.core.config import settings
 from app.core.database import engine, Base
 from app.api.v1 import accounts, transactions, budgets, categories, reports
-from app.api.v1.endpoints import auth, users, password_reset, email_verification
+from app.api.v1.endpoints import auth, users, password_reset, email_verification, api_keys
 
 
 @asynccontextmanager
@@ -56,6 +56,7 @@ async def health_check():
 # Authentication & Authorization
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["authentication"])
 app.include_router(users.router, prefix="/api/v1/users", tags=["users"])
+app.include_router(api_keys.router, prefix="/api/v1/api-keys", tags=["api-keys"])
 app.include_router(
     password_reset.router, prefix="/api/v1/password-reset", tags=["password-reset"]
 )

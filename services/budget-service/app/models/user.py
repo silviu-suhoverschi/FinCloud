@@ -25,6 +25,7 @@ if TYPE_CHECKING:
     from app.models.budget import Budget
     from app.models.recurring_transaction import RecurringTransaction
     from app.models.tag import Tag
+    from app.models.api_key import ApiKey
 
 """
 User Model
@@ -80,6 +81,9 @@ class User(Base):
     timezone: Mapped[str] = mapped_column(
         String(50), default="UTC", server_default="UTC"
     )
+    theme: Mapped[str] = mapped_column(
+        String(20), default="auto", server_default="auto"
+    )
 
     # Timestamps
     created_at: Mapped[datetime] = mapped_column(
@@ -112,6 +116,9 @@ class User(Base):
     tags: Mapped[List["Tag"]] = relationship(
         "Tag", back_populates="user", cascade="all, delete-orphan"
     )
+    api_keys: Mapped[List["ApiKey"]] = relationship(
+        "ApiKey", back_populates="user", cascade="all, delete-orphan"
+    )
 
     # Table Constraints
     __table_args__ = (
@@ -123,6 +130,7 @@ class User(Base):
             "LENGTH(preferred_currency) = 3", name="chk_preferred_currency_length"
         ),
         CheckConstraint("role IN ('user', 'admin', 'premium')", name="chk_role_valid"),
+        CheckConstraint("theme IN ('light', 'dark', 'auto')", name="chk_theme_valid"),
         Index("idx_users_email", "email", postgresql_where="deleted_at IS NULL"),
         Index("idx_users_uuid", "uuid"),
         Index(
@@ -169,6 +177,14 @@ class User(Base):
         if role not in valid_roles:
             raise ValueError(f"Role must be one of: {', '.join(valid_roles)}")
         return role
+
+    @validates("theme")
+    def validate_theme(self, key, theme):
+        """Validate theme preference."""
+        valid_themes = ["light", "dark", "auto"]
+        if theme not in valid_themes:
+            raise ValueError(f"Theme must be one of: {', '.join(valid_themes)}")
+        return theme
 
     def __repr__(self) -> str:
         return f"<User(id={self.id}, email='{self.email}')>"
