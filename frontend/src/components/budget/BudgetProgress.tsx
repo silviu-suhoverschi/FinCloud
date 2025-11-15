@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import budgetService, { Budget } from '@/lib/budget'
 
 interface BudgetProgressProps {
@@ -14,11 +14,7 @@ export default function BudgetProgress({ budgetId, showAll = false, limit = 5 }:
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    loadBudgets()
-  }, [budgetId, showAll])
-
-  const loadBudgets = async () => {
+  const loadBudgets = useCallback(async () => {
     try {
       setLoading(true)
       if (budgetId) {
@@ -35,7 +31,11 @@ export default function BudgetProgress({ budgetId, showAll = false, limit = 5 }:
     } finally {
       setLoading(false)
     }
-  }
+  }, [budgetId, showAll, limit])
+
+  useEffect(() => {
+    loadBudgets()
+  }, [loadBudgets])
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
