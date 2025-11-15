@@ -26,10 +26,22 @@ function VerifyEmailContent() {
           router.push('/auth/login')
         }, 3000)
       } catch (err: any) {
-        setError(
-          err.response?.data?.detail ||
-            'Email verification failed. The link may have expired or is invalid.'
-        )
+        // Handle different error response formats
+        let errorMessage = 'Email verification failed. The link may have expired or is invalid.'
+
+        if (err.response?.data?.detail) {
+          const detail = err.response.data.detail
+          // Check if detail is an array (validation errors)
+          if (Array.isArray(detail)) {
+            // Extract error messages from validation errors
+            errorMessage = detail.map((e: any) => e.msg || e.message || 'Validation error').join(', ')
+          } else if (typeof detail === 'string') {
+            // Detail is a string
+            errorMessage = detail
+          }
+        }
+
+        setError(errorMessage)
       } finally {
         setIsVerifying(false)
       }

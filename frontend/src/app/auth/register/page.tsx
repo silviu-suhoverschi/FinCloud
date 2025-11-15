@@ -54,7 +54,22 @@ export default function RegisterPage() {
         router.push('/auth/login')
       }, 3000)
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Registration failed. Please try again.')
+      // Handle different error response formats
+      let errorMessage = 'Registration failed. Please try again.'
+
+      if (err.response?.data?.detail) {
+        const detail = err.response.data.detail
+        // Check if detail is an array (validation errors)
+        if (Array.isArray(detail)) {
+          // Extract error messages from validation errors
+          errorMessage = detail.map((e: any) => e.msg || e.message || 'Validation error').join(', ')
+        } else if (typeof detail === 'string') {
+          // Detail is a string
+          errorMessage = detail
+        }
+      }
+
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }

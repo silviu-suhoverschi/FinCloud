@@ -47,7 +47,22 @@ function LoginForm() {
       const redirect = searchParams.get('redirect') || '/dashboard'
       router.push(redirect)
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Invalid email or password')
+      // Handle different error response formats
+      let errorMessage = 'Invalid email or password'
+
+      if (err.response?.data?.detail) {
+        const detail = err.response.data.detail
+        // Check if detail is an array (validation errors)
+        if (Array.isArray(detail)) {
+          // Extract error messages from validation errors
+          errorMessage = detail.map((e: any) => e.msg || e.message || 'Validation error').join(', ')
+        } else if (typeof detail === 'string') {
+          // Detail is a string
+          errorMessage = detail
+        }
+      }
+
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }
