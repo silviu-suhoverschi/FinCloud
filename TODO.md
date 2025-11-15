@@ -225,11 +225,11 @@
 - ✅ Email verification page
 
 #### Dashboard
-- 📋 Overview dashboard with key metrics
-- 📋 Recent transactions widget
-- 📋 Budget summary widget
-- 📋 Portfolio value chart
-- 📋 Net worth timeline chart
+- ✅ Overview dashboard with key metrics
+- ✅ Recent transactions widget
+- ✅ Budget summary widget
+- ✅ Portfolio value chart
+- ✅ Net worth timeline chart
 
 #### Budget Module
 - 📋 Accounts list page
