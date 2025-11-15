@@ -6,7 +6,8 @@ export interface Account {
   name: string
   type: 'bank' | 'savings' | 'cash' | 'credit' | 'investment'
   currency: string
-  balance: number
+  current_balance: number
+  initial_balance?: number
   created_at: string
   updated_at: string
 }
@@ -63,14 +64,14 @@ export interface CreateAccountData {
   name: string
   type: 'bank' | 'savings' | 'cash' | 'credit' | 'investment'
   currency: string
-  balance: number
+  initial_balance: number
 }
 
 export interface UpdateAccountData {
   name?: string
   type?: 'bank' | 'savings' | 'cash' | 'credit' | 'investment'
   currency?: string
-  balance?: number
+  current_balance?: number
 }
 
 export interface CreateTransactionData {
@@ -122,8 +123,8 @@ export interface UpdateBudgetData {
 export const budgetService = {
   // Accounts
   async getAccounts(): Promise<Account[]> {
-    const response = await api.get<Account[]>('/api/v1/accounts')
-    return response.data
+    const response = await api.get<{ total: number; accounts: Account[] }>('/api/v1/accounts')
+    return response.data.accounts || []
   },
 
   async getAccount(id: number): Promise<Account> {
@@ -147,7 +148,7 @@ export const budgetService = {
 
   async getTotalBalance(): Promise<number> {
     const accounts = await this.getAccounts()
-    return accounts.reduce((sum, account) => sum + account.balance, 0)
+    return accounts.reduce((sum, account) => sum + account.current_balance, 0)
   },
 
   async getAccountBalance(id: number): Promise<{ balance: number }> {

@@ -14,7 +14,7 @@ export default function AccountsPage() {
     name: '',
     type: 'bank',
     currency: 'USD',
-    balance: 0,
+    initial_balance: 0,
   })
   const [submitting, setSubmitting] = useState(false)
 
@@ -42,7 +42,7 @@ export default function AccountsPage() {
       setSubmitting(true)
       await budgetService.createAccount(formData)
       setShowCreateModal(false)
-      setFormData({ name: '', type: 'bank', currency: 'USD', balance: 0 })
+      setFormData({ name: '', type: 'bank', currency: 'USD', initial_balance: 0 })
       await loadAccounts()
     } catch (err) {
       alert('Failed to create account')
@@ -82,7 +82,7 @@ export default function AccountsPage() {
     }).format(amount)
   }
 
-  const totalBalance = accounts.reduce((sum, acc) => sum + acc.balance, 0)
+  const totalBalance = accounts.reduce((sum, acc) => sum + acc.current_balance, 0)
 
   return (
     <AppLayout>
@@ -167,8 +167,8 @@ export default function AccountsPage() {
                       {account.currency}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-right">
-                      <span className={account.balance >= 0 ? 'text-green-600 dark:text-green-400 font-semibold' : 'text-red-600 dark:text-red-400 font-semibold'}>
-                        {formatCurrency(account.balance, account.currency)}
+                      <span className={account.current_balance >= 0 ? 'text-green-600 dark:text-green-400 font-semibold' : 'text-red-600 dark:text-red-400 font-semibold'}>
+                        {formatCurrency(account.current_balance, account.currency)}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -256,8 +256,8 @@ export default function AccountsPage() {
                   type="number"
                   required
                   step="0.01"
-                  value={formData.balance}
-                  onChange={(e) => setFormData({ ...formData, balance: parseFloat(e.target.value) })}
+                  value={formData.initial_balance}
+                  onChange={(e) => setFormData({ ...formData, initial_balance: parseFloat(e.target.value) })}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
                   placeholder="0.00"
                 />
