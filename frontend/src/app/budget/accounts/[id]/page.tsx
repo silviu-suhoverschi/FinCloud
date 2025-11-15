@@ -114,8 +114,11 @@ export default function AccountDetailPage() {
       bank: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
       savings: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
       cash: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-      credit: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
+      credit_card: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
       investment: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
+      loan: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300',
+      mortgage: 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300',
+      other: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
     }
     return colors[type] || 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
   }
@@ -282,8 +285,11 @@ export default function AccountDetailPage() {
                   <option value="bank">Bank</option>
                   <option value="savings">Savings</option>
                   <option value="cash">Cash</option>
-                  <option value="credit">Credit Card</option>
+                  <option value="credit_card">Credit Card</option>
                   <option value="investment">Investment</option>
+                  <option value="loan">Loan</option>
+                  <option value="mortgage">Mortgage</option>
+                  <option value="other">Other</option>
                 </select>
               </div>
 
