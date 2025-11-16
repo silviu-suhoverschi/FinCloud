@@ -133,7 +133,7 @@ async def proxy_accounts_root(request: Request) -> Response:
     """
     Proxy account root routes to budget service.
     """
-    service_path = "/api/v1/accounts"
+    service_path = "/api/v1/accounts/"
     return await service_proxy.proxy_request(
         request=request, service_name="budget", path=service_path
     )
@@ -165,7 +165,7 @@ async def proxy_transactions_root(request: Request) -> Response:
     """
     Proxy transaction root routes to budget service.
     """
-    service_path = "/api/v1/transactions"
+    service_path = "/api/v1/transactions/"
     return await service_proxy.proxy_request(
         request=request, service_name="budget", path=service_path
     )
@@ -197,7 +197,7 @@ async def proxy_budgets_root(request: Request) -> Response:
     """
     Proxy budget root routes to budget service.
     """
-    service_path = "/api/v1/budgets"
+    service_path = "/api/v1/budgets/"
     return await service_proxy.proxy_request(
         request=request, service_name="budget", path=service_path
     )
@@ -229,7 +229,7 @@ async def proxy_categories_root(request: Request) -> Response:
     """
     Proxy category root routes to budget service.
     """
-    service_path = "/api/v1/categories"
+    service_path = "/api/v1/categories/"
     return await service_proxy.proxy_request(
         request=request, service_name="budget", path=service_path
     )
@@ -261,7 +261,7 @@ async def proxy_reports_root(request: Request) -> Response:
     """
     Proxy report root routes to budget service.
     """
-    service_path = "/api/v1/reports"
+    service_path = "/api/v1/reports/"
     return await service_proxy.proxy_request(
         request=request, service_name="budget", path=service_path
     )
@@ -293,7 +293,7 @@ async def proxy_portfolios_root(request: Request) -> Response:
     """
     Proxy portfolio root routes to portfolio service.
     """
-    service_path = "/api/v1/portfolios"
+    service_path = "/api/v1/portfolios/"
     return await service_proxy.proxy_request(
         request=request, service_name="portfolio", path=service_path
     )
@@ -325,7 +325,7 @@ async def proxy_holdings_root(request: Request) -> Response:
     """
     Proxy holdings root routes to portfolio service.
     """
-    service_path = "/api/v1/holdings"
+    service_path = "/api/v1/holdings/"
     return await service_proxy.proxy_request(
         request=request, service_name="portfolio", path=service_path
     )
@@ -357,7 +357,7 @@ async def proxy_analytics_root(request: Request) -> Response:
     """
     Proxy analytics root routes to portfolio service.
     """
-    service_path = "/api/v1/analytics"
+    service_path = "/api/v1/analytics/"
     return await service_proxy.proxy_request(
         request=request, service_name="portfolio", path=service_path
     )
@@ -389,7 +389,7 @@ async def proxy_assets_root(request: Request) -> Response:
     """
     Proxy assets root routes to portfolio service.
     """
-    service_path = "/api/v1/assets"
+    service_path = "/api/v1/assets/"
     return await service_proxy.proxy_request(
         request=request, service_name="portfolio", path=service_path
     )
