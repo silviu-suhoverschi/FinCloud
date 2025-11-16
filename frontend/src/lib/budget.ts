@@ -106,8 +106,10 @@ export interface UpdateCategoryData {
 }
 
 export interface CreateBudgetData {
+  name: string
   category_id: number
   amount: number
+  currency: string
   period: 'monthly' | 'yearly'
   start_date: string
   end_date?: string
