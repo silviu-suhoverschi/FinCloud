@@ -74,11 +74,13 @@ export default function AccountDetailPage() {
     }
   }
 
-  const formatCurrency = (amount: number, currency: string) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency,
+  const formatCurrency = (amount: number, currency?: string) => {
+    const formatted = new Intl.NumberFormat('en-US', {
+      style: 'decimal',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     }).format(amount)
+    return currency ? `${formatted} ${currency}` : formatted
   }
 
   const formatDate = (dateStr: string) => {
