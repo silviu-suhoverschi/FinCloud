@@ -7,6 +7,7 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_, func
+from sqlalchemy.orm import selectinload
 
 from app.core.database import get_db
 from app.core.auth import get_current_user
@@ -69,9 +70,10 @@ async def list_budgets(
     count_result = await db.execute(count_query)
     total = count_result.scalar()
 
-    # Get budgets with pagination
+    # Get budgets with pagination and eagerly load category relationship
     query = (
         select(Budget)
+        .options(selectinload(Budget.category))
         .filter(and_(*filters))
         .order_by(Budget.start_date.desc(), Budget.name)
         .offset(skip)
@@ -94,12 +96,16 @@ async def get_budget(
 
     - **budget_id**: Budget ID
     """
-    # Get budget
-    query = select(Budget).filter(
-        and_(
-            Budget.id == budget_id,
-            Budget.user_id == current_user.id,
-            Budget.deleted_at.is_(None),
+    # Get budget and eagerly load category relationship
+    query = (
+        select(Budget)
+        .options(selectinload(Budget.category))
+        .filter(
+            and_(
+                Budget.id == budget_id,
+                Budget.user_id == current_user.id,
+                Budget.deleted_at.is_(None),
+            )
         )
     )
     result = await db.execute(query)
@@ -362,12 +368,16 @@ async def get_budget_progress(
 
     - **budget_id**: Budget ID
     """
-    # Get budget
-    query = select(Budget).filter(
-        and_(
-            Budget.id == budget_id,
-            Budget.user_id == current_user.id,
-            Budget.deleted_at.is_(None),
+    # Get budget and eagerly load category relationship
+    query = (
+        select(Budget)
+        .options(selectinload(Budget.category))
+        .filter(
+            and_(
+                Budget.id == budget_id,
+                Budget.user_id == current_user.id,
+                Budget.deleted_at.is_(None),
+            )
         )
     )
     result = await db.execute(query)
