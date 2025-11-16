@@ -68,6 +68,7 @@ services:
       REDIS_URL: redis://redis:6379/0
       SERVICE_PORT: 8001
       LOG_LEVEL: info
+      JWT_SECRET: ${JWT_SECRET:-your-secret-key-change-in-production}
     ports:
       - "8001:8001"
     depends_on:
@@ -93,6 +94,7 @@ services:
       CELERY_BROKER_URL: redis://redis:6379/2
       SERVICE_PORT: 8002
       LOG_LEVEL: info
+      JWT_SECRET: ${JWT_SECRET:-your-secret-key-change-in-production}
       ALPHA_VANTAGE_API_KEY: ${ALPHA_VANTAGE_API_KEY:-demo}
       COINGECKO_API_KEY: ${COINGECKO_API_KEY:-}
     ports:
@@ -129,6 +131,8 @@ services:
     networks:
       - fincloud-network
     restart: unless-stopped
+    healthcheck:
+      disable: true
 
   # Notification Service
   notification-service:
