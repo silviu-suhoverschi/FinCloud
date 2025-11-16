@@ -78,11 +78,13 @@ export default function AccountsPage() {
     return colors[type] || 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
   }
 
-  const formatCurrency = (amount: number, currency: string) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency,
+  const formatCurrency = (amount: number, currency?: string) => {
+    const formatted = new Intl.NumberFormat('en-US', {
+      style: 'decimal',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
     }).format(amount)
+    return currency ? `${formatted} ${currency}` : formatted
   }
 
   const totalBalance = accounts.reduce((sum, acc) => sum + acc.current_balance, 0)
@@ -111,7 +113,7 @@ export default function AccountsPage() {
         {/* Summary Card */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg shadow p-6 text-white">
           <h3 className="text-lg font-medium mb-2">Total Balance</h3>
-          <p className="text-3xl font-bold">{formatCurrency(totalBalance, 'USD')}</p>
+          <p className="text-3xl font-bold">{formatCurrency(totalBalance)}</p>
           <p className="mt-2 text-blue-100">{accounts.length} account(s)</p>
         </div>
 
