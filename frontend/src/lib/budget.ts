@@ -78,6 +78,7 @@ export interface CreateTransactionData {
   account_id: number
   category_id?: number
   amount: number
+  currency: string
   description: string
   date: string
   type: 'income' | 'expense'
