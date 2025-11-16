@@ -202,7 +202,16 @@ async def create_budget(
     await db.commit()
     await db.refresh(new_budget)
 
-    return new_budget
+    # Eagerly load category relationship to avoid lazy loading issues
+    query = (
+        select(Budget)
+        .options(selectinload(Budget.category))
+        .filter(Budget.id == new_budget.id)
+    )
+    result = await db.execute(query)
+    budget_with_category = result.scalar_one()
+
+    return budget_with_category
 
 
 @router.put("/{budget_id}", response_model=BudgetResponse)
@@ -313,7 +322,16 @@ async def update_budget(
     await db.commit()
     await db.refresh(budget)
 
-    return budget
+    # Eagerly load category relationship to avoid lazy loading issues
+    query = (
+        select(Budget)
+        .options(selectinload(Budget.category))
+        .filter(Budget.id == budget.id)
+    )
+    result = await db.execute(query)
+    budget_with_category = result.scalar_one()
+
+    return budget_with_category
 
 
 @router.delete("/{budget_id}", status_code=status.HTTP_200_OK)
