@@ -15,7 +15,7 @@ export default function AddHoldingForm({ portfolioId, onSuccess, onCancel }: Add
   const [selectedAsset, setSelectedAsset] = useState<Asset | null>(null)
   const [formData, setFormData] = useState({
     quantity: '',
-    average_buy_price: '',
+    average_cost: '',
   })
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -28,7 +28,7 @@ export default function AddHoldingForm({ portfolioId, onSuccess, onCancel }: Add
       return
     }
 
-    if (!formData.quantity || !formData.average_buy_price) {
+    if (!formData.quantity || !formData.average_cost) {
       setError('Please fill in all required fields')
       return
     }
@@ -41,7 +41,7 @@ export default function AddHoldingForm({ portfolioId, onSuccess, onCancel }: Add
         portfolio_id: portfolioId,
         asset_id: selectedAsset.id,
         quantity: parseFloat(formData.quantity),
-        average_buy_price: parseFloat(formData.average_buy_price),
+        average_cost: parseFloat(formData.average_cost),
       })
 
       onSuccess()
@@ -121,12 +121,12 @@ export default function AddHoldingForm({ portfolioId, onSuccess, onCancel }: Add
 
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Average Buy Price *
+            Average Cost *
           </label>
           <input
             type="number"
-            value={formData.average_buy_price}
-            onChange={(e) => setFormData({ ...formData, average_buy_price: e.target.value })}
+            value={formData.average_cost}
+            onChange={(e) => setFormData({ ...formData, average_cost: e.target.value })}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
             placeholder="100.00"
             step="0.01"
@@ -135,7 +135,7 @@ export default function AddHoldingForm({ portfolioId, onSuccess, onCancel }: Add
         </div>
       </div>
 
-      {selectedAsset && formData.quantity && formData.average_buy_price && (
+      {selectedAsset && formData.quantity && formData.average_cost && (
         <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
           <div className="flex items-center justify-between">
             <span className="text-sm text-gray-600 dark:text-gray-400">Total Investment:</span>
@@ -143,7 +143,7 @@ export default function AddHoldingForm({ portfolioId, onSuccess, onCancel }: Add
               {new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: 'USD',
-              }).format(parseFloat(formData.quantity) * parseFloat(formData.average_buy_price))}
+              }).format(parseFloat(formData.quantity) * parseFloat(formData.average_cost))}
             </span>
           </div>
         </div>

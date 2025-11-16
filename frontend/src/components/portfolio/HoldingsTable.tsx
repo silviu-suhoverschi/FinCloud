@@ -11,7 +11,7 @@ interface HoldingsTableProps {
 
 export default function HoldingsTable({ holdings, onUpdate }: HoldingsTableProps) {
   const [editingId, setEditingId] = useState<number | null>(null)
-  const [editForm, setEditForm] = useState({ quantity: 0, average_buy_price: 0 })
+  const [editForm, setEditForm] = useState({ quantity: 0, average_cost: 0 })
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -28,7 +28,7 @@ export default function HoldingsTable({ holdings, onUpdate }: HoldingsTableProps
     setEditingId(holding.id)
     setEditForm({
       quantity: holding.quantity,
-      average_buy_price: holding.average_buy_price,
+      average_cost: holding.average_cost,
     })
   }
 
@@ -134,11 +134,11 @@ export default function HoldingsTable({ holdings, onUpdate }: HoldingsTableProps
                   {editingId === holding.id ? (
                     <input
                       type="number"
-                      value={editForm.average_buy_price}
+                      value={editForm.average_cost}
                       onChange={(e) =>
                         setEditForm({
                           ...editForm,
-                          average_buy_price: parseFloat(e.target.value),
+                          average_cost: parseFloat(e.target.value),
                         })
                       }
                       className="w-24 px-2 py-1 text-right border border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700 dark:text-white"
@@ -146,7 +146,7 @@ export default function HoldingsTable({ holdings, onUpdate }: HoldingsTableProps
                     />
                   ) : (
                     <span className="text-gray-900 dark:text-white">
-                      {formatCurrency(holding.average_buy_price)}
+                      {formatCurrency(holding.average_cost)}
                     </span>
                   )}
                 </td>
@@ -157,25 +157,25 @@ export default function HoldingsTable({ holdings, onUpdate }: HoldingsTableProps
                   {holding.current_value ? formatCurrency(holding.current_value) : 'N/A'}
                 </td>
                 <td className="px-4 py-3 text-right">
-                  {holding.gain_loss !== undefined && holding.gain_loss_percentage !== undefined ? (
+                  {holding.unrealized_gain_loss !== undefined && holding.unrealized_gain_loss_percent !== undefined ? (
                     <div>
                       <div
                         className={`font-medium ${
-                          holding.gain_loss >= 0
+                          holding.unrealized_gain_loss >= 0
                             ? 'text-green-600 dark:text-green-400'
                             : 'text-red-600 dark:text-red-400'
                         }`}
                       >
-                        {formatCurrency(holding.gain_loss)}
+                        {formatCurrency(holding.unrealized_gain_loss)}
                       </div>
                       <div
                         className={`text-sm ${
-                          holding.gain_loss_percentage >= 0
+                          holding.unrealized_gain_loss_percent >= 0
                             ? 'text-green-600 dark:text-green-400'
                             : 'text-red-600 dark:text-red-400'
                         }`}
                       >
-                        {formatPercentage(holding.gain_loss_percentage)}
+                        {formatPercentage(holding.unrealized_gain_loss_percent)}
                       </div>
                     </div>
                   ) : (
