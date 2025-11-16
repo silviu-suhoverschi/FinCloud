@@ -115,8 +115,8 @@ export interface UpdateTransactionData {
 export const portfolioService = {
   // Portfolios
   async getPortfolios(): Promise<Portfolio[]> {
-    const response = await api.get<Portfolio[]>('/api/v1/portfolios')
-    return response.data
+    const response = await api.get<{total: number, portfolios: Portfolio[]}>('/api/v1/portfolios')
+    return response.data.portfolios
   },
 
   async getPortfolio(id: number): Promise<Portfolio> {
