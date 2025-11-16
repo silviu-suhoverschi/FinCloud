@@ -14,8 +14,10 @@ export default function NewBudgetPage() {
   const [submitting, setSubmitting] = useState(false)
 
   const [formData, setFormData] = useState<CreateBudgetData>({
+    name: '',
     category_id: 0,
     amount: 0,
+    currency: 'USD',
     period: 'monthly',
     start_date: new Date().toISOString().split('T')[0],
     end_date: undefined,
@@ -49,11 +51,17 @@ export default function NewBudgetPage() {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {}
 
+    if (!formData.name || !formData.name.trim()) {
+      newErrors.name = 'Budget name is required'
+    }
     if (!formData.category_id) {
       newErrors.category_id = 'Please select a category'
     }
     if (formData.amount <= 0) {
       newErrors.amount = 'Amount must be greater than 0'
+    }
+    if (!formData.currency || !formData.currency.trim()) {
+      newErrors.currency = 'Currency is required'
     }
     if (!formData.start_date) {
       newErrors.start_date = 'Start date is required'
@@ -137,6 +145,26 @@ export default function NewBudgetPage() {
         {/* Form */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Budget Name */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Budget Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                required
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white ${
+                  errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                }`}
+                placeholder="e.g., Monthly Groceries Budget"
+              />
+              {errors.name && (
+                <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+              )}
+            </div>
+
             {/* Category */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -165,26 +193,54 @@ export default function NewBudgetPage() {
               </p>
             </div>
 
-            {/* Amount */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Budget Amount <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="number"
-                required
-                step="0.01"
-                min="0.01"
-                value={formData.amount}
-                onChange={(e) => setFormData({ ...formData, amount: parseFloat(e.target.value) })}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white ${
-                  errors.amount ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                }`}
-                placeholder="0.00"
-              />
-              {errors.amount && (
-                <p className="mt-1 text-sm text-red-500">{errors.amount}</p>
-              )}
+            {/* Amount and Currency */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Budget Amount <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  required
+                  step="0.01"
+                  min="0.01"
+                  value={formData.amount}
+                  onChange={(e) => setFormData({ ...formData, amount: parseFloat(e.target.value) })}
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white ${
+                    errors.amount ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                  }`}
+                  placeholder="0.00"
+                />
+                {errors.amount && (
+                  <p className="mt-1 text-sm text-red-500">{errors.amount}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  Currency <span className="text-red-500">*</span>
+                </label>
+                <select
+                  required
+                  value={formData.currency}
+                  onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
+                  className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white ${
+                    errors.currency ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                  }`}
+                >
+                  <option value="USD">USD</option>
+                  <option value="EUR">EUR</option>
+                  <option value="GBP">GBP</option>
+                  <option value="JPY">JPY</option>
+                  <option value="CAD">CAD</option>
+                  <option value="AUD">AUD</option>
+                  <option value="CHF">CHF</option>
+                  <option value="CNY">CNY</option>
+                  <option value="RON">RON</option>
+                </select>
+                {errors.currency && (
+                  <p className="mt-1 text-sm text-red-500">{errors.currency}</p>
+                )}
+              </div>
             </div>
 
             {/* Period */}
