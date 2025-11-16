@@ -18,6 +18,7 @@ export default function NewTransactionPage() {
     account_id: 0,
     category_id: undefined,
     amount: 0,
+    currency: 'USD',
     description: '',
     date: new Date().toISOString().split('T')[0],
     type: 'expense',
@@ -41,7 +42,11 @@ export default function NewTransactionPage() {
 
       // Set first account as default if available
       if (accountsData.length > 0) {
-        setFormData((prev) => ({ ...prev, account_id: accountsData[0].id }))
+        setFormData((prev) => ({
+          ...prev,
+          account_id: accountsData[0].id,
+          currency: accountsData[0].currency
+        }))
       }
     } catch (err) {
       alert('Failed to load accounts and categories')
@@ -161,7 +166,15 @@ export default function NewTransactionPage() {
               <select
                 required
                 value={formData.account_id}
-                onChange={(e) => setFormData({ ...formData, account_id: parseInt(e.target.value) })}
+                onChange={(e) => {
+                  const accountId = parseInt(e.target.value)
+                  const selectedAccount = accounts.find(acc => acc.id === accountId)
+                  setFormData({
+                    ...formData,
+                    account_id: accountId,
+                    currency: selectedAccount?.currency || 'USD'
+                  })
+                }}
                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white ${
                   errors.account_id ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                 }`}
