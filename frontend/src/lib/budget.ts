@@ -177,7 +177,7 @@ export const budgetService = {
   },
 
   async createTransaction(data: CreateTransactionData): Promise<Transaction> {
-    const response = await api.post<Transaction>('/api/v1/transactions', data)
+    const response = await api.post<Transaction>('/api/v1/transactions/', data)
     return response.data
   },
 
