@@ -195,8 +195,8 @@ export const budgetService = {
 
   // Categories
   async getCategories(): Promise<Category[]> {
-    const response = await api.get<Category[]>('/api/v1/categories')
-    return response.data
+    const response = await api.get<{ total: number; categories: Category[] }>('/api/v1/categories')
+    return response.data.categories || []
   },
 
   async getCategory(id: number): Promise<Category> {
@@ -219,8 +219,8 @@ export const budgetService = {
   },
 
   async getCategoryTree(): Promise<Category[]> {
-    const response = await api.get<Category[]>('/api/v1/categories/tree')
-    return response.data
+    const response = await api.get<{ categories: Category[] }>('/api/v1/categories/tree')
+    return response.data.categories || []
   },
 
   // Budgets
