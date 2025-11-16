@@ -12,6 +12,16 @@ from pydantic import BaseModel, Field, field_validator, ConfigDict
 from enum import Enum
 
 
+class CategoryInfo(BaseModel):
+    """Simplified category information for budget responses."""
+
+    id: int = Field(..., description="Category ID")
+    name: str = Field(..., description="Category name")
+    type: str = Field(..., description="Category type")
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 class BudgetPeriod(str, Enum):
     """Valid budget periods."""
 
@@ -150,6 +160,9 @@ class BudgetResponse(BudgetBase):
     id: int = Field(..., description="Budget ID")
     uuid: UUID = Field(..., description="Budget UUID")
     user_id: int = Field(..., description="User ID who owns the budget")
+    category: Optional[CategoryInfo] = Field(
+        None, description="Category information if budget is for a category"
+    )
     created_at: datetime = Field(..., description="Budget creation timestamp")
     updated_at: datetime = Field(..., description="Last update timestamp")
     deleted_at: Optional[datetime] = Field(
