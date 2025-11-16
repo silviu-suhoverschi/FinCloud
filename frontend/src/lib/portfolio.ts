@@ -24,11 +24,11 @@ export interface Holding {
   portfolio_id: number
   asset_id: number
   quantity: number
-  average_buy_price: number
+  average_cost: number
   current_price?: number
   current_value?: number
-  gain_loss?: number
-  gain_loss_percentage?: number
+  unrealized_gain_loss?: number
+  unrealized_gain_loss_percent?: number
   asset?: Asset
 }
 
@@ -82,12 +82,12 @@ export interface CreateHoldingData {
   portfolio_id: number
   asset_id: number
   quantity: number
-  average_buy_price: number
+  average_cost: number
 }
 
 export interface UpdateHoldingData {
   quantity?: number
-  average_buy_price?: number
+  average_cost?: number
 }
 
 export interface CreateTransactionData {
@@ -153,8 +153,8 @@ export const portfolioService = {
   // Holdings
   async getHoldings(portfolioId?: number): Promise<Holding[]> {
     const params = portfolioId ? { portfolio_id: portfolioId } : {}
-    const response = await api.get<Holding[]>('/api/v1/holdings', { params })
-    return response.data
+    const response = await api.get<{total: number, holdings: Holding[]}>('/api/v1/holdings', { params })
+    return response.data.holdings
   },
 
   async getHolding(id: number): Promise<Holding> {
@@ -179,8 +179,8 @@ export const portfolioService = {
   // Transactions
   async getTransactions(portfolioId?: number): Promise<PortfolioTransaction[]> {
     const params = portfolioId ? { portfolio_id: portfolioId } : {}
-    const response = await api.get<PortfolioTransaction[]>('/api/v1/transactions', { params })
-    return response.data
+    const response = await api.get<{total: number, transactions: PortfolioTransaction[]}>('/api/v1/transactions', { params })
+    return response.data.transactions
   },
 
   async getTransaction(id: number): Promise<PortfolioTransaction> {
