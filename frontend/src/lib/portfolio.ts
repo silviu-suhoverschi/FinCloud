@@ -36,11 +36,12 @@ export interface PortfolioTransaction {
   id: number
   portfolio_id: number
   asset_id: number
-  transaction_type: 'BUY' | 'SELL' | 'DIVIDEND' | 'SPLIT' | 'INTEREST' | 'FEE' | 'TAX' | 'TRANSFER_IN' | 'TRANSFER_OUT'
+  type: string
   quantity: number
   price: number
-  fee?: number
-  tax?: number
+  total_amount: number
+  fee: number
+  tax: number
   date: string
   notes?: string
   created_at: string
@@ -93,9 +94,10 @@ export interface UpdateHoldingData {
 export interface CreateTransactionData {
   portfolio_id: number
   asset_id: number
-  transaction_type: 'BUY' | 'SELL' | 'DIVIDEND' | 'SPLIT' | 'INTEREST' | 'FEE' | 'TAX' | 'TRANSFER_IN' | 'TRANSFER_OUT'
+  type: string
   quantity: number
   price: number
+  total_amount: number
   fee?: number
   tax?: number
   date: string
@@ -103,9 +105,10 @@ export interface CreateTransactionData {
 }
 
 export interface UpdateTransactionData {
-  transaction_type?: 'BUY' | 'SELL' | 'DIVIDEND' | 'SPLIT' | 'INTEREST' | 'FEE' | 'TAX' | 'TRANSFER_IN' | 'TRANSFER_OUT'
+  type?: string
   quantity?: number
   price?: number
+  total_amount?: number
   fee?: number
   tax?: number
   date?: string

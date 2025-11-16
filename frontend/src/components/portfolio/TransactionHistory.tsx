@@ -25,7 +25,8 @@ export default function TransactionHistory({
   }
 
   const getTransactionTypeColor = (type: string) => {
-    switch (type) {
+    const upperType = type.toUpperCase()
+    switch (upperType) {
       case 'BUY':
         return 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300'
       case 'SELL':
@@ -96,7 +97,7 @@ export default function TransactionHistory({
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
               {displayTransactions.map((transaction) => {
-                const total = transaction.quantity * transaction.price
+                const total = transaction.total_amount || (transaction.quantity * transaction.price)
                 return (
                   <tr key={transaction.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                     <td className="px-4 py-3 text-sm text-gray-900 dark:text-white whitespace-nowrap">
@@ -110,14 +111,14 @@ export default function TransactionHistory({
                     <td className="px-4 py-3">
                       <span
                         className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getTransactionTypeColor(
-                          transaction.transaction_type
+                          transaction.type
                         )}`}
                       >
-                        {transaction.transaction_type}
+                        {transaction.type.toUpperCase()}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-right text-sm text-gray-900 dark:text-white">
-                      {transaction.quantity.toLocaleString()}
+                      {transaction.quantity?.toLocaleString() || '0'}
                     </td>
                     <td className="px-4 py-3 text-right text-sm text-gray-900 dark:text-white">
                       {formatCurrency(transaction.price)}
