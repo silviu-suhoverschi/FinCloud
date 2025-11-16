@@ -85,11 +85,13 @@ export default function NewTransactionPage() {
 
     try {
       setSubmitting(true)
+      console.log('Submitting transaction data:', formData)
       await budgetService.createTransaction(formData)
       router.push('/budget/transactions')
-    } catch (err) {
-      alert('Failed to create transaction')
-      console.error(err)
+    } catch (err: any) {
+      console.error('Full error:', err)
+      console.error('Error response:', err.response?.data)
+      alert(`Failed to create transaction: ${err.response?.data?.detail || err.message}`)
     } finally {
       setSubmitting(false)
     }
