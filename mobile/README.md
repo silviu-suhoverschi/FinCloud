@@ -9,7 +9,7 @@ Privacy-first personal finance and investment tracking mobile application built 
 - **Offline-First Architecture**: Full functionality without internet connection
   - WatermelonDB for local SQLite database
   - MMKV for fast key-value storage
-  - Automatic sync when online
+  - Automatic sync when online (planned)
 
 - **Security**
   - PIN Lock (4, 6, or 8 digits)
@@ -28,6 +28,90 @@ Privacy-first personal finance and investment tracking mobile application built 
   - Categories with subcategories
   - Budgets (Weekly, Monthly, Yearly)
   - Portfolio tracking (Stocks, ETF, Crypto, Bonds)
+
+### ✅ Phase 2: Core FREE (MVP) Features (Completed)
+
+- **Transactions Management**
+  - Add/edit/delete transaction flows with validation
+  - Receipt photo attachments using expo-image-picker
+  - Transfer transactions between accounts
+  - Soft-delete markers for future sync
+  - Tag support for better organization
+  - Search and filter functionality
+
+- **Recurring Transactions**
+  - Daily, weekly, monthly, and yearly scheduling
+  - Configurable intervals (e.g., every 2 weeks)
+  - Automatic transaction creation engine
+  - End date support (optional)
+  - Active/inactive toggle
+
+- **Categories**
+  - 20 preset localized categories (10 expense, 5 income)
+  - Custom category creation with CRUD operations
+  - Icon picker (12 preset icons: 💼, 💻, 📈, 🎁, 💰, 🍽️, 🛒, 🚗, 💡, 🏠, 🏥, ...)
+  - Color picker (12 preset colors)
+  - Live preview in forms
+  - Default category protection
+
+- **Accounts (Wallets)**
+  - 5 account types: Bank, Savings, Cash, Credit Card, Investment
+  - FREE tier enforcement: max 5 accounts
+  - Opening balance support
+  - Multi-currency support (USD, EUR, GBP, RON, JPY, CAD, AUD)
+  - Account activation/deactivation (archive)
+  - Rename and edit functionality
+  - Transaction history per account
+
+- **Budgets**
+  - Create budgets with weekly/monthly/annual periods
+  - Progress bars showing spent vs. remaining
+  - Category-based budgeting
+  - Overspending indicators (visual warnings)
+  - Automatic spending calculations
+
+- **Budget Notifications**
+  - 80% warning threshold
+  - 100% budget exceeded alert
+  - 120% overspending notification
+  - Push notifications via expo-notifications
+  - Configurable on/off in settings
+
+- **Dashboard**
+  - Total balance aggregation across accounts
+  - Income/Expense totals for current month
+  - Category pie chart using react-native-chart-kit
+  - 7-day spending trend line chart
+  - Recent transactions list (last 5)
+  - Pull-to-refresh functionality
+
+- **Portfolio (Manual)**
+  - 6 asset types: Stock, ETF, Crypto, Bond, Commodity, Real Estate
+  - Manual price entry
+  - Yahoo Finance price refresh integration
+  - Performance metrics (quantity, avg cost, current price, gain/loss)
+  - Transaction history (buy/sell/dividend)
+  - Total portfolio value calculation
+
+- **Yahoo Finance Integration**
+  - Real-time price fetching for stocks/ETFs
+  - Batch price updates with rate limiting
+  - Symbol search functionality
+  - CoinGecko fallback for crypto prices
+  - Automatic portfolio value updates
+
+- **Localization & Export**
+  - Language switcher (English/Romanian)
+  - Auto-detect with fallback
+  - All 20 preset categories localized
+  - CSV export for:
+    - Transactions
+    - Accounts
+    - Categories
+    - Budgets
+    - Portfolio assets
+    - All data (combined export)
+  - File sharing via expo-sharing
 
 ## 🏗️ Architecture
 
@@ -363,26 +447,136 @@ The app is designed to work fully offline:
 3. **Conflict Resolution**: Last-write-wins strategy (can be customized)
 4. **Sync Queue**: Failed syncs are retried automatically
 
+## 📝 Implementation Details
+
+### Screens Implemented (27 total)
+
+**Auth Flow (3 screens)**
+- `WelcomeScreen` - App introduction and onboarding
+- `PINSetupScreen` - PIN creation with 4/6/8 digit support
+- `BiometricSetupScreen` - Biometric authentication setup
+- `LockScreen` - App lock/unlock screen
+
+**Dashboard (1 screen)**
+- `DashboardScreen` - Main overview with balance, charts, and recent transactions
+
+**Accounts (4 screens)**
+- `AccountsListScreen` - List all accounts with total balance
+- `AccountDetailsScreen` - Individual account with transaction history
+- `AddAccountScreen` - Create account with FREE tier check (max 5)
+- `EditAccountScreen` - Edit account details and archive
+
+**Transactions (4 screens)**
+- `TransactionsListScreen` - Searchable, filterable transaction list
+- `TransactionDetailsScreen` - Transaction details with attachments
+- `AddTransactionScreen` - Add income/expense/transfer with photo
+- `EditTransactionScreen` - Edit transaction
+
+**Portfolio (5 screens)**
+- `PortfolioScreen` - Asset overview with total value
+- `AssetDetailsScreen` - Asset details with performance metrics
+- `AddAssetScreen` - Add investment asset
+- `EditAssetScreen` - Edit asset details
+- `AddPortfolioTransactionScreen` - Record buy/sell/dividend
+
+**More & Settings (10 screens)**
+- `MoreScreen` - Settings menu hub
+- `CategoriesScreen` - Manage categories
+- `AddCategoryScreen` - Create category with icon/color picker
+- `EditCategoryScreen` - Edit category
+- `BudgetsScreen` - Budget list with progress bars
+- `AddBudgetScreen` - Create budget
+- `EditBudgetScreen` - Edit budget
+- `SettingsScreen` - App preferences (language, theme, currency, etc.)
+- `SecurityScreen` - Security settings (PIN, biometric, auto-lock)
+- `ExportScreen` - CSV data export
+
+### Services Implemented
+
+**RecurringTransactionService**
+- Manages recurring transaction patterns
+- Calculates next execution dates
+- Processes due transactions automatically
+- Supports daily, weekly, monthly, yearly frequencies
+
+**CategorySeedService**
+- Seeds 20 preset categories on first launch
+- Localized for EN/RO
+- Prevents duplicate seeding
+- Supports re-seeding with language change
+
+**NotificationService**
+- Budget overspending alerts (80%, 100%, 120%)
+- Notification permission handling
+- Configurable on/off via settings
+- Recurring transaction reminders (planned)
+
+**PriceUpdateService**
+- Yahoo Finance API integration
+- Batch price updates with rate limiting
+- Symbol search functionality
+- CoinGecko crypto price fallback
+- Automatic portfolio recalculation
+
+**InitializationService**
+- First launch setup and configuration
+- Category seeding orchestration
+- Daily maintenance tasks (recurring transactions, budget alerts)
+- Onboarding state management
+
+### Key Features
+
+**FREE Tier Enforcement**
+- Maximum 5 accounts per user
+- Implemented in `AddAccountScreen:155-161`
+- Shows helpful upgrade message
+- Prevents account creation when limit reached
+
+**Preset Categories (20 total)**
+
+*Income (5)*:
+- 💼 Salary - 💻 Freelance - 📈 Investment - 🎁 Gift - 💰 Other Income
+
+*Expense (15)*:
+- 🍽️ Food & Dining - 🛒 Groceries - 🚗 Transportation - 💡 Utilities
+- 🏠 Housing - 🏥 Healthcare - 🎬 Entertainment - 🛍️ Shopping
+- ✈️ Travel - 📚 Education - 💆 Personal Care - 🛡️ Insurance
+- 📱 Subscriptions - 🐾 Pet Care - 💸 Other Expenses
+
+**Multi-Currency Support**
+- USD, EUR, GBP, RON, JPY, CAD, AUD
+- Per-account currency settings
+- Portfolio supports mixed currencies
+
+**Transaction Types**
+- **Income**: Money received (salary, freelance, gifts, etc.)
+- **Expense**: Money spent (groceries, bills, shopping, etc.)
+- **Transfer**: Move money between accounts (updates both balances)
+
+**Budget Periods**
+- Weekly: 7-day rolling period
+- Monthly: Calendar month
+- Yearly: Calendar year
+
+**Asset Types**
+- Stock - ETF - Crypto - Bond - Commodity (Gold, Silver, etc.) - Real Estate
+
 ## 📝 Next Steps
 
-### Phase 2: Core Screens & Navigation
-- [ ] Implement navigation structure
-- [ ] Create authentication screens (login, register)
-- [ ] Build dashboard/home screen
-- [ ] Develop account management screens
-- [ ] Create transaction screens
+### Phase 3: Enhancements
+- [ ] Add recurring transaction management screen
+- [ ] Implement data import (CSV, OFX, QIF)
+- [ ] Advanced filtering and date range selection
+- [ ] Reports and analytics screens
+- [ ] Budget rollover functionality
+- [ ] Multi-account transfers
 
-### Phase 3: Budget & Portfolio
-- [ ] Budget management UI
-- [ ] Portfolio tracking screens
-- [ ] Charts and analytics
-- [ ] Reports generation
-
-### Phase 4: Sync & Cloud
-- [ ] API integration with backend
-- [ ] Sync engine implementation
-- [ ] Conflict resolution
+### Phase 4: Sync & Cloud (Future)
+- [ ] API integration with backend services
+- [ ] Sync engine with conflict resolution
 - [ ] Offline queue management
+- [ ] Cloud backup and restore
+- [ ] Multi-device support
 
 ## 🤝 Contributing
 

@@ -116,6 +116,7 @@ export const StorageKeys = {
   // Auth
   AUTH_TOKENS: 'auth_tokens',
   USER_DATA: 'user_data',
+  HAS_COMPLETED_ONBOARDING: 'has_completed_onboarding',
 
   // Security
   SECURITY_SETTINGS: 'security_settings',
@@ -135,4 +136,5 @@ export const StorageKeys = {
   // Onboarding
   ONBOARDING_COMPLETED: 'onboarding_completed',
   FIRST_LAUNCH: 'first_launch',
+  HAS_SEEDED_CATEGORIES: 'has_seeded_categories',
 } as const;

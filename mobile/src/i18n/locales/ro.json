@@ -13,7 +13,24 @@
     "error": "Eroare",
     "success": "Succes",
     "retry": "Reîncearcă",
-    "close": "Închide"
+    "close": "Închide",
+    "add": "Adaugă",
+    "search": "Caută",
+    "filter": "Filtrează",
+    "sortBy": "Sortează După",
+    "all": "Toate",
+    "today": "Azi",
+    "thisWeek": "Săptămâna Aceasta",
+    "thisMonth": "Luna Aceasta",
+    "thisYear": "Anul Acesta",
+    "custom": "Personalizat"
+  },
+  "navigation": {
+    "dashboard": "Panou",
+    "accounts": "Conturi",
+    "transactions": "Tranzacții",
+    "portfolio": "Portofoliu",
+    "more": "Mai Mult"
   },
   "auth": {
     "login": "Autentificare",
@@ -146,7 +163,31 @@
     "about": "Despre",
     "version": "Versiune",
     "privacyPolicy": "Politica de Confidențialitate",
-    "termsOfService": "Termeni și Condiții"
+    "termsOfService": "Termeni și Condiții",
+    "export": "Export Date"
+  },
+  "export": {
+    "export": "Export",
+    "exportData": "Export Date",
+    "exportAccounts": "Export Conturi",
+    "exportTransactions": "Export Tranzacții",
+    "exportCategories": "Export Categorii",
+    "exportBudgets": "Export Bugete",
+    "exportPortfolio": "Export Portofoliu",
+    "exportAll": "Export Toate",
+    "exportSuccess": "Export reușit",
+    "exportError": "Export eșuat",
+    "csvFormat": "Format CSV"
+  },
+  "dashboard": {
+    "welcome": "Bun venit",
+    "totalBalance": "Sold Total",
+    "income": "Venituri",
+    "expenses": "Cheltuieli",
+    "thisMonth": "Luna Aceasta",
+    "recentTransactions": "Tranzacții Recente",
+    "expensesByCategory": "Cheltuieli pe Categorii",
+    "spendingTrend": "Tendință Cheltuieli"
   },
   "sync": {
     "sync": "Sincronizare",

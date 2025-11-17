@@ -13,7 +13,24 @@
     "error": "Error",
     "success": "Success",
     "retry": "Retry",
-    "close": "Close"
+    "close": "Close",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "sortBy": "Sort By",
+    "all": "All",
+    "today": "Today",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "thisYear": "This Year",
+    "custom": "Custom"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "accounts": "Accounts",
+    "transactions": "Transactions",
+    "portfolio": "Portfolio",
+    "more": "More"
   },
   "auth": {
     "login": "Login",
@@ -146,7 +163,31 @@
     "about": "About",
     "version": "Version",
     "privacyPolicy": "Privacy Policy",
-    "termsOfService": "Terms of Service"
+    "termsOfService": "Terms of Service",
+    "export": "Export Data"
+  },
+  "export": {
+    "export": "Export",
+    "exportData": "Export Data",
+    "exportAccounts": "Export Accounts",
+    "exportTransactions": "Export Transactions",
+    "exportCategories": "Export Categories",
+    "exportBudgets": "Export Budgets",
+    "exportPortfolio": "Export Portfolio",
+    "exportAll": "Export All",
+    "exportSuccess": "Export successful",
+    "exportError": "Export failed",
+    "csvFormat": "CSV Format"
+  },
+  "dashboard": {
+    "welcome": "Welcome",
+    "totalBalance": "Total Balance",
+    "income": "Income",
+    "expenses": "Expenses",
+    "thisMonth": "This Month",
+    "recentTransactions": "Recent Transactions",
+    "expensesByCategory": "Expenses by Category",
+    "spendingTrend": "Spending Trend"
   },
   "sync": {
     "sync": "Sync",

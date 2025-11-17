@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, Text } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import './src/i18n'; // Initialize i18n
 import { database } from './src/storage/database';
 import AutoLockProvider from './src/security/AutoLockProvider';
+import RootNavigator from './src/navigation/RootNavigator';
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
@@ -16,14 +18,20 @@ export default function App() {
         // Database is already initialized via import, just verify it's ready
         console.log('Database initialized');
 
-        // Add any other initialization logic here
-        // - Load user settings
-        // - Check authentication status
-        // - Initialize services
+        // Initialize app (seed categories, process recurring transactions, etc.)
+        const { initializationService } = await import('./src/services/InitializationService');
+        await initializationService.initializeApp();
+
+        // Perform daily maintenance if needed
+        if (initializationService.shouldPerformDailyMaintenance()) {
+          await initializationService.performDailyMaintenance();
+        }
 
         setIsReady(true);
       } catch (error) {
         console.error('Error initializing app:', error);
+        // Continue anyway to not block the app
+        setIsReady(true);
       }
     }
 
@@ -40,19 +48,14 @@ export default function App() {
   }
 
   return (
-    <SafeAreaProvider>
-      <AutoLockProvider>
-        <View style={styles.container}>
-          <Text style={styles.title}>FinCloud Mobile</Text>
-          <Text style={styles.subtitle}>Personal Finance & Investment Tracker</Text>
-          <Text style={styles.info}>✅ Offline-first storage configured</Text>
-          <Text style={styles.info}>✅ Security features ready</Text>
-          <Text style={styles.info}>✅ Internationalization (EN/RO) enabled</Text>
-          <Text style={styles.info}>✅ Data repositories initialized</Text>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <AutoLockProvider>
+          <RootNavigator />
           <StatusBar style="auto" />
-        </View>
-      </AutoLockProvider>
-    </SafeAreaProvider>
+        </AutoLockProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
 
@@ -67,28 +70,5 @@ const styles = StyleSheet.create({
     marginTop: 16,
     fontSize: 16,
     color: '#666',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 32,
-  },
-  info: {
-    fontSize: 14,
-    color: '#007AFF',
-    marginVertical: 4,
   },
 });
